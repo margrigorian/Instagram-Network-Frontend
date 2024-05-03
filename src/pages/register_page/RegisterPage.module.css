@@ -1,0 +1,136 @@
+.container {
+  /* height: 100vh; */
+  margin: 10px 0 30px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.registerContainer {
+  width: 266px;
+  border: 1px solid rgb(187, 187, 187);
+  padding: 35px 40px 35px 40px;
+}
+.instagramLogoContainer {
+  display: flex;
+  justify-content: center;
+}
+.instagramLogo {
+  align-items: center;
+  background-image: url("../../pictures/logo.png  ");
+  width: 200px;
+  height: 60px;
+  background-size: cover;
+  background-position: center;
+}
+.registerText {
+  color: rgb(100, 99, 99);
+  text-align: center;
+  margin: 20px 0;
+}
+.facebookButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 5px 0;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #2196f3;
+  color: white;
+}
+.orContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: rgb(100, 99, 99);
+  margin: 20px 0;
+}
+.horizontalLine {
+  flex: 2;
+  border-bottom: 1px solid lightgrey;
+}
+.orWord {
+  flex: 1;
+  text-align: center;
+  font-size: 14px;
+}
+.inputContainer {
+  height: 47px;
+}
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  transition: background-color 5000s ease-in-out 0s;
+}
+.passwordIconsContainer {
+  display: flex;
+  align-items: center;
+}
+.showPasswordButton {
+  padding-left: 5px;
+  color: black;
+  cursor: pointer;
+}
+.showPasswordButton:hover {
+  color: #bfbfbf;
+}
+.policyText {
+  margin: 6px 0 12px 0;
+  text-align: center;
+  font-size: 11px;
+  color: rgb(149, 148, 148);
+  line-height: 1.5;
+}
+.spanOfPolicyText {
+  color: #30487d;
+  cursor: pointer;
+}
+.registerButton {
+  width: 100%;
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #4dabf5;
+  color: white;
+}
+.alertTextContainer {
+  padding: 40px 0;
+}
+.alertText {
+  text-align: center;
+  font-size: 13px;
+  color: rgb(250, 81, 81);
+  margin-bottom: 3px;
+}
+
+.loginTextContainer {
+  width: 346px;
+  margin-top: 10px;
+  padding: 25px 0;
+  border: 1px solid rgb(187, 187, 187);
+  text-align: center;
+  font-size: 14px;
+}
+.loginNavlink {
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
+}
+.spanOfLoginText {
+  color: #2196f3;
+  font-weight: bolder;
+}

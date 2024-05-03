@@ -1,0 +1,134 @@
+.container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.phoneScreenImage {
+  background-image: url("../../pictures/insta-image-4.jpg");
+  width: 700px;
+  height: 477px;
+  margin-right: 50px;
+  background-size: 100% 100%;
+  background-position: center;
+}
+
+.authenticationContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.loginContainer {
+  width: 266px;
+  border: 1px solid rgb(187, 187, 187);
+  padding: 35px 40px 20px 40px;
+}
+.instagramLogoContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+.instagramLogo {
+  align-items: center;
+  background-image: url("../../pictures/logo.png  ");
+  width: 200px;
+  height: 60px;
+  background-size: cover;
+  background-position: center;
+}
+.inputContainer {
+  height: 47px;
+}
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  transition: background-color 5000s ease-in-out 0s;
+}
+.showPasswordButton {
+  padding-left: 5px;
+  color: black;
+  cursor: pointer;
+}
+.showPasswordButton:hover {
+  color: #bfbfbf;
+}
+.button {
+  width: 100%;
+  padding: 8px;
+  border: none;
+  border-radius: 7px;
+  margin-top: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #4dabf5;
+  color: white;
+}
+
+.orContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: rgb(100, 99, 99);
+  margin: 20px 0 30px;
+}
+.horizontalLine {
+  flex: 2;
+  border-bottom: 1px solid lightgrey;
+}
+.orWord {
+  flex: 1;
+  text-align: center;
+  font-size: 14px;
+}
+
+.facebookContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #3b5999;
+  cursor: pointer;
+}
+
+.alertText {
+  margin-top: 20px;
+  font-size: 13px;
+  color: rgb(250, 81, 81);
+  text-align: center;
+  line-height: 18px;
+}
+
+.forgotPasswordText {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 12px;
+  color: #30487d;
+  cursor: pointer;
+}
+
+.registerTextContainer {
+  width: 346px;
+  margin-top: 10px;
+  padding: 25px 0;
+  border: 1px solid rgb(187, 187, 187);
+  text-align: center;
+  font-size: 14px;
+}
+.registerNavlink {
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
+}
+.spanText {
+  font-weight: bolder;
+  color: #2196f3;
+}
