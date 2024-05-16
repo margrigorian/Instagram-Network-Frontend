@@ -1,6 +1,6 @@
 import axios from "axios";
 import { IRegistartionFormData } from "./types/formDataTypes";
-import { IUser } from "./types/storeTypes";
+import { IUser, IAccount } from "./types/storeTypes";
 import { ILoginFormData } from "./types/formDataTypes";
 
 interface IResponse<T> {
@@ -61,4 +61,28 @@ async function makeAuthorization(
   }
 }
 
-export { checkLogin, makeRegistration, makeAuthorization };
+async function getAccountInfo(login: string | undefined): Promise<IResponse<IAccount> | null> {
+  try {
+    // useParams имеет тип string | undefined
+    if (login) {
+      const data = await axios({
+        method: "get",
+        url: `http://localhost:3001/account/${login}`,
+        headers: {
+          "Content-Type": "application/json; charset=utf-8"
+        }
+      });
+
+      return data.data.data;
+    } else {
+      return null;
+    }
+  } catch (err) {
+    // из ошибки не получается вытащить body
+    console.log(err);
+    // чтобы на фронте отрисовать отсутствие такого аккаунта
+    return null;
+  }
+}
+
+export { checkLogin, makeRegistration, makeAuthorization, getAccountInfo };

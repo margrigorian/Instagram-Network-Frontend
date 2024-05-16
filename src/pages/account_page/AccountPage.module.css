@@ -1,0 +1,229 @@
+.headerContainer {
+  position: sticky;
+  height: 60px;
+  border-bottom: 1px solid lightgrey;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.headerWithoutLogin {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 70vw;
+}
+.instagramLogo {
+  background-image: url("../../pictures/logo.png");
+  width: 112px;
+  height: 35px;
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+}
+.loginContainer {
+  display: flex;
+  align-items: center;
+}
+.blueButton {
+  margin-right: 10px;
+  padding: 10px 20px 7px 20px;
+  border: none;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  color: white;
+  background-color: #2196f3;
+}
+.blueButton:hover {
+  background-color: #276def;
+  cursor: pointer;
+}
+.registerLink {
+  margin-left: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #2196f3;
+  text-decoration: none;
+}
+.registerLink:hover {
+  cursor: pointer;
+  color: black;
+}
+
+.container {
+  width: 72.9vw;
+  margin: 0 auto;
+  padding: 35px 43px 43px 43px;
+}
+
+.highlightsContainer {
+  width: 88px;
+  margin: 50px 45px;
+  cursor: pointer;
+}
+.highlightsCircle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 85px;
+  height: 85px;
+  border: 1.5px solid lightgrey;
+  border-radius: 50%;
+}
+.highlightsPlusContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 80px;
+  border: none;
+  border-radius: 50%;
+  background-color: rgb(241, 239, 239, 0.3);
+}
+.plusIcon {
+  font-size: 50px;
+  color: rgb(207, 206, 206);
+}
+.addText {
+  margin-top: 10px;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.postsNavBarContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  border-top: 1px solid lightgrey;
+  padding-bottom: 16px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+.postsNavBarItemContainer {
+  display: flex;
+  align-items: center;
+  margin-right: 50px;
+  padding-top: 16px;
+  border-top: 1px solid;
+  cursor: pointer;
+}
+.gridNavBarIcon {
+  margin-right: 6px;
+  margin-bottom: -2px;
+}
+.savedNavBarItemContainer {
+  display: flex;
+  align-items: center;
+  margin-right: 50px;
+  padding-top: 16px;
+  color: grey;
+  font-size: 13px;
+  cursor: pointer;
+}
+.bookMarkNavBarIcon {
+  margin-right: 6px;
+  margin-bottom: -2px;
+}
+.marksNavBarItemContainer {
+  display: flex;
+  align-items: center;
+  padding-top: 16px;
+  color: grey;
+  font-size: 13px;
+  cursor: pointer;
+}
+.userNavBarIcon {
+  margin-right: 8px;
+  margin-bottom: -2px;
+}
+
+.postsContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+.post {
+  width: 303px;
+  height: 303px;
+  border: 1px solid lightgrey;
+  margin-bottom: 5px;
+}
+.postsDisplay {
+  width: 100%;
+  height: 100%;
+}
+.postsDisplay:hover {
+  background-color: rgba(53, 53, 53, 0.5);
+  cursor: pointer;
+}
+.postsDisplay:hover .evaluationDisplay {
+  display: block;
+}
+.collectionIcon {
+  margin: 10px 10px 0 88%;
+  width: 27px;
+  height: 27px;
+}
+.evaluationDisplay {
+  display: none;
+}
+.evaluationContainer {
+  width: 100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-left: auto;
+  margin-right: auto;
+  color: white;
+  font-weight: 500;
+}
+.likesNumberContainer {
+  width: 35%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.commentsNumberContainer {
+  width: 35%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.noPostsContainer {
+  margin: 60px 0;
+  font-size: 30px;
+}
+.cameraIconCircle {
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  height: 60px;
+  border: 2px solid;
+  border-radius: 50px;
+}
+.noPostsText {
+  margin-top: 30px;
+  font-size: 30px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.unavailablePageContainer {
+  text-align: center;
+}
+.unavailablePageText {
+  margin-bottom: 30px;
+  font-size: 24px;
+  font-weight: 500;
+}
+.backToInstagramLink {
+  color: #2c4272;
+  text-decoration: none;
+  cursor: pointer;
+}

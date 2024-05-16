@@ -1,0 +1,105 @@
+.userInfoContainer {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  margin: 0 100px;
+  width: 150px;
+  height: 150px;
+  border: 1px solid grey;
+  border-radius: 50%;
+  background-size: 100% 100%;
+  background-position: center;
+  cursor: pointer;
+}
+.defaultAvatar {
+  margin: 0 80px;
+  width: 150px;
+  height: 150px;
+  color: lightgrey;
+  cursor: pointer;
+}
+.sittingsContainer {
+  display: flex;
+  align-items: center;
+}
+.loginContainer {
+  display: flex;
+  /* align-items: center; */
+  margin-right: 20px;
+}
+.login {
+  font-size: 20px;
+  margin-right: 5px;
+}
+.verificationIcon {
+  background-image: url("../../pictures/free-icon-verify.png");
+  width: 25px;
+  height: 25px;
+  background-size: cover;
+  background-position: center;
+}
+.button {
+  margin-right: 10px;
+  border: none;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgb(36, 35, 35);
+  letter-spacing: 0.3px;
+}
+.button:hover {
+  background-color: rgb(225, 224, 224);
+  cursor: pointer;
+}
+.subscriptionsButton {
+  display: flex;
+  align-items: center;
+  padding: 7px 20px 3px 20px;
+}
+.recommendationButton {
+  margin-right: 10px;
+  padding: 8px 10px 3px 10px;
+  border: none;
+  border-radius: 7px;
+}
+.recommendationButton:hover {
+  background-color: rgb(225, 224, 224);
+  cursor: pointer;
+}
+.blueButton {
+  margin-right: 10px;
+  padding: 10px 20px 7px 20px;
+  border: none;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  color: white;
+  background-color: #2196f3;
+}
+.blueButton:hover {
+  background-color: #276def;
+  cursor: pointer;
+}
+
+.containerOfnumberOfsubscriptionsAndPosts {
+  display: flex;
+  margin: 20px 0;
+}
+.followersContainer {
+  margin: 0 40px;
+  cursor: pointer;
+}
+.spanOfNumber {
+  font-weight: 500;
+  margin-right: 5px;
+}
+.username {
+  font-size: 14px;
+  font-weight: 500;
+}
+.aboutText {
+  font-size: 14px;
+}
