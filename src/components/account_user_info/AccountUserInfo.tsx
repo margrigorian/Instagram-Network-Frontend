@@ -1,5 +1,6 @@
 import React from "react";
 import { userStore, accountStore } from "../../store/store";
+import { NavLink } from "react-router-dom";
 import style from "./AccountUserInfo.module.css";
 import * as Icon from "react-bootstrap-icons";
 import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
@@ -13,7 +14,7 @@ const AccountUserInfo: React.FC = () => {
   const followers = accountStore(state => state.followers);
   const following = accountStore(state => state.following);
 
-  const isFollower = followers.find(el => el.id === account?.id);
+  const isFollower = followers.find(el => el.login === account?.login);
   const isSubscription = following.find(el => el.login === account?.login);
 
   return (
@@ -33,9 +34,11 @@ const AccountUserInfo: React.FC = () => {
                 <div className={style.login}>{account?.login}</div>
                 {account?.verification ? <div className={style.verificationIcon}></div> : ""}
               </div>
-              <button style={{ padding: "10px 20px 7px 20px" }} className={style.button}>
-                Редактировать профиль
-              </button>
+              <NavLink to={"/profile/edit"}>
+                <button style={{ padding: "10px 20px 7px 20px" }} className={style.button}>
+                  Редактировать профиль
+                </button>
+              </NavLink>
               <button style={{ padding: "10px 20px 7px 20px" }} className={style.button}>
                 Посмотреть архив
               </button>

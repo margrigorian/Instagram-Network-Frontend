@@ -8,7 +8,7 @@ import { userStore } from "../../store/store";
 import { IRegistartionFormData } from "../../lib/types/formDataTypes";
 import style from "./RegisterPage.module.css";
 import { ThemeProvider } from "@mui/material/styles";
-import theme from "../../theme/theme";
+import { textFieldTheme } from "../../theme/theme";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import FacebookIcon from "@mui/icons-material/Facebook";
@@ -105,7 +105,7 @@ const RegisterPage: React.FC = () => {
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className={style.form}>
-          <ThemeProvider theme={theme}>
+          <ThemeProvider theme={textFieldTheme}>
             <div className={style.inputContainer}>
               <TextField
                 id="contact"

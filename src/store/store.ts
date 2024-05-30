@@ -6,6 +6,10 @@ export const userStore = create<IUserStore>(set => ({
   token: null,
 
   setUser: obj => set({ user: obj }),
+  setAvatar: image =>
+    set(state => ({
+      user: state.user ? { ...state.user, avatar: image } : null
+    })),
   setToken: token => set({ token: token })
 }));
 

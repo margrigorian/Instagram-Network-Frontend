@@ -40,8 +40,12 @@ const NavBar: React.FC = () => {
           <Icon.PlusSquare className={style.navBarIcon} />
           <div>Создать</div>
         </div>
-        <NavLink to={`/account/${user?.login}`} className={style.navBarItemContainer}>
-          <div className={style.avatarIcon}></div>
+        <NavLink to={`/accounts/${user?.login}`} className={style.navBarItemContainer}>
+          {user?.avatar ? (
+            <img src={user.avatar} className={style.avatarIcon} />
+          ) : (
+            <Icon.PersonCircle className={style.defaultAvatar} />
+          )}
           <div>Профиль</div>
         </NavLink>
         <div className={style.navBarItemContainer}>

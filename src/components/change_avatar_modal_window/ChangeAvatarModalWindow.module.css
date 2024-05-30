@@ -1,0 +1,54 @@
+.modalContainer {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(40, 40, 40, 0.7);
+  z-index: 1;
+}
+.modal {
+  width: 400px;
+  border-radius: 13px;
+  background-color: white;
+}
+.photoModificationHeaderText {
+  font-size: 20px;
+  padding: 20px 0;
+  text-align: center;
+}
+.photoLoadingElement {
+  padding: 15px 0;
+  text-align: center;
+  color: #2196f3;
+  border-top: 1px solid lightgrey;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.hiddenImageInput {
+  opacity: 0;
+  height: 0;
+  width: 0;
+  line-height: 0;
+  overflow: 0;
+  padding: 0;
+  margin: 0;
+}
+.photoDeletionElement {
+  padding: 15px 0;
+  text-align: center;
+  color: rgb(250, 81, 81);
+  border-top: 1px solid lightgrey;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.cancellation {
+  padding: 15px 0;
+  text-align: center;
+  border-top: 1px solid lightgrey;
+  font-size: 14px;
+  cursor: pointer;
+}

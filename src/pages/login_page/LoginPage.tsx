@@ -8,7 +8,7 @@ import { ILoginFormData } from "../../lib/types/formDataTypes";
 import style from "./LoginPage.module.css";
 import { ThemeProvider } from "@mui/material/styles";
 import InputAdornment from "@mui/material/InputAdornment";
-import theme from "../../theme/theme";
+import { textFieldTheme } from "../../theme/theme";
 import TextField from "@mui/material/TextField";
 import FacebookIcon from "@mui/icons-material/Facebook";
 
@@ -52,7 +52,7 @@ const LoginPage: React.FC = () => {
             <div className={style.instagramLogo}></div>
           </div>
           <form onSubmit={handleSubmit(onSubmit)} className={style.form}>
-            <ThemeProvider theme={theme}>
+            <ThemeProvider theme={textFieldTheme}>
               <div className={style.inputContainer}>
                 <TextField
                   id="login"
