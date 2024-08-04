@@ -56,9 +56,9 @@ const RegisterPage: React.FC = () => {
     setIsFocusedOnLogin(false);
   };
   const [contact, setContact] = useState("");
+  // gemini
   const pattern =
-    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.[a-zA-Z]{2,}$/ ||
-    /^(\+?\d{1,3})?[- .]?\(?\d{3}\)?[- .]?\d{3}[- .]?\d{4}(?:\s*\(\d{1,5}\))?$/;
+    /^(^(\+?\d{1,3})?[- .]?\(?\d{3}\)?[- .]?\d{3}[- .]?\d{4}(?:\s*\(\d{1,5}\))?$|([a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$))/;
   // можно и errors исп. для контроля иконок в инпут
   const [isValidContact, setIsValidContact] = useState(true);
   const handleContactValidation = (e: HTMLInputElement) => {
@@ -210,6 +210,7 @@ const RegisterPage: React.FC = () => {
                   )
                 }}
                 onChange={e => {
+                  // toLowerCase() не срабатывает
                   setLogin(e.target.value);
                   setIsFocusedOnLogin(true);
                   if (e.target.value) {

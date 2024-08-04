@@ -1,10 +1,11 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { userStore } from "../../store/store";
+import { newPostStore, userStore } from "../../store/store";
 import style from "./NavBar.module.css";
 import * as Icon from "react-bootstrap-icons";
 
 const NavBar: React.FC = () => {
+  const setIsOpenedNewPostModalWindow = newPostStore(state => state.setIsOpenedNewPostModalWindow);
   const user = userStore(state => state.user);
 
   return (
@@ -14,7 +15,6 @@ const NavBar: React.FC = () => {
         <NavLink to={"/home"} className={style.navBarItemContainer}>
           <Icon.House className={style.navBarIcon} />
           <div>Главная</div>
-          {/* </div> */}
         </NavLink>
         <div className={style.navBarItemContainer}>
           <Icon.Search className={style.navBarIcon} />
@@ -36,7 +36,10 @@ const NavBar: React.FC = () => {
           <Icon.Heart className={style.navBarIcon} />
           <div>Уведомления</div>
         </div>
-        <div className={style.navBarItemContainer}>
+        <div
+          onClick={() => setIsOpenedNewPostModalWindow(true)}
+          className={style.navBarItemContainer}
+        >
           <Icon.PlusSquare className={style.navBarIcon} />
           <div>Создать</div>
         </div>

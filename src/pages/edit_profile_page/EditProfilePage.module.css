@@ -121,7 +121,7 @@
   font-size: 17px;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   color: rgb(53, 52, 52);
-  overflow: auto;
+  outline: none;
   resize: none;
 }
 .counterText {

@@ -146,10 +146,13 @@
   flex-wrap: wrap;
 }
 .post {
-  width: 303px;
-  height: 303px;
+  width: 305px;
+  height: 305px;
   border: 1px solid lightgrey;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
+  margin-right: 4px;
+  background-size: cover;
+  background-position: center;
 }
 .postsDisplay {
   width: 100%;
@@ -190,7 +193,7 @@
   width: 35%;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .noPostsContainer {

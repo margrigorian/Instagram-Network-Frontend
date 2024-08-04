@@ -11,10 +11,6 @@ import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlin
 import copyImage from "../../pictures/copy.png";
 
 const AccountPage: React.FC = () => {
-  useEffect(() => {
-    makeRequest();
-  }, []);
-
   const user = userStore(state => state.user);
   const { login } = useParams();
   const account = accountStore(state => state.user);
@@ -24,22 +20,26 @@ const AccountPage: React.FC = () => {
   const setFollowing = accountStore(state => state.setFollowing);
   const setPosts = accountStore(state => state.setPosts);
 
-  async function makeRequest() {
-    const account = await getAccountInfo(login);
+  useEffect(() => {
+    async function makeRequest() {
+      const account = await getAccountInfo(login);
 
-    if (account?.data) {
-      setUser(account.data.user);
-      setFollowers(account.data.followers);
-      setFollowing(account.data.following);
-      setPosts(account.data.posts);
-    } else {
-      // аккаунт не найден, обнуляем, чтобы старое не сохранялось
-      setUser(null);
-      setFollowers([]);
-      setFollowing([]);
-      setPosts([]);
+      if (account?.data) {
+        setUser(account.data.user);
+        setFollowers(account.data.followers);
+        setFollowing(account.data.following);
+        setPosts(account.data.posts);
+      } else {
+        // аккаунт не найден, обнуляем, чтобы старое не сохранялось
+        setUser(null);
+        setFollowers([]);
+        setFollowing([]);
+        setPosts([]);
+      }
     }
-  }
+
+    makeRequest();
+  }, []);
 
   return (
     <div>
@@ -98,23 +98,12 @@ const AccountPage: React.FC = () => {
 
             {posts.length > 0 ? (
               <div className={style.postsContainer}>
-                {posts.map((el, i) => (
+                {posts.map(el => (
                   <div
                     key={`postsId-${el.id}`}
-                    style={
-                      i % 2 === 0
-                        ? {
-                            marginLeft: "5px",
-                            marginRight: "5px"
-                            // править css
-                            // backgroundImage: `url(${el.images[0].image})`
-                          }
-                        : {}
-                      // { backgroundImage: `url(${el.images[0].image})` }
-                    }
+                    style={{ backgroundImage: `url(${el.images[0].image})` }}
                     className={style.post}
                   >
-                    {/* <Icon.Files size={"20px"} className={style.collectionIcon} /> */}
                     <div className={style.postsDisplay}>
                       {el.images.length > 1 ? (
                         <img src={copyImage} className={style.collectionIcon} />

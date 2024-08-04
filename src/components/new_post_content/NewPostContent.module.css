@@ -1,0 +1,34 @@
+.postContent {
+  padding: 15px;
+}
+.userInfo {
+  display: flex;
+  align-items: center;
+}
+.avatarIcon {
+  width: 25px;
+  height: 25px;
+  border: 1.5px solid lightgrey;
+  border-radius: 50%;
+  margin-right: 15px;
+  background-size: 100% 100%;
+  background-position: center;
+}
+.defaultAvatar {
+  width: 25px;
+  height: 25px;
+  margin-right: 15px;
+  color: rgb(40, 40, 40);
+}
+.postCaption {
+  margin-top: 15px;
+  width: 215px;
+  height: 150px;
+  border: none;
+  overflow: auto;
+  outline: none;
+  resize: none;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-size: 14px;
+  color: rgb(40, 40, 40);
+}

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { IRegistartionFormData } from "./types/formDataTypes";
-import { IUser, IAccount, IAvatar } from "./types/storeTypes";
+import { IUser, IAccount, IAvatar, IPost } from "./types/storeTypes";
 import { ILoginFormData } from "./types/formDataTypes";
 
 interface IResponse<T> {
@@ -164,6 +164,28 @@ async function putUserInfo(
   }
 }
 
+async function postPublication(
+  data: FormData,
+  token: string
+): Promise<IResponse<IPost> | undefined> {
+  try {
+    const publication = await axios({
+      method: "post",
+      url: "http://localhost:3001/new_post",
+      headers: {
+        // Заголовок при отправке файлов, необходимо исп. FormData
+        "Content-Type": "multipart/form-data; boundary=<calculated when request is sent>",
+        authorization: `Bearer ${token}`
+      },
+      data
+    });
+
+    return publication.data.data;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 export {
   checkLogin,
   makeRegistration,
@@ -172,5 +194,6 @@ export {
   postAvatar,
   putAvatar,
   deleteAvatar,
-  putUserInfo
+  putUserInfo,
+  postPublication
 };

@@ -22,8 +22,12 @@ export interface IAvatar {
   image: string;
 }
 
-interface IPost {
+export interface IPost {
   id: string;
+  caption: string;
+  hashtags: string;
+  user_links: string;
+  time: number;
   likes_number: number;
   comments_number: number;
   images: IImage[];
@@ -46,4 +50,22 @@ export interface IAccountStore extends IAccount {
   setFollowers: (arr: { login: string }[]) => void;
   setFollowing: (arr: { login: string }[]) => void;
   setPosts: (arr: IPost[]) => void;
+  addNewPost: (post: IPost) => void;
+}
+
+export interface INewPostStore {
+  isOpenedNewPostModalWindow: boolean;
+  isOpenedModalWindowOfReadyNewPost: boolean;
+  images: File[];
+  isOpenedCollectionOfImagesWindow: boolean;
+  indexOfCurrentImage: number;
+  postCaption: string;
+  setIsOpenedNewPostModalWindow: (value: boolean) => void;
+  setIsOpenedModalWindowOfReadyNewPost: (value: boolean) => void;
+  setImages: (image: File) => void;
+  setIsOpenedCollectionOfImagesWindow: (value: boolean) => void;
+  deleteCurrentImage: (index: number) => void;
+  deleteAllImages: () => void;
+  setIndexOfCurrentImage: (index: number) => void;
+  setPostCaption: (text: string) => void;
 }
