@@ -15,6 +15,8 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const setUser = userStore(state => state.setUser);
+  const setFollowers = userStore(state => state.setFollowers);
+  const setFollowing = userStore(state => state.setFollowing);
   const setToken = userStore(state => state.setToken);
   const [isExistingError, setIsExistingError] = useState(false);
 
@@ -31,6 +33,8 @@ const LoginPage: React.FC = () => {
     // при ошибке на сервере будет undefined, нужна проверка
     if (serverAnswer?.data?.user) {
       setUser(serverAnswer.data.user);
+      setFollowers(serverAnswer.data.followers);
+      setFollowing(serverAnswer.data.following);
       setToken(serverAnswer.data.token);
       navigate("/home");
     } else {

@@ -1,12 +1,14 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { newPostStore, userStore } from "../../store/store";
+import { newPostStore, userStore, accountStore } from "../../store/store";
 import style from "./NavBar.module.css";
 import * as Icon from "react-bootstrap-icons";
 
 const NavBar: React.FC = () => {
   const setIsOpenedNewPostModalWindow = newPostStore(state => state.setIsOpenedNewPostModalWindow);
   const user = userStore(state => state.user);
+  const account = accountStore(state => state.user);
+  const setReloudAccountPage = accountStore(state => state.setReloudAccountPage);
 
   return (
     <div className={style.container}>
@@ -43,7 +45,13 @@ const NavBar: React.FC = () => {
           <Icon.PlusSquare className={style.navBarIcon} />
           <div>Создать</div>
         </div>
-        <NavLink to={`/accounts/${user?.login}`} className={style.navBarItemContainer}>
+        <NavLink
+          to={`/accounts/${user?.login}`}
+          onClick={() => {
+            if (user?.login !== account?.login) setReloudAccountPage();
+          }}
+          className={style.navBarItemContainer}
+        >
           {user?.avatar ? (
             <img src={user.avatar} className={style.avatarIcon} />
           ) : (

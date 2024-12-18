@@ -1,7 +1,7 @@
 import style from "./App.module.css";
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { newPostStore, userStore } from "./store/store";
+import { userStore, newPostStore, postStore } from "./store/store";
 import ScrollToTop from "./hoc/ScrollToTheTop";
 // import NavBar from "./components/navbar/NavBar";
 import NewPostModalWindow from "./components/new_post_modal_window/NewPostModalWindow";
@@ -12,8 +12,11 @@ import AccountPage from "./pages/account_page/AccountPage";
 import EditProfilePage from "./pages/edit_profile_page/EditProfilePage";
 
 const App: React.FC = () => {
-  const isOpenedNewPostModalWindow = newPostStore(state => state.isOpenedNewPostModalWindow);
   const user = userStore(state => state.user);
+  const isOpenedNewPostModalWindow = newPostStore(state => state.isOpenedNewPostModalWindow);
+  // контроль за скроллом
+  const isOpenedPostModalWindow = postStore(state => state.isOpenedPostModalWindow);
+  document.body.style.overflow = isOpenedPostModalWindow ? "hidden" : "auto";
 
   return (
     <div className={user ? style.App : undefined}>

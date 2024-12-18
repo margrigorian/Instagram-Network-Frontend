@@ -1,11 +1,15 @@
 import { create } from "zustand";
-import { IUserStore, IAccountStore, INewPostStore } from "../lib/types/storeTypes";
+import { IUserStore, IAccountStore, INewPostStore, IPostStore } from "../lib/types/storeTypes";
 
 export const userStore = create<IUserStore>(set => ({
   user: null,
+  followers: [],
+  following: [],
   token: null,
 
   setUser: obj => set({ user: obj }),
+  setFollowers: followers => set({ followers: followers }),
+  setFollowing: following => set({ following: following }),
   setAvatar: image =>
     set(state => ({
       user: state.user ? { ...state.user, avatar: image } : null
@@ -18,6 +22,7 @@ export const accountStore = create<IAccountStore>(set => ({
   followers: [],
   following: [],
   posts: [],
+  reloudAccountPage: false,
 
   setUser: obj => set({ user: obj }),
   setFollowers: arr => set({ followers: arr }),
@@ -26,7 +31,8 @@ export const accountStore = create<IAccountStore>(set => ({
   addNewPost: post =>
     set(state => ({
       posts: [post, ...state.posts]
-    }))
+    })),
+  setReloudAccountPage: () => set(state => ({ reloudAccountPage: !state.reloudAccountPage }))
 }));
 
 export const newPostStore = create<INewPostStore>(set => ({
@@ -60,4 +66,23 @@ export const newPostStore = create<INewPostStore>(set => ({
   deleteAllImages: () => set({ images: [] }),
   setIndexOfCurrentImage: index => set({ indexOfCurrentImage: index }),
   setPostCaption: text => set({ postCaption: text })
+}));
+
+export const postStore = create<IPostStore>(set => ({
+  isOpenedPostModalWindow: false,
+  indexOfCurrentPost: 0,
+  comments: [],
+
+  setIsOpenedPostModalWindow: value =>
+    set({
+      isOpenedPostModalWindow: value
+    }),
+  setIndexOfCurrentPost: index =>
+    set({
+      indexOfCurrentPost: index
+    }),
+  setComments: array =>
+    set({
+      comments: array
+    })
 }));

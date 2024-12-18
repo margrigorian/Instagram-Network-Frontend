@@ -1,28 +1,53 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import style from "./AccountPage.module.css";
 import { NavLink, useParams } from "react-router-dom";
 import { getAccountInfo } from "../../lib/request";
-import { userStore, accountStore } from "../../store/store";
+import { userStore, accountStore, postStore } from "../../store/store";
 import NavBar from "../../components/navbar/NavBar";
 import AccountUserInfo from "../../components/account_user_info/AccountUserInfo";
+import PostModalWindow from "../../components/post_modal_window/PostModalWindow";
 import * as Icon from "react-bootstrap-icons";
 import GridOnOutlinedIcon from "@mui/icons-material/GridOnOutlined";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import copyImage from "../../pictures/copy.png";
 
 const AccountPage: React.FC = () => {
-  const user = userStore(state => state.user);
   const { login } = useParams();
+  const user = userStore(state => state.user);
   const account = accountStore(state => state.user);
-  const posts = accountStore(state => state.posts);
   const setUser = accountStore(state => state.setUser);
   const setFollowers = accountStore(state => state.setFollowers);
   const setFollowing = accountStore(state => state.setFollowing);
+  const posts = accountStore(state => state.posts);
   const setPosts = accountStore(state => state.setPosts);
+  const isOpenedPostModalWindow = postStore(state => state.isOpenedPostModalWindow);
+  const setIsOpenedPostModalWindow = postStore(state => state.setIsOpenedPostModalWindow);
+  const setIndexOfCurrentPost = postStore(state => state.setIndexOfCurrentPost);
+
+  const [loading, setLoading] = useState(true);
+  const reloudAccountPage = accountStore(state => state.reloudAccountPage);
+
+  // делает переключение на другую страницу (почему?), не подходит
+  // const navigate = useNavigate();
+  // const handleModalOpen = () => {
+  //   navigate("/my-modal", { replace: true });
+  //   setIsOpenedPostModalWindow();
+  // };
+
+  // смена url при открытии модального окна
+  const handleModalOpen = (postId: string, lengthOfImagesArray: number) => {
+    const postUrl = lengthOfImagesArray > 1 ? `/p/${postId}/?img_index=1` : `/p/${postId}/`; // Новый URL
+    window.history.pushState({}, "", postUrl);
+    setIsOpenedPostModalWindow(true);
+  };
 
   useEffect(() => {
     async function makeRequest() {
       const account = await getAccountInfo(login);
+      // есть результаты getAccountInfo, закрываем loading
+      setLoading(false);
+      // при этом, если вынести loading в store, возникает бесконечный цикл
+      // страница безостановочно будет перезагружается
 
       if (account?.data) {
         setUser(account.data.user);
@@ -39,11 +64,14 @@ const AccountPage: React.FC = () => {
     }
 
     makeRequest();
-  }, []);
+  }, [reloudAccountPage]);
+
+  console.log(loading);
 
   return (
     <div>
       {user ? <NavBar /> : undefined}
+      {isOpenedPostModalWindow && <PostModalWindow posts={posts} />}
       {/* header при неавторизации */}
       {!user ? (
         <div className={style.headerContainer}>
@@ -63,7 +91,9 @@ const AccountPage: React.FC = () => {
         ""
       )}
       <div style={user ? { marginLeft: "242px" } : {}} className={style.container}>
-        {account ? (
+        {loading ? (
+          <div className={style.loading}></div>
+        ) : account ? (
           <div>
             <AccountUserInfo />
 
@@ -98,11 +128,15 @@ const AccountPage: React.FC = () => {
 
             {posts.length > 0 ? (
               <div className={style.postsContainer}>
-                {posts.map(el => (
+                {posts.map((el, i) => (
                   <div
                     key={`postsId-${el.id}`}
                     style={{ backgroundImage: `url(${el.images[0].image})` }}
                     className={style.post}
+                    onClick={() => {
+                      setIndexOfCurrentPost(i);
+                      handleModalOpen(el.id, el.images.length);
+                    }}
                   >
                     <div className={style.postsDisplay}>
                       {el.images.length > 1 ? (
@@ -119,7 +153,7 @@ const AccountPage: React.FC = () => {
                         >
                           <div className={style.likesNumberContainer}>
                             <Icon.HeartFill size={"18px"} />
-                            {el.likes_number}
+                            {el.likes.length}
                           </div>
                           <div className={style.commentsNumberContainer}>
                             <Icon.ChatFill size={"18px"} />

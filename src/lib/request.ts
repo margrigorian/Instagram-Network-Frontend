@@ -17,14 +17,20 @@ async function checkLogin(login: string): Promise<IResponse<{ login: string | nu
     const data = await axios.get(`http://localhost:3001/register/${login}`);
 
     return data.data.data;
-  } catch (e) {
-    console.log(e);
+  } catch (err) {
+    console.log(err);
   }
 }
 
-async function makeRegistration(
-  body: IRegistartionFormData
-): Promise<IResponse<{ user: IUser; token: string }> | undefined> {
+async function makeRegistration(body: IRegistartionFormData): Promise<
+  | IResponse<{
+      user: IUser;
+      followers: { login: string }[];
+      following: { login: string }[];
+      token: string;
+    }>
+  | undefined
+> {
   // undefined из-за catch
   try {
     const data = await axios({
@@ -42,9 +48,15 @@ async function makeRegistration(
   }
 }
 
-async function makeAuthorization(
-  body: ILoginFormData
-): Promise<IResponse<{ user: IUser; token: string }> | undefined> {
+async function makeAuthorization(body: ILoginFormData): Promise<
+  | IResponse<{
+      user: IUser;
+      followers: { login: string }[];
+      following: { login: string }[];
+      token: string;
+    }>
+  | undefined
+> {
   try {
     const data = await axios({
       method: "post",
@@ -186,6 +198,22 @@ async function postPublication(
   }
 }
 
+async function getComments(post_id: string) {
+  try {
+    const comments = await axios({
+      method: "get",
+      url: `http://localhost:3001/p/${post_id}`,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8"
+      }
+    });
+
+    return comments.data.data;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 export {
   checkLogin,
   makeRegistration,
@@ -195,5 +223,6 @@ export {
   putAvatar,
   deleteAvatar,
   putUserInfo,
-  postPublication
+  postPublication,
+  getComments
 };

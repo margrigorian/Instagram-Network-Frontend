@@ -10,9 +10,13 @@ export interface IUser {
 
 export interface IUserStore {
   user: IUser | null;
+  followers: { login: string }[];
+  following: { login: string }[];
   token: string | null;
 
   setUser: (obj: IUser) => void;
+  setFollowers: (array: { login: string }[]) => void;
+  setFollowing: (array: { login: string }[]) => void;
   setAvatar: (image: string | null) => void;
   setToken: (token: string) => void;
 }
@@ -25,10 +29,13 @@ export interface IAvatar {
 export interface IPost {
   id: string;
   caption: string;
-  hashtags: string;
-  user_links: string;
+  hashtags: string[];
+  user_links: string[];
   time: number;
-  likes_number: number;
+  user_login: string;
+  avatar: string;
+  verification: boolean;
+  likes: string[];
   comments_number: number;
   images: IImage[];
 }
@@ -43,6 +50,7 @@ export interface IAccount {
   followers: { login: string }[];
   following: { login: string }[];
   posts: IPost[];
+  reloudAccountPage: boolean;
 }
 
 export interface IAccountStore extends IAccount {
@@ -51,6 +59,7 @@ export interface IAccountStore extends IAccount {
   setFollowing: (arr: { login: string }[]) => void;
   setPosts: (arr: IPost[]) => void;
   addNewPost: (post: IPost) => void;
+  setReloudAccountPage: () => void;
 }
 
 export interface INewPostStore {
@@ -68,4 +77,26 @@ export interface INewPostStore {
   deleteAllImages: () => void;
   setIndexOfCurrentImage: (index: number) => void;
   setPostCaption: (text: string) => void;
+}
+
+export interface IPostStore {
+  isOpenedPostModalWindow: boolean;
+  indexOfCurrentPost: number;
+  comments: IComment[];
+  setIsOpenedPostModalWindow: (value: boolean) => void;
+  setIndexOfCurrentPost: (index: number) => void;
+  setComments: (array: IComment[]) => void;
+}
+
+export interface IComment {
+  id: number;
+  content: string;
+  hashtags: string[];
+  user_links: string[];
+  under_comment: number;
+  user_login: string;
+  avatar: string | null;
+  verification: boolean;
+  likes: string[];
+  subcomments: IComment[];
 }

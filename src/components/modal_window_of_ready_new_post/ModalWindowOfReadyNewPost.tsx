@@ -8,7 +8,7 @@ import * as Icon from "react-bootstrap-icons";
 
 const ModalWindowOfReadyNewPost: React.FC = () => {
   // при записи в input не будет ререндеринга компонента изображений
-  // начилие postCaption ниже то вызывает
+  // начилие postCaption ниже это вызывает
   const imageContainerForNewPost = useMemo(() => <ImageContainerForNewPost />, []);
   const setIsOpenedNewPostModalWindow = newPostStore(state => state.setIsOpenedNewPostModalWindow);
   const setIsOpenedModalWindowOfReadyNewPost = newPostStore(
@@ -21,6 +21,9 @@ const ModalWindowOfReadyNewPost: React.FC = () => {
   const setPostCaption = newPostStore(state => state.setPostCaption);
   const setIndexOfCurrentImage = newPostStore(state => state.setIndexOfCurrentImage);
   const deleteAllImages = newPostStore(state => state.deleteAllImages);
+  // размещение нового поста на фронт
+  const user = userStore(state => state.user);
+  const account = accountStore(state => state.user);
   const addNewPost = accountStore(state => state.addNewPost);
 
   async function postPublicationOnAccountPage(): Promise<void> {
@@ -34,7 +37,9 @@ const ModalWindowOfReadyNewPost: React.FC = () => {
       // так как при просмотре аккаунтов без авторизации токен равен null; проверка требуется типизацией
       const publication = await postPublication(formData, token);
 
-      if (publication?.data) {
+      // user?.username === account?.username - в случае, если мы находимся на странице другого пользователя
+      // иначе пост добавиться на фронте в массив posts[] аккаунта и отобразиться на чужой странице
+      if (publication?.data && user?.login === account?.login) {
         addNewPost(publication.data);
       }
     }

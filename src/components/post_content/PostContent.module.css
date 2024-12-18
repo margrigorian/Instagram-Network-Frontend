@@ -1,0 +1,123 @@
+.header {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgb(239, 238, 238);
+}
+.userContainer {
+  display: flex;
+  align-items: center;
+}
+.avatarIcon {
+  width: 30px;
+  height: 30px;
+  border: 1.5px solid lightgrey;
+  border-radius: 50%;
+  margin-right: 15px;
+  background-size: 100% 100%;
+  background-position: center;
+}
+.defaultAvatar {
+  width: 30px;
+  height: 30px;
+  margin-right: 15px;
+  color: rgb(40, 40, 40);
+}
+.login {
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  color: black;
+}
+.login:hover {
+  color: grey;
+  cursor: pointer;
+}
+.verificationIcon {
+  width: 16px;
+  height: 16px;
+  background-image: url("../../pictures/free-icon-verify.png");
+  background-size: 100% 100%;
+  margin-left: 5px;
+}
+.subscriptionContainer {
+  display: flex;
+  align-items: center;
+}
+.subscriptionButton {
+  font-size: 14px;
+  font-weight: 500;
+  color: #2196f3;
+  cursor: pointer;
+}
+.subscriptionButton:hover {
+  color: #30487d;
+}
+.threeDotsIcon {
+  cursor: pointer;
+}
+.threeDotsIcon:hover {
+  color: grey;
+}
+
+.captionContainer {
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+  font-size: 14px;
+}
+.loginAndVerificationIconContainer {
+  display: inline-flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 500;
+}
+.caption {
+  width: 90%;
+  display: flex;
+}
+.captionText {
+  word-break: break-all;
+  font-weight: 400;
+  margin-left: 5px;
+}
+
+.commentsContainer {
+  height: 258px;
+  padding: 0 20px 20px 20px;
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+
+.evaluationContainer {
+  padding: 13px 20px;
+  border-top: 1px solid rgb(239, 238, 238);
+  border-bottom: 1px solid rgb(239, 238, 238);
+  font-size: 24px;
+}
+.iconsContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* margin-bottom: 10px; */
+}
+.evaluationIconsContainer {
+  width: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.evaluationIcon:hover {
+  color: grey;
+  cursor: pointer;
+}
+
+.likesCount {
+  display: inline-flex;
+  font-size: 14px;
+}
+.postDate {
+  font-size: 12px;
+  color: grey;
+}

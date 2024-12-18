@@ -4,7 +4,7 @@
 }
 
 .avatar {
-  margin: 0 100px;
+  margin: 0 11%;
   width: 150px;
   height: 150px;
   border: 1px solid lightgrey;
@@ -14,7 +14,7 @@
   cursor: pointer;
 }
 .defaultAvatar {
-  margin: 0 100px;
+  margin: 0 11%;
   width: 150px;
   height: 150px;
   color: lightgrey;
