@@ -1,3 +1,26 @@
+.containerOfAuthorizationWarningModalWindow {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  background-color: rgba(40, 40, 40, 0.8);
+}
+.authorizationWarningModalWindow {
+  width: 400px;
+  height: 200px;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+}
+.authorizationButton {
+  color: #2196f3;
+}
+
 .headerContainer {
   position: sticky;
   height: 60px;

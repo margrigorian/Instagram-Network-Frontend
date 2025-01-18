@@ -1,13 +1,13 @@
 import React, { useRef, Dispatch, SetStateAction } from "react";
 import { userStore } from "../../store/store";
-import { postAvatar, putAvatar, deleteAvatar } from "../../lib/request";
+import { postAvatar, putAvatar, deleteAvatar } from "../../lib/requests/userRequests";
 import style from "./ChangeAvatarModalWindow.module.css";
 
-interface IModalWindow {
+interface IModalWindowProps {
   setIsOpenedModalUploadWindow: Dispatch<SetStateAction<boolean>>;
 }
 
-const ChangeAvatarModalWindow: React.FC<IModalWindow> = ({ setIsOpenedModalUploadWindow }) => {
+const ChangeAvatarModalWindow: React.FC<IModalWindowProps> = ({ setIsOpenedModalUploadWindow }) => {
   const user = userStore(state => state.user);
   const token = userStore(state => state.token);
   const imagePicker = useRef(null);

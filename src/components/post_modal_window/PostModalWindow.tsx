@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { postStore } from "../../store/store";
 import { IPost } from "../../lib/types/storeTypes";
-import { getComments } from "../../lib/request";
+import { getComments } from "../../lib/requests/commentRequest";
 import PostContent from "../post_content/PostContent";
 import style from "./PostModalWindow.module.css";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
@@ -21,9 +21,11 @@ const PostModalWindow: React.FC<{ posts: IPost[] }> = array => {
     makeRequest(post.id);
   }, []);
 
-  async function makeRequest(id: string) {
+  async function makeRequest(id: string): Promise<void> {
     const comments = await getComments(id);
-    setComments(comments.data);
+    if (comments?.data) {
+      setComments(comments.data);
+    }
   }
 
   const updatingTheURLAfterAPostOrImageChange = (

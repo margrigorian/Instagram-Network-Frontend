@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import style from "./AccountPage.module.css";
 import { NavLink, useParams } from "react-router-dom";
-import { getAccountInfo } from "../../lib/request";
+import { getAccountInfo } from "../../lib/requests/userRequests";
 import { userStore, accountStore, postStore } from "../../store/store";
 import NavBar from "../../components/navbar/NavBar";
 import AccountUserInfo from "../../components/account_user_info/AccountUserInfo";
@@ -23,6 +23,12 @@ const AccountPage: React.FC = () => {
   const isOpenedPostModalWindow = postStore(state => state.isOpenedPostModalWindow);
   const setIsOpenedPostModalWindow = postStore(state => state.setIsOpenedPostModalWindow);
   const setIndexOfCurrentPost = postStore(state => state.setIndexOfCurrentPost);
+  const isOpenedAuthorizationWarningModalWindow = accountStore(
+    state => state.isOpenedAuthorizationWarningModalWindow
+  );
+  const setIsOpenedAuthorizationWarningModalWindow = accountStore(
+    state => state.setIsOpenedAuthorizationWarningModalWindow
+  );
 
   const [loading, setLoading] = useState(true);
   const reloudAccountPage = accountStore(state => state.reloudAccountPage);
@@ -35,7 +41,7 @@ const AccountPage: React.FC = () => {
   // };
 
   // смена url при открытии модального окна
-  const handleModalOpen = (postId: string, lengthOfImagesArray: number) => {
+  const handleModalOpen = (postId: string, lengthOfImagesArray: number): void => {
     const postUrl = lengthOfImagesArray > 1 ? `/p/${postId}/?img_index=1` : `/p/${postId}/`; // Новый URL
     window.history.pushState({}, "", postUrl);
     setIsOpenedPostModalWindow(true);
@@ -66,11 +72,36 @@ const AccountPage: React.FC = () => {
     makeRequest();
   }, [reloudAccountPage]);
 
-  console.log(loading);
-
   return (
     <div>
       {user ? <NavBar /> : undefined}
+      {/* Сработает при отсутствии авторизации */}
+      {isOpenedAuthorizationWarningModalWindow && (
+        <div
+          className={style.containerOfAuthorizationWarningModalWindow}
+          onClick={() => {
+            setIsOpenedAuthorizationWarningModalWindow(false);
+          }}
+        >
+          <div
+            className={style.authorizationWarningModalWindow}
+            onClick={e => {
+              e.stopPropagation();
+            }}
+          >
+            Пройдите &nbsp;
+            <NavLink
+              to={"/"}
+              className={style.authorizationButton}
+              onClick={() => {
+                setIsOpenedAuthorizationWarningModalWindow(false);
+              }}
+            >
+              авторизацию
+            </NavLink>{" "}
+          </div>
+        </div>
+      )}
       {isOpenedPostModalWindow && <PostModalWindow posts={posts} />}
       {/* header при неавторизации */}
       {!user ? (
@@ -134,8 +165,12 @@ const AccountPage: React.FC = () => {
                     style={{ backgroundImage: `url(${el.images[0].image})` }}
                     className={style.post}
                     onClick={() => {
-                      setIndexOfCurrentPost(i);
-                      handleModalOpen(el.id, el.images.length);
+                      if (user) {
+                        setIndexOfCurrentPost(i);
+                        handleModalOpen(el.id, el.images.length);
+                      } else {
+                        setIsOpenedAuthorizationWarningModalWindow(true);
+                      }
                     }}
                   >
                     <div className={style.postsDisplay}>

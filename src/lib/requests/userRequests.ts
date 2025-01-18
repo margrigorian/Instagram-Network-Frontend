@@ -1,7 +1,6 @@
 import axios from "axios";
-import { IRegistartionFormData } from "./types/formDataTypes";
-import { IUser, IAccount, IAvatar, IPost } from "./types/storeTypes";
-import { ILoginFormData } from "./types/formDataTypes";
+import { IUser, IAccount, IAvatar } from "../types/storeTypes";
+import { IUserInfoBody } from "../types/bodyTypesRequested";
 
 interface IResponse<T> {
   data: T | null;
@@ -11,67 +10,6 @@ interface IResponse<T> {
 type Message = {
   message: string;
 };
-
-async function checkLogin(login: string): Promise<IResponse<{ login: string | null }> | undefined> {
-  try {
-    const data = await axios.get(`http://localhost:3001/register/${login}`);
-
-    return data.data.data;
-  } catch (err) {
-    console.log(err);
-  }
-}
-
-async function makeRegistration(body: IRegistartionFormData): Promise<
-  | IResponse<{
-      user: IUser;
-      followers: { login: string }[];
-      following: { login: string }[];
-      token: string;
-    }>
-  | undefined
-> {
-  // undefined из-за catch
-  try {
-    const data = await axios({
-      method: "post",
-      url: "http://localhost:3001/register",
-      headers: {
-        "Content-Type": "application/json; charset=utf-8"
-      },
-      data: JSON.stringify(body)
-    });
-
-    return data.data.data;
-  } catch (err) {
-    console.log(err);
-  }
-}
-
-async function makeAuthorization(body: ILoginFormData): Promise<
-  | IResponse<{
-      user: IUser;
-      followers: { login: string }[];
-      following: { login: string }[];
-      token: string;
-    }>
-  | undefined
-> {
-  try {
-    const data = await axios({
-      method: "post",
-      url: "http://localhost:3001/",
-      headers: {
-        "Content-Type": "application/json; charset=utf-8"
-      },
-      data: JSON.stringify(body)
-    });
-
-    return data.data.data;
-  } catch (err) {
-    console.log(err);
-  }
-}
 
 async function getAccountInfo(login: string | undefined): Promise<IResponse<IAccount> | null> {
   try {
@@ -152,11 +90,7 @@ async function deleteAvatar(token: string): Promise<void> {
 }
 
 async function putUserInfo(
-  body: {
-    about: string;
-    gender: string | null;
-    recommendation: boolean;
-  },
+  body: IUserInfoBody,
   token: string
 ): Promise<IResponse<IUser> | undefined> {
   try {
@@ -176,53 +110,4 @@ async function putUserInfo(
   }
 }
 
-async function postPublication(
-  data: FormData,
-  token: string
-): Promise<IResponse<IPost> | undefined> {
-  try {
-    const publication = await axios({
-      method: "post",
-      url: "http://localhost:3001/new_post",
-      headers: {
-        // Заголовок при отправке файлов, необходимо исп. FormData
-        "Content-Type": "multipart/form-data; boundary=<calculated when request is sent>",
-        authorization: `Bearer ${token}`
-      },
-      data
-    });
-
-    return publication.data.data;
-  } catch (err) {
-    console.log(err);
-  }
-}
-
-async function getComments(post_id: string) {
-  try {
-    const comments = await axios({
-      method: "get",
-      url: `http://localhost:3001/p/${post_id}`,
-      headers: {
-        "Content-Type": "application/json; charset=utf-8"
-      }
-    });
-
-    return comments.data.data;
-  } catch (err) {
-    console.log(err);
-  }
-}
-
-export {
-  checkLogin,
-  makeRegistration,
-  makeAuthorization,
-  getAccountInfo,
-  postAvatar,
-  putAvatar,
-  deleteAvatar,
-  putUserInfo,
-  postPublication,
-  getComments
-};
+export { getAccountInfo, postAvatar, putAvatar, deleteAvatar, putUserInfo };

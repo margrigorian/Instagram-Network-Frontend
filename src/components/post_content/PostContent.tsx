@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { userStore, postStore, accountStore } from "../../store/store";
 import TextWithLinks from "../post_caption/TextWithLinks";
@@ -7,17 +7,73 @@ import { postDateCalculation } from "../../lib/postDateCalculation";
 import { IPost } from "../../lib/types/storeTypes";
 import style from "./PostContent.module.css";
 import * as Icon from "react-bootstrap-icons";
+import { addComment } from "../../lib/requests/commentRequest";
+import { addLikeToPost } from "../../lib/requests/postsRequests";
 
 const PostContent: React.FC<{ post: IPost }> = post => {
   const user = userStore(state => state.user);
+  const token = userStore(state => state.token);
   const following = userStore(state => state.following);
   const isFollowing = following.find(el => el.login === user?.login);
   const comments = postStore(state => state.comments);
+  const addCommentToStore = postStore(state => state.addComment);
+  const increaseCommentsNumberAfterAdding = accountStore(
+    state => state.increaseCommentsNumberAfterAdding
+  );
   const setIsOpenedPostModalWindow = postStore(state => state.setIsOpenedPostModalWindow);
   const setReloudAccountPage = accountStore(state => state.setReloudAccountPage);
 
+  // БЛОК ДОБАВЛЕНИЯ КОММЕНТАРИЯ
+  const [text, setText] = useState("");
+  const [underComment, setUnderComment] = useState<number | null>(null);
+  // для фокуса на элемент textarea при клике на "ответить" в комментариях
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  function handleClick(commentId: number, login: string): void {
+    // с передачей id главного комментария, под которыми хотим оставить свой
+    setUnderComment(commentId);
+    // и логина пользователя для обращения
+    if (textareaRef.current) {
+      setText(`@${login} `);
+      textareaRef.current.focus();
+    }
+  }
+
+  async function addCommentToPost(): Promise<void> {
+    // проверка, требуемая типизацией
+    if (user && token) {
+      const data = {
+        content: text,
+        under_comment: underComment
+      };
+      const comment = await addComment(post.post.id, data, token);
+      // проверка, требуемая типизацией
+      if (comment?.data) {
+        addCommentToStore(comment.data);
+        increaseCommentsNumberAfterAdding(post.post.id);
+      }
+
+      setText("");
+    }
+  }
+
+  // БЛОК ДОБАВЛЕНИЯ ЛАЙКА
+  const likes = post.post.likes;
+  const user_like = likes.find(el => el === user?.login);
+  const addLikeOnPost = accountStore(state => state.addLikeOnPost);
+
+  async function addUserLikeToPost(): Promise<void> {
+    // проверка, требуемая типизацией
+    if (token) {
+      await addLikeToPost(post.post.id, token);
+      // типизацией
+      if (user) {
+        addLikeOnPost(post.post.id, user.login);
+      }
+    }
+  }
+
   return (
-    <div className={style.container}>
+    <div>
       <div className={style.header}>
         <div className={style.userContainer}>
           {post.post.avatar ? (
@@ -81,10 +137,20 @@ const PostContent: React.FC<{ post: IPost }> = post => {
         <div className={style.commentsContainer}>
           {comments.map(comment => (
             <div key={`commentId-${comment.id}`}>
-              <Comment comment={comment} key={`commentId-${comment.id}`} />
+              <Comment
+                key={`commentId-${comment.id}`}
+                post_id={post.post.id}
+                comment={comment}
+                handleClick={handleClick}
+              />
               <div style={{ marginTop: "30px" }}>
-                {comment.subcomments.map(subcomment => (
-                  <Comment comment={subcomment} key={`subcommentId-${subcomment.id}`} />
+                {comment.subcomments?.map(subcomment => (
+                  <Comment
+                    key={`subcommentId-${subcomment.id}`}
+                    post_id={post.post.id}
+                    comment={subcomment}
+                    handleClick={handleClick}
+                  />
                 ))}
               </div>
             </div>
@@ -95,7 +161,16 @@ const PostContent: React.FC<{ post: IPost }> = post => {
         <div className={style.evaluationContainer}>
           <div className={style.iconsContainer}>
             <div className={style.evaluationIconsContainer}>
-              <Icon.Heart className={style.evaluationIcon} />
+              {user_like ? (
+                <Icon.HeartFill className={style.evaluationIcon} style={{ color: "red" }} />
+              ) : (
+                <Icon.Heart
+                  className={style.evaluationIcon}
+                  onClick={() => {
+                    addUserLikeToPost();
+                  }}
+                />
+              )}
               <Icon.Chat className={style.evaluationIcon} />
               <Icon.Send className={style.evaluationIcon} />
             </div>
@@ -135,6 +210,29 @@ const PostContent: React.FC<{ post: IPost }> = post => {
             {postDateCalculation(post.post.time)}
           </div>
         </div>
+      </div>
+      <div className={style.commentTextAreaContainer}>
+        <Icon.EmojiSmile style={{ fontSize: "23px" }} />
+        <textarea
+          ref={textareaRef}
+          value={text}
+          onChange={e => {
+            setText(e.target.value);
+          }}
+          className={style.commentTextArea}
+          disabled={user ? false : true}
+          placeholder="Добавьте комментарий..."
+        />
+        <button
+          disabled={text ? false : true}
+          className={style.addCommentButton}
+          style={text ? { color: "#2196f3" } : { color: "#c9e5fc" }}
+          onClick={() => {
+            addCommentToPost();
+          }}
+        >
+          Опубликовать
+        </button>
       </div>
     </div>
   );

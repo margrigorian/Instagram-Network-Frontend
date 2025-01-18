@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { postStore, accountStore } from "../../store/store";
 import style from "./TextWithLinks.module.css";
 
-interface IText {
+interface ITextProps {
   text: string;
   hashtags: string[];
   user_links: string[];
@@ -14,7 +14,7 @@ interface ILinksIndexes {
   key: string;
 }
 
-const TextWithLinks: React.FC<IText> = text => {
+const TextWithLinks: React.FC<ITextProps> = text => {
   const setIsOpenedPostModalWindow = postStore(state => state.setIsOpenedPostModalWindow);
   const setReloudAccountPage = accountStore(state => state.setReloudAccountPage);
 
@@ -67,6 +67,8 @@ const TextWithLinks: React.FC<IText> = text => {
             >
               {text.text.slice(el.indexes[0], el.indexes[1])}
             </NavLink>
+            {/* хвост */}
+            {text.text.slice(linksIndexes[linksIndexes.length - 1].indexes[1])}
           </div>
         ))
       ) : (

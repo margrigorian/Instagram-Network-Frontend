@@ -22,6 +22,7 @@ export const accountStore = create<IAccountStore>(set => ({
   followers: [],
   following: [],
   posts: [],
+  isOpenedAuthorizationWarningModalWindow: false,
   reloudAccountPage: false,
 
   setUser: obj => set({ user: obj }),
@@ -32,6 +33,30 @@ export const accountStore = create<IAccountStore>(set => ({
     set(state => ({
       posts: [post, ...state.posts]
     })),
+  increaseCommentsNumberAfterAdding: id =>
+    set(state => ({
+      posts: state.posts.map(post => {
+        if (post.id === id) {
+          post.comments_number += 1;
+          return post;
+        } else {
+          return post;
+        }
+      })
+    })),
+  addLikeOnPost: (post_id, login) =>
+    set(state => ({
+      posts: state.posts.map(el => {
+        if (el.id === post_id) {
+          el.likes = [...el.likes, login];
+          return el;
+        } else {
+          return el;
+        }
+      })
+    })),
+  setIsOpenedAuthorizationWarningModalWindow: value =>
+    set({ isOpenedAuthorizationWarningModalWindow: value }),
   setReloudAccountPage: () => set(state => ({ reloudAccountPage: !state.reloudAccountPage }))
 }));
 
@@ -84,5 +109,51 @@ export const postStore = create<IPostStore>(set => ({
   setComments: array =>
     set({
       comments: array
-    })
+    }),
+  addComment: newComment =>
+    set(state => ({
+      comments:
+        newComment.under_comment === null
+          ? [...state.comments, newComment]
+          : state.comments.map(comment => {
+              if (comment.id === newComment.under_comment) {
+                // проверка, требуемая типизацией
+                if (comment.subcomments) {
+                  comment.subcomments = [...comment.subcomments, newComment];
+                }
+                return comment;
+              } else {
+                return comment;
+              }
+            })
+    })),
+  addLikeOnComment: (comment_id, login) =>
+    set(state => ({
+      comments: state.comments.map(el => {
+        if (el.id === comment_id) {
+          el.likes = [...el.likes, login];
+          return el;
+        } else {
+          return el;
+        }
+      })
+    })),
+  addLikeOnSubcomment: (under_comment, comment_id, login) =>
+    set(state => ({
+      comments: state.comments.map(comment => {
+        if (comment.id === under_comment) {
+          comment.subcomments?.map(subcomment => {
+            if (subcomment.id === comment_id) {
+              subcomment.likes = [...subcomment.likes, login];
+              return subcomment;
+            } else {
+              return subcomment;
+            }
+          });
+          return comment;
+        } else {
+          return comment;
+        }
+      })
+    }))
 }));

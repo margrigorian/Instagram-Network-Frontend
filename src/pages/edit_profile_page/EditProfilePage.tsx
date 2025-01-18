@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { userStore } from "../../store/store";
-import { putUserInfo } from "../../lib/request";
+import { putUserInfo } from "../../lib/requests/userRequests";
 import NavBar from "../../components/navbar/NavBar";
 import ChangeAvatarModalWindow from "../../components/change_avatar_modal_window/ChangeAvatarModalWindow";
 import GenderSelectionBlock from "../../components/gender_selection_block/GenderSelectionBlock";
@@ -25,7 +25,7 @@ const EditProfilePage: React.FC = () => {
   const [individualGenderType, setIndividualGenderType] = useState("");
   const [recommendation, setRecommendation] = useState(user ? user.recommendation : true);
 
-  async function updateUserInfo() {
+  async function updateUserInfo(): Promise<void> {
     const data = {
       about: textAbout,
       gender: individualGenderType ? individualGenderType : backendGenderValue,

@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { newPostStore, userStore, accountStore } from "../../store/store";
 import ImageContainerForNewPost from "../image_container_for_new_post/ImageContainerForNewPost";
 import NewPostContent from "../new_post_content/NewPostContent";
-import { postPublication } from "../../lib/request";
+import { postPublication } from "../../lib/requests/postsRequests";
 import style from "./ModalWindowOfReadyNewPost.module.css";
 import * as Icon from "react-bootstrap-icons";
 

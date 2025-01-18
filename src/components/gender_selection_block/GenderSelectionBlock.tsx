@@ -6,7 +6,7 @@ import Radio from "@mui/material/Radio";
 import style from "./GenderSelectionBlock.module.css";
 import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
 
-interface GenderSelectionInfo {
+interface IGenderSelectionInfoProps {
   isOpenedModalGenderSelectionWindow: boolean;
   setIsOpenedModalGenderSelectionWindow: Dispatch<SetStateAction<boolean>>;
   backendGenderValue: string | null;
@@ -15,7 +15,7 @@ interface GenderSelectionInfo {
   setIndividualGenderType: Dispatch<SetStateAction<string>>;
 }
 
-const GenderSelectionBlock: React.FC<GenderSelectionInfo> = ({
+const GenderSelectionBlock: React.FC<IGenderSelectionInfoProps> = ({
   isOpenedModalGenderSelectionWindow,
   setIsOpenedModalGenderSelectionWindow,
   backendGenderValue,

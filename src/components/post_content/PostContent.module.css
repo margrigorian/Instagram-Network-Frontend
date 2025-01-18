@@ -84,13 +84,17 @@
 }
 
 .commentsContainer {
-  height: 258px;
+  height: 242px;
   padding: 0 20px 20px 20px;
   overflow-y: scroll;
   scrollbar-width: none;
 }
 
 .evaluationContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 72px;
   padding: 13px 20px;
   border-top: 1px solid rgb(239, 238, 238);
   border-bottom: 1px solid rgb(239, 238, 238);
@@ -120,4 +124,32 @@
 .postDate {
   font-size: 12px;
   color: grey;
+}
+
+.commentTextAreaContainer {
+  width: 100%;
+  padding: 10px 20px 0 20px;
+  display: flex;
+}
+.commentTextArea {
+  width: 63%;
+  height: 48px;
+  margin: 0 10px 0 18px;
+  border: none;
+  font-size: 14px;
+  font-weight: 100;
+  font-family: sans-serif;
+  resize: none;
+  background: none;
+}
+.commentTextArea:focus {
+  outline: none;
+}
+.addCommentButton {
+  height: 20px;
+  border: none;
+  background-color: rgb(255, 255, 255, 0);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
 }

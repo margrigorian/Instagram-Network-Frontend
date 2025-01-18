@@ -50,6 +50,7 @@ export interface IAccount {
   followers: { login: string }[];
   following: { login: string }[];
   posts: IPost[];
+  isOpenedAuthorizationWarningModalWindow: boolean;
   reloudAccountPage: boolean;
 }
 
@@ -59,6 +60,9 @@ export interface IAccountStore extends IAccount {
   setFollowing: (arr: { login: string }[]) => void;
   setPosts: (arr: IPost[]) => void;
   addNewPost: (post: IPost) => void;
+  increaseCommentsNumberAfterAdding: (id: string) => void;
+  addLikeOnPost: (post_id: string, login: string) => void;
+  setIsOpenedAuthorizationWarningModalWindow: (value: boolean) => void;
   setReloudAccountPage: () => void;
 }
 
@@ -86,6 +90,9 @@ export interface IPostStore {
   setIsOpenedPostModalWindow: (value: boolean) => void;
   setIndexOfCurrentPost: (index: number) => void;
   setComments: (array: IComment[]) => void;
+  addComment: (newComment: IComment) => void;
+  addLikeOnComment: (comment_id: number, login: string) => void;
+  addLikeOnSubcomment: (under_comment: number, comment_id: number, login: string) => void;
 }
 
 export interface IComment {
@@ -98,5 +105,5 @@ export interface IComment {
   avatar: string | null;
   verification: boolean;
   likes: string[];
-  subcomments: IComment[];
+  subcomments?: IComment[];
 }
