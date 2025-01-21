@@ -61,6 +61,7 @@ export interface IAccountStore extends IAccount {
   setPosts: (arr: IPost[]) => void;
   addNewPost: (post: IPost) => void;
   increaseCommentsNumberAfterAdding: (id: string) => void;
+  decreaseCommentsNumberAfterDeleting: (post_id: string, number_of_comments: number) => void;
   addLikeOnPost: (post_id: string, login: string) => void;
   setIsOpenedAuthorizationWarningModalWindow: (value: boolean) => void;
   setReloudAccountPage: () => void;
@@ -87,12 +88,18 @@ export interface IPostStore {
   isOpenedPostModalWindow: boolean;
   indexOfCurrentPost: number;
   comments: IComment[];
+  isActiveCommentMenu: boolean;
+  currentComment: ICurrentComment | null;
   setIsOpenedPostModalWindow: (value: boolean) => void;
   setIndexOfCurrentPost: (index: number) => void;
   setComments: (array: IComment[]) => void;
   addComment: (newComment: IComment) => void;
   addLikeOnComment: (comment_id: number, login: string) => void;
   addLikeOnSubcomment: (under_comment: number, comment_id: number, login: string) => void;
+  setIsActiveCommentMenu: (value: boolean) => void;
+  setCurrentComment: (value: ICurrentComment) => void;
+  deleteCommentFromStore: (comment_id: number) => void;
+  deleteSubcommentFromStore: (subcomment_id: number, under_comment: number) => void;
 }
 
 export interface IComment {
@@ -106,4 +113,11 @@ export interface IComment {
   verification: boolean;
   likes: string[];
   subcomments?: IComment[];
+}
+
+interface ICurrentComment {
+  comment_id: number;
+  under_comment: number | null;
+  user_login: string;
+  number_of_subcomments: number;
 }

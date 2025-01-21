@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { postStore, accountStore, userStore } from "../../store/store";
 import TextWithLinks from "../post_caption/TextWithLinks";
 import { IComment } from "../../lib/types/storeTypes";
-import { addLikeToComment } from "../../lib/requests/commentRequest";
+import { addLikeToComment } from "../../lib/requests/commentsRequests";
 import style from "./Comment.module.css";
 import * as Icon from "react-bootstrap-icons";
 
@@ -17,12 +17,13 @@ const Comment: React.FC<ICommentProps> = ({ post_id, comment, handleClick }) => 
   const user = userStore(state => state.user);
   const token = userStore(state => state.token);
   const likes = comment.likes;
-  // console.log(likes);
 
   const user_like = likes.find(el => el === user?.login);
   const addLikeOnComment = postStore(state => state.addLikeOnComment);
   const addLikeOnSubcomment = postStore(state => state.addLikeOnSubcomment);
   const setIsOpenedPostModalWindow = postStore(state => state.setIsOpenedPostModalWindow);
+  const setIsActiveCommentMenu = postStore(state => state.setIsActiveCommentMenu);
+  const setCurrentComment = postStore(state => state.setCurrentComment);
   const setReloudAccountPage = accountStore(state => state.setReloudAccountPage);
 
   async function addUserLikeToComment(comment_id: number): Promise<void> {
@@ -95,7 +96,19 @@ const Comment: React.FC<ICommentProps> = ({ post_id, comment, handleClick }) => 
               >
                 Ответить
               </div>
-              <Icon.ThreeDots title="Действия с комментарием" className={style.threeDotsIcon} />
+              <Icon.ThreeDots
+                title="Действия с комментарием"
+                className={style.threeDotsIcon}
+                onClick={() => {
+                  setCurrentComment({
+                    comment_id: comment.id,
+                    under_comment: comment.under_comment,
+                    user_login: comment.user_login,
+                    number_of_subcomments: comment.subcomments ? comment.subcomments.length : 0
+                  });
+                  setIsActiveCommentMenu(true);
+                }}
+              />
             </div>
           )}
         </div>

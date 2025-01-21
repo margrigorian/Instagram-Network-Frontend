@@ -9,6 +9,36 @@
   background-color: rgba(40, 40, 40, 0.8);
 }
 
+.commentMenueContainer {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  background-color: rgba(21, 21, 21, 0.8);
+}
+.commentMenue {
+  width: 400px;
+  background-color: white;
+  border-radius: 10px;
+  font-size: 14px;
+}
+.redButton {
+  color: rgb(245, 67, 67);
+  font-weight: 700;
+  text-align: center;
+  border-bottom: 1px solid lightgrey;
+  padding: 15px 0;
+  cursor: pointer;
+}
+.cancelButton {
+  text-align: center;
+  padding: 15px 0;
+  cursor: pointer;
+}
+
 .closeAndArrowIconsContainer {
   height: 95%;
   display: flex;

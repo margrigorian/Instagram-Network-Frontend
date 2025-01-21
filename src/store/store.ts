@@ -33,11 +33,22 @@ export const accountStore = create<IAccountStore>(set => ({
     set(state => ({
       posts: [post, ...state.posts]
     })),
-  increaseCommentsNumberAfterAdding: id =>
+  increaseCommentsNumberAfterAdding: post_id =>
     set(state => ({
       posts: state.posts.map(post => {
-        if (post.id === id) {
+        if (post.id === post_id) {
           post.comments_number += 1;
+          return post;
+        } else {
+          return post;
+        }
+      })
+    })),
+  decreaseCommentsNumberAfterDeleting: (post_id, number_of_comments) =>
+    set(state => ({
+      posts: state.posts.map(post => {
+        if (post.id === post_id) {
+          post.comments_number -= number_of_comments;
           return post;
         } else {
           return post;
@@ -97,6 +108,8 @@ export const postStore = create<IPostStore>(set => ({
   isOpenedPostModalWindow: false,
   indexOfCurrentPost: 0,
   comments: [],
+  isActiveCommentMenu: false,
+  currentComment: null,
 
   setIsOpenedPostModalWindow: value =>
     set({
@@ -150,6 +163,31 @@ export const postStore = create<IPostStore>(set => ({
               return subcomment;
             }
           });
+          return comment;
+        } else {
+          return comment;
+        }
+      })
+    })),
+  setIsActiveCommentMenu: value =>
+    set({
+      isActiveCommentMenu: value
+    }),
+  setCurrentComment: obj =>
+    set({
+      currentComment: obj
+    }),
+  deleteCommentFromStore: comment_id =>
+    set(state => ({
+      comments: state.comments.filter(el => el.id !== comment_id)
+    })),
+  deleteSubcommentFromStore: (subcomment_id, under_comment) =>
+    set(state => ({
+      comments: state.comments.map(comment => {
+        if (comment.id === under_comment) {
+          comment.subcomments = comment.subcomments?.filter(
+            subcomment => subcomment.id !== subcomment_id
+          );
           return comment;
         } else {
           return comment;

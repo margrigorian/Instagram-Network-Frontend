@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { postStore } from "../../store/store";
+import { accountStore, postStore, userStore } from "../../store/store";
 import { IPost } from "../../lib/types/storeTypes";
-import { getComments } from "../../lib/requests/commentRequest";
+import { deleteComment, getComments } from "../../lib/requests/commentsRequests";
 import PostContent from "../post_content/PostContent";
 import style from "./PostModalWindow.module.css";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
@@ -10,12 +10,22 @@ import KeyboardArrowLeftOutlinedIcon from "@mui/icons-material/KeyboardArrowLeft
 import KeyboardArrowRightOutlinedIcon from "@mui/icons-material/KeyboardArrowRightOutlined";
 
 const PostModalWindow: React.FC<{ posts: IPost[] }> = array => {
+  const user = userStore(state => state.user);
+  const token = userStore(state => state.token);
   const setIsOpenedPostModalWindow = postStore(state => state.setIsOpenedPostModalWindow);
   const indexOfCurrentPost = postStore(state => state.indexOfCurrentPost);
   const setIndexOfCurrentPost = postStore(state => state.setIndexOfCurrentPost);
   const post = array.posts[indexOfCurrentPost];
   const [indexOfImage, setIndexOfImage] = useState(0);
   const setComments = postStore(state => state.setComments);
+  const isActiveCommentMenu = postStore(state => state.isActiveCommentMenu);
+  const setIsActiveCommentMenu = postStore(state => state.setIsActiveCommentMenu);
+  const currentComment = postStore(state => state.currentComment);
+  const decreaseCommentsNumberAfterDeleting = accountStore(
+    state => state.decreaseCommentsNumberAfterDeleting
+  );
+  const deleteCommentFromStore = postStore(state => state.deleteCommentFromStore);
+  const deleteSubcommentFromStore = postStore(state => state.deleteSubcommentFromStore);
 
   useEffect(() => {
     makeRequest(post.id);
@@ -50,13 +60,73 @@ const PostModalWindow: React.FC<{ posts: IPost[] }> = array => {
     setIsOpenedPostModalWindow(false);
   };
 
+  async function deleteUserComment() {
+    // проверка, требуемая типизацией
+    if (currentComment && token) {
+      await deleteComment(post.id, currentComment.comment_id, token);
+      if (currentComment.under_comment === null) {
+        deleteCommentFromStore(currentComment.comment_id);
+      } else {
+        deleteSubcommentFromStore(currentComment.comment_id, currentComment.under_comment);
+      }
+      // уменьшение на: количество подкомментариев + сам комментарий
+      decreaseCommentsNumberAfterDeleting(post.id, currentComment.number_of_subcomments + 1);
+    }
+  }
+
   return (
     <div
       className={style.container}
-      onClick={() => {
-        handleModalClose();
+      onClick={e => {
+        if (isActiveCommentMenu) {
+          e.stopPropagation();
+        } else {
+          handleModalClose();
+        }
       }}
     >
+      {isActiveCommentMenu && (
+        <div
+          className={style.commentMenueContainer}
+          onClick={() => {
+            setIsActiveCommentMenu(false);
+          }}
+        >
+          <div
+            className={style.commentMenue}
+            onClick={e => {
+              e.stopPropagation();
+            }}
+          >
+            {/* если свой комментарий, кнопки "пожаловаться" не будет  */}
+            {currentComment?.user_login !== user?.login && (
+              <div className={style.redButton}>Пожаловаться</div>
+            )}
+            {/* мой комментарий или же мой пост */}
+            {currentComment?.user_login === user?.login || post.user_login === user?.login ? (
+              <div
+                className={style.redButton}
+                onClick={() => {
+                  deleteUserComment();
+                  setIsActiveCommentMenu(false);
+                }}
+              >
+                Удалить
+              </div>
+            ) : (
+              ""
+            )}
+            <div
+              className={style.cancelButton}
+              onClick={() => {
+                setIsActiveCommentMenu(false);
+              }}
+            >
+              Отмена
+            </div>
+          </div>
+        </div>
+      )}
       {indexOfCurrentPost > 0 ? (
         <KeyboardArrowLeftOutlinedIcon
           className={style.postArrow}

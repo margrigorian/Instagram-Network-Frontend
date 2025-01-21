@@ -7,7 +7,7 @@ import { postDateCalculation } from "../../lib/postDateCalculation";
 import { IPost } from "../../lib/types/storeTypes";
 import style from "./PostContent.module.css";
 import * as Icon from "react-bootstrap-icons";
-import { addComment } from "../../lib/requests/commentRequest";
+import { addComment } from "../../lib/requests/commentsRequests";
 import { addLikeToPost } from "../../lib/requests/postsRequests";
 
 const PostContent: React.FC<{ post: IPost }> = post => {
@@ -229,6 +229,8 @@ const PostContent: React.FC<{ post: IPost }> = post => {
           style={text ? { color: "#2196f3" } : { color: "#c9e5fc" }}
           onClick={() => {
             addCommentToPost();
+            // необходимо обнулять
+            setUnderComment(null);
           }}
         >
           Опубликовать
