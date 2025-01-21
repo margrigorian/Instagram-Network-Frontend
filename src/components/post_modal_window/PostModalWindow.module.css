@@ -9,7 +9,7 @@
   background-color: rgba(40, 40, 40, 0.8);
 }
 
-.commentMenueContainer {
+.menuContainer {
   position: fixed;
   display: flex;
   justify-content: center;
@@ -19,18 +19,24 @@
   z-index: 3;
   background-color: rgba(21, 21, 21, 0.8);
 }
-.commentMenue {
+.commentMenu {
   width: 400px;
   background-color: white;
   border-radius: 10px;
   font-size: 14px;
 }
-.redButton {
+.redMenuButton {
   color: rgb(245, 67, 67);
   font-weight: 700;
   text-align: center;
   border-bottom: 1px solid lightgrey;
   padding: 15px 0;
+  cursor: pointer;
+}
+.menuButton {
+  text-align: center;
+  padding: 15px 0;
+  border-bottom: 1px solid lightgrey;
   cursor: pointer;
 }
 .cancelButton {

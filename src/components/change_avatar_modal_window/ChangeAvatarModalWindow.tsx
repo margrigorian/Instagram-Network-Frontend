@@ -83,7 +83,9 @@ const ChangeAvatarModalWindow: React.FC<IModalWindowProps> = ({ setIsOpenedModal
         <div
           onClick={async () => {
             if (token) {
-              await deleteAvatar(token);
+              if (user?.avatar !== null) {
+                await deleteAvatar(token);
+              }
               setAvatar(null);
               setIsOpenedModalUploadWindow(false);
             }

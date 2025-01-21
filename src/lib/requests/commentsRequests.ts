@@ -79,4 +79,17 @@ async function deleteComment(post_id: string, comment_id: number, token: string)
   console.log(deletedComment.data.data);
 }
 
-export { getComments, addComment, addLikeToComment, deleteComment };
+async function deleteLikeFromComment(post_id: string, comment_id: number, token: string) {
+  const deletedLike = await axios({
+    method: "delete",
+    url: `http://localhost:3001/p/${post_id}?liked_comment_id=${comment_id}`,
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      authorization: `Bearer ${token}`
+    }
+  });
+
+  console.log(deletedLike.data.data);
+}
+
+export { getComments, addComment, addLikeToComment, deleteComment, deleteLikeFromComment };

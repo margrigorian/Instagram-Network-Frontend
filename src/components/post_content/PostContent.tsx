@@ -8,7 +8,7 @@ import { IPost } from "../../lib/types/storeTypes";
 import style from "./PostContent.module.css";
 import * as Icon from "react-bootstrap-icons";
 import { addComment } from "../../lib/requests/commentsRequests";
-import { addLikeToPost } from "../../lib/requests/postsRequests";
+import { addLikeToPost, deleteLikeFromPost } from "../../lib/requests/postsRequests";
 
 const PostContent: React.FC<{ post: IPost }> = post => {
   const user = userStore(state => state.user);
@@ -20,6 +20,8 @@ const PostContent: React.FC<{ post: IPost }> = post => {
   const increaseCommentsNumberAfterAdding = accountStore(
     state => state.increaseCommentsNumberAfterAdding
   );
+  const deleteLikeFromPostInStore = accountStore(state => state.deleteLikeFromPostInStore);
+  const setIsOpenedPostMenu = postStore(state => state.setIsOpenedPostMenu);
   const setIsOpenedPostModalWindow = postStore(state => state.setIsOpenedPostModalWindow);
   const setReloudAccountPage = accountStore(state => state.setReloudAccountPage);
 
@@ -56,7 +58,7 @@ const PostContent: React.FC<{ post: IPost }> = post => {
     }
   }
 
-  // БЛОК ДОБАВЛЕНИЯ ЛАЙКА
+  // БЛОК ДОБАВЛЕНИЯ И УДАЛЕНИЯ ЛАЙКА
   const likes = post.post.likes;
   const user_like = likes.find(el => el === user?.login);
   const addLikeOnPost = accountStore(state => state.addLikeOnPost);
@@ -68,6 +70,16 @@ const PostContent: React.FC<{ post: IPost }> = post => {
       // типизацией
       if (user) {
         addLikeOnPost(post.post.id, user.login);
+      }
+    }
+  }
+
+  async function deleteUserLikeFromPost() {
+    if (token) {
+      await deleteLikeFromPost(post.post.id, token);
+      // типизация
+      if (user) {
+        deleteLikeFromPostInStore(post.post.id, user.login);
       }
     }
   }
@@ -101,7 +113,13 @@ const PostContent: React.FC<{ post: IPost }> = post => {
             </div>
           )}
         </div>
-        <Icon.ThreeDots style={{ fontSize: "18px" }} className={style.threeDotsIcon} />
+        <Icon.ThreeDots
+          style={{ fontSize: "18px" }}
+          className={style.threeDotsIcon}
+          onClick={() => {
+            setIsOpenedPostMenu(true);
+          }}
+        />
       </div>
       <div>
         <div className={style.captionContainer}>
@@ -162,7 +180,13 @@ const PostContent: React.FC<{ post: IPost }> = post => {
           <div className={style.iconsContainer}>
             <div className={style.evaluationIconsContainer}>
               {user_like ? (
-                <Icon.HeartFill className={style.evaluationIcon} style={{ color: "red" }} />
+                <Icon.HeartFill
+                  className={style.evaluationIcon}
+                  style={{ color: "red" }}
+                  onClick={() => {
+                    deleteUserLikeFromPost();
+                  }}
+                />
               ) : (
                 <Icon.Heart
                   className={style.evaluationIcon}

@@ -66,6 +66,21 @@ export const accountStore = create<IAccountStore>(set => ({
         }
       })
     })),
+  deleteLikeFromPostInStore: (post_id, login) =>
+    set(state => ({
+      posts: state.posts.map(post => {
+        if (post.id === post_id) {
+          post.likes = post.likes.filter(user_login => user_login !== login);
+          return post;
+        } else {
+          return post;
+        }
+      })
+    })),
+  deletePostFromStore: post_id =>
+    set(state => ({
+      posts: state.posts.filter(post => post.id !== post_id)
+    })),
   setIsOpenedAuthorizationWarningModalWindow: value =>
     set({ isOpenedAuthorizationWarningModalWindow: value }),
   setReloudAccountPage: () => set(state => ({ reloudAccountPage: !state.reloudAccountPage }))
@@ -108,8 +123,9 @@ export const postStore = create<IPostStore>(set => ({
   isOpenedPostModalWindow: false,
   indexOfCurrentPost: 0,
   comments: [],
-  isActiveCommentMenu: false,
+  isOpenedCommentMenu: false,
   currentComment: null,
+  isOpenedPostMenu: false,
 
   setIsOpenedPostModalWindow: value =>
     set({
@@ -169,9 +185,9 @@ export const postStore = create<IPostStore>(set => ({
         }
       })
     })),
-  setIsActiveCommentMenu: value =>
+  setIsOpenedCommentMenu: value =>
     set({
-      isActiveCommentMenu: value
+      isOpenedCommentMenu: value
     }),
   setCurrentComment: obj =>
     set({
@@ -193,5 +209,35 @@ export const postStore = create<IPostStore>(set => ({
           return comment;
         }
       })
-    }))
+    })),
+  deleteLikeFromCommentInStore: (comment_id, login) =>
+    set(state => ({
+      comments: state.comments.map(comment => {
+        if (comment.id === comment_id) {
+          comment.likes = comment.likes.filter(user_login => user_login !== login);
+          return comment;
+        } else {
+          return comment;
+        }
+      })
+    })),
+  deleteLikeFromSubcommentInStore: (subcomment_id, under_comment, login) =>
+    set(state => ({
+      comments: state.comments.map(comment => {
+        if (comment.id === under_comment) {
+          comment.subcomments = comment.subcomments?.map(subcomment => {
+            if (subcomment.id === subcomment_id) {
+              subcomment.likes = subcomment.likes.filter(user_login => user_login !== login);
+              return subcomment;
+            } else {
+              return subcomment;
+            }
+          });
+          return comment;
+        } else {
+          return comment;
+        }
+      })
+    })),
+  setIsOpenedPostMenu: value => set({ isOpenedPostMenu: value })
 }));

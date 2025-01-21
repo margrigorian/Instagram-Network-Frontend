@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { postStore, accountStore, userStore } from "../../store/store";
 import TextWithLinks from "../post_caption/TextWithLinks";
 import { IComment } from "../../lib/types/storeTypes";
-import { addLikeToComment } from "../../lib/requests/commentsRequests";
+import { addLikeToComment, deleteLikeFromComment } from "../../lib/requests/commentsRequests";
 import style from "./Comment.module.css";
 import * as Icon from "react-bootstrap-icons";
 
@@ -22,8 +22,10 @@ const Comment: React.FC<ICommentProps> = ({ post_id, comment, handleClick }) => 
   const addLikeOnComment = postStore(state => state.addLikeOnComment);
   const addLikeOnSubcomment = postStore(state => state.addLikeOnSubcomment);
   const setIsOpenedPostModalWindow = postStore(state => state.setIsOpenedPostModalWindow);
-  const setIsActiveCommentMenu = postStore(state => state.setIsActiveCommentMenu);
+  const setIsOpenedCommentMenu = postStore(state => state.setIsOpenedCommentMenu);
   const setCurrentComment = postStore(state => state.setCurrentComment);
+  const deleteLikeFromCommentInStore = postStore(state => state.deleteLikeFromCommentInStore);
+  const deleteLikeFromSubcommentInStore = postStore(state => state.deleteLikeFromSubcommentInStore);
   const setReloudAccountPage = accountStore(state => state.setReloudAccountPage);
 
   async function addUserLikeToComment(comment_id: number): Promise<void> {
@@ -37,6 +39,20 @@ const Comment: React.FC<ICommentProps> = ({ post_id, comment, handleClick }) => 
           addLikeOnComment(comment_id, user.login);
         } else {
           addLikeOnSubcomment(comment.under_comment, comment_id, user.login);
+        }
+      }
+    }
+  }
+
+  async function deleteUserLikeFromComment() {
+    if (token) {
+      await deleteLikeFromComment(post_id, comment.id, token);
+      // типизация
+      if (user) {
+        if (comment.under_comment === null) {
+          deleteLikeFromCommentInStore(comment.id, user.login);
+        } else {
+          deleteLikeFromSubcommentInStore(comment.id, comment.under_comment, user.login);
         }
       }
     }
@@ -106,7 +122,7 @@ const Comment: React.FC<ICommentProps> = ({ post_id, comment, handleClick }) => 
                     user_login: comment.user_login,
                     number_of_subcomments: comment.subcomments ? comment.subcomments.length : 0
                   });
-                  setIsActiveCommentMenu(true);
+                  setIsOpenedCommentMenu(true);
                 }}
               />
             </div>
@@ -114,7 +130,13 @@ const Comment: React.FC<ICommentProps> = ({ post_id, comment, handleClick }) => 
         </div>
       </div>
       {user_like ? (
-        <Icon.HeartFill className={style.heartIcon} style={{ color: "red" }} />
+        <Icon.HeartFill
+          className={style.heartIcon}
+          style={{ color: "red" }}
+          onClick={() => {
+            deleteUserLikeFromComment();
+          }}
+        />
       ) : (
         <Icon.Heart
           className={style.heartIcon}

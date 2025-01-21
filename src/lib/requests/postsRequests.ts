@@ -49,4 +49,30 @@ async function addLikeToPost(post_id: string, token: string): Promise<void> {
   }
 }
 
-export { postPublication, addLikeToPost };
+async function deleteLikeFromPost(post_id: string, token: string) {
+  const deletedLike = await axios({
+    method: "delete",
+    url: `http://localhost:3001/p/${post_id}?like_on_post=false`,
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      authorization: `Bearer ${token}`
+    }
+  });
+
+  console.log(deletedLike.data.data);
+}
+
+async function deletePost(post_id: string, token: string) {
+  const deletedPost = await axios({
+    method: "delete",
+    url: `http://localhost:3001/p/${post_id}`,
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      authorization: `Bearer ${token}`
+    }
+  });
+
+  console.log(deletedPost.data.data);
+}
+
+export { postPublication, addLikeToPost, deleteLikeFromPost, deletePost };

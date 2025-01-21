@@ -8,6 +8,7 @@ import style from "./PostModalWindow.module.css";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import KeyboardArrowLeftOutlinedIcon from "@mui/icons-material/KeyboardArrowLeftOutlined";
 import KeyboardArrowRightOutlinedIcon from "@mui/icons-material/KeyboardArrowRightOutlined";
+import { deletePost } from "../../lib/requests/postsRequests";
 
 const PostModalWindow: React.FC<{ posts: IPost[] }> = array => {
   const user = userStore(state => state.user);
@@ -18,8 +19,11 @@ const PostModalWindow: React.FC<{ posts: IPost[] }> = array => {
   const post = array.posts[indexOfCurrentPost];
   const [indexOfImage, setIndexOfImage] = useState(0);
   const setComments = postStore(state => state.setComments);
-  const isActiveCommentMenu = postStore(state => state.isActiveCommentMenu);
-  const setIsActiveCommentMenu = postStore(state => state.setIsActiveCommentMenu);
+  const isOpenedPostMenu = postStore(state => state.isOpenedPostMenu);
+  const setIsOpenedPostMenu = postStore(state => state.setIsOpenedPostMenu);
+  const deletePostFromStore = accountStore(state => state.deletePostFromStore);
+  const isOpenedCommentMenu = postStore(state => state.isOpenedCommentMenu);
+  const setIsOpenedCommentMenu = postStore(state => state.setIsOpenedCommentMenu);
   const currentComment = postStore(state => state.currentComment);
   const decreaseCommentsNumberAfterDeleting = accountStore(
     state => state.decreaseCommentsNumberAfterDeleting
@@ -74,26 +78,85 @@ const PostModalWindow: React.FC<{ posts: IPost[] }> = array => {
     }
   }
 
+  async function deleteUserPost() {
+    // типизация
+    if (token) {
+      await deletePost(post.id, token);
+      deletePostFromStore(post.id);
+    }
+  }
+
   return (
     <div
       className={style.container}
       onClick={e => {
-        if (isActiveCommentMenu) {
+        if (isOpenedCommentMenu || isOpenedPostMenu) {
           e.stopPropagation();
         } else {
           handleModalClose();
         }
       }}
     >
-      {isActiveCommentMenu && (
+      {isOpenedPostMenu && (
         <div
-          className={style.commentMenueContainer}
+          className={style.menuContainer}
           onClick={() => {
-            setIsActiveCommentMenu(false);
+            setIsOpenedPostMenu(false);
           }}
         >
           <div
-            className={style.commentMenue}
+            className={style.commentMenu}
+            onClick={e => {
+              e.stopPropagation();
+            }}
+          >
+            {post.user_login === user?.login ? (
+              <div>
+                <div
+                  className={style.redMenuButton}
+                  onClick={() => {
+                    deleteUserPost();
+                    setIsOpenedPostMenu(false);
+                    handleModalClose();
+                  }}
+                >
+                  Удалить
+                </div>
+                <div className={style.menuButton}>Редактировать</div>
+                <div
+                  className={style.cancelButton}
+                  onClick={() => {
+                    setIsOpenedPostMenu(false);
+                  }}
+                >
+                  Отмена
+                </div>
+              </div>
+            ) : (
+              <div>
+                <div className={style.redMenuButton}>Пожаловаться</div>
+                <div
+                  className={style.cancelButton}
+                  onClick={() => {
+                    setIsOpenedPostMenu(false);
+                  }}
+                >
+                  Отмена
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+      {isOpenedCommentMenu && (
+        <div
+          className={style.menuContainer}
+          onClick={() => {
+            setIsOpenedCommentMenu(false);
+          }}
+        >
+          <div
+            className={style.commentMenu}
             onClick={e => {
               e.stopPropagation();
             }}
@@ -105,10 +168,10 @@ const PostModalWindow: React.FC<{ posts: IPost[] }> = array => {
             {/* мой комментарий или же мой пост */}
             {currentComment?.user_login === user?.login || post.user_login === user?.login ? (
               <div
-                className={style.redButton}
+                className={style.redMenuButton}
                 onClick={() => {
                   deleteUserComment();
-                  setIsActiveCommentMenu(false);
+                  setIsOpenedCommentMenu(false);
                 }}
               >
                 Удалить
@@ -117,9 +180,9 @@ const PostModalWindow: React.FC<{ posts: IPost[] }> = array => {
               ""
             )}
             <div
-              className={style.cancelButton}
+              className={style.menuButton}
               onClick={() => {
-                setIsActiveCommentMenu(false);
+                setIsOpenedCommentMenu(false);
               }}
             >
               Отмена
