@@ -1,11 +1,12 @@
 import React from "react";
-import { newPostStore, userStore } from "../../store/store";
+import { userStore, storeOfEditedPost } from "../../store/store";
 import style from "./NewPostContent.module.css";
 import * as Icon from "react-bootstrap-icons";
 
 const NewPostContent: React.FC = () => {
   const user = userStore(state => state.user);
-  const setPostCaption = newPostStore(state => state.setPostCaption);
+  const postCaption = storeOfEditedPost(state => state.postCaption);
+  const setPostCaption = storeOfEditedPost(state => state.setPostCaption);
 
   return (
     <div className={style.postContent}>
@@ -21,6 +22,7 @@ const NewPostContent: React.FC = () => {
         placeholder="Добавить подпись"
         maxLength={2200}
         className={style.postCaption}
+        value={postCaption}
         onChange={e => setPostCaption(e.target.value)}
       ></textarea>
     </div>

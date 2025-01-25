@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
-import { newPostStore, userStore, accountStore } from "../../store/store";
-import ImageContainerForNewPost from "../image_container_for_new_post/ImageContainerForNewPost";
+import { userStore, accountStore, storeOfEditedPost } from "../../store/store";
+import ImageContainerOfEditedPost from "../ImageContainerOfEditedPost/ImageContainerOfEditedPost";
 import NewPostContent from "../new_post_content/NewPostContent";
 import { postPublication } from "../../lib/requests/postsRequests";
 import style from "./ModalWindowOfReadyNewPost.module.css";
@@ -9,18 +9,20 @@ import * as Icon from "react-bootstrap-icons";
 const ModalWindowOfReadyNewPost: React.FC = () => {
   // при записи в input не будет ререндеринга компонента изображений
   // начилие postCaption ниже это вызывает
-  const imageContainerForNewPost = useMemo(() => <ImageContainerForNewPost />, []);
-  const setIsOpenedNewPostModalWindow = newPostStore(state => state.setIsOpenedNewPostModalWindow);
-  const setIsOpenedModalWindowOfReadyNewPost = newPostStore(
+  const imageContainerForNewPost = useMemo(() => <ImageContainerOfEditedPost />, []);
+  const setIsOpenedNewPostModalWindow = storeOfEditedPost(
+    state => state.setIsOpenedNewPostModalWindow
+  );
+  const setIsOpenedModalWindowOfReadyNewPost = storeOfEditedPost(
     state => state.setIsOpenedModalWindowOfReadyNewPost
   );
   // images - для отправки на back
   const token = userStore(state => state.token);
-  const images = newPostStore(state => state.images);
-  const postCaption = newPostStore(state => state.postCaption);
-  const setPostCaption = newPostStore(state => state.setPostCaption);
-  const setIndexOfCurrentImage = newPostStore(state => state.setIndexOfCurrentImage);
-  const deleteAllImages = newPostStore(state => state.deleteAllImages);
+  const files = storeOfEditedPost(state => state.files);
+  const postCaption = storeOfEditedPost(state => state.postCaption);
+  const setPostCaption = storeOfEditedPost(state => state.setPostCaption);
+  const setIndexOfCurrentImage = storeOfEditedPost(state => state.setIndexOfCurrentImage);
+  const deleteAllFiles = storeOfEditedPost(state => state.deleteAllFiles);
   // размещение нового поста на фронт
   const user = userStore(state => state.user);
   const account = accountStore(state => state.user);
@@ -28,8 +30,10 @@ const ModalWindowOfReadyNewPost: React.FC = () => {
 
   async function postPublicationOnAccountPage(): Promise<void> {
     const formData = new FormData();
-    images.map(el => {
-      formData.append("images", el, el.name);
+    files.map(el => {
+      if (el instanceof File) {
+        formData.append("images", el, el.name);
+      }
     });
     formData.append("caption", postCaption);
 
@@ -49,7 +53,7 @@ const ModalWindowOfReadyNewPost: React.FC = () => {
     setIsOpenedModalWindowOfReadyNewPost(false);
     // очистка данных
     setIndexOfCurrentImage(0);
-    deleteAllImages();
+    deleteAllFiles();
     setPostCaption("");
   }
 

@@ -37,6 +37,8 @@
   text-align: center;
   padding: 15px 0;
   border-bottom: 1px solid lightgrey;
+  font-weight: 700;
+  color: #2196f3;
   cursor: pointer;
 }
 .cancelButton {

@@ -6,16 +6,30 @@
   display: flex;
   flex-direction: column;
 }
-.arrowContainer {
+.arrowAndBasketContainer {
   width: 97%;
-  height: 48%;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
-  align-items: flex-end;
   margin: 0 auto 5px auto;
 }
+.basket {
+  margin-top: 10px;
+  padding: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: rgb(40, 40, 40, 0.8);
+  /* font-size: 12px; */
+  color: white;
+  cursor: pointer;
+}
+.arrowContainer {
+  display: flex;
+  justify-content: space-between;
+}
 .arrow {
-  height: 14%;
   display: flex;
   justify-content: center;
   align-items: center;

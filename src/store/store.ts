@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { IUserStore, IAccountStore, INewPostStore, IPostStore } from "../lib/types/storeTypes";
+import { IUserStore, IAccountStore, IStoreOfEditedPost, IPostStore } from "../lib/types/storeTypes";
 
 export const userStore = create<IUserStore>(set => ({
   user: null,
@@ -32,6 +32,19 @@ export const accountStore = create<IAccountStore>(set => ({
   addNewPost: post =>
     set(state => ({
       posts: [post, ...state.posts]
+    })),
+  updatePostInStore: (post_id, caption, hashtags, user_links) =>
+    set(state => ({
+      posts: state.posts.map(post => {
+        if (post.id === post_id) {
+          post.caption = caption;
+          post.hashtags = hashtags;
+          post.user_links = user_links;
+          return post;
+        } else {
+          return post;
+        }
+      })
     })),
   increaseCommentsNumberAfterAdding: post_id =>
     set(state => ({
@@ -77,6 +90,17 @@ export const accountStore = create<IAccountStore>(set => ({
         }
       })
     })),
+  deleteImageOfPostInStore: (post_id, img_index) =>
+    set(state => ({
+      posts: state.posts.map(post => {
+        if (post.id === post_id) {
+          post.images = post.images.filter(image => image.img_index !== img_index);
+          return post;
+        } else {
+          return post;
+        }
+      })
+    })),
   deletePostFromStore: post_id =>
     set(state => ({
       posts: state.posts.filter(post => post.id !== post_id)
@@ -86,13 +110,15 @@ export const accountStore = create<IAccountStore>(set => ({
   setReloudAccountPage: () => set(state => ({ reloudAccountPage: !state.reloudAccountPage }))
 }));
 
-export const newPostStore = create<INewPostStore>(set => ({
+export const storeOfEditedPost = create<IStoreOfEditedPost>(set => ({
   isOpenedNewPostModalWindow: false,
   isOpenedModalWindowOfReadyNewPost: false,
-  images: [],
+  files: [],
   isOpenedCollectionOfImagesWindow: false,
+  postId: null,
   indexOfCurrentImage: 0,
   postCaption: "",
+  imagesOfEditedPost: [],
 
   setIsOpenedNewPostModalWindow: value =>
     set({
@@ -102,21 +128,27 @@ export const newPostStore = create<INewPostStore>(set => ({
     set({
       isOpenedModalWindowOfReadyNewPost: value
     }),
-  setImages: image =>
+  setFiles: file =>
     set(state => ({
-      images: [...state.images, image]
+      files: [...state.files, file]
     })),
   setIsOpenedCollectionOfImagesWindow: value =>
     set({
       isOpenedCollectionOfImagesWindow: value
     }),
-  deleteCurrentImage: index =>
+  deleteCurrentFile: index =>
     set(state => ({
-      images: state.images.filter((el, i) => i !== index)
+      files: state.files.filter((el, i) => i !== index)
     })),
-  deleteAllImages: () => set({ images: [] }),
+  deleteAllFiles: () => set({ files: [] }),
+  setPostId: id => set({ postId: id }),
   setIndexOfCurrentImage: index => set({ indexOfCurrentImage: index }),
-  setPostCaption: text => set({ postCaption: text })
+  setPostCaption: text => set({ postCaption: text }),
+  setImagesOfEditedPost: images => set({ imagesOfEditedPost: images }),
+  deleteImageInEditedPost: index =>
+    set(state => ({
+      imagesOfEditedPost: state.imagesOfEditedPost.filter(image => image.img_index !== index)
+    }))
 }));
 
 export const postStore = create<IPostStore>(set => ({
@@ -126,6 +158,7 @@ export const postStore = create<IPostStore>(set => ({
   isOpenedCommentMenu: false,
   currentComment: null,
   isOpenedPostMenu: false,
+  isOpenedPostEditModalWindow: false,
 
   setIsOpenedPostModalWindow: value =>
     set({
@@ -239,5 +272,6 @@ export const postStore = create<IPostStore>(set => ({
         }
       })
     })),
-  setIsOpenedPostMenu: value => set({ isOpenedPostMenu: value })
+  setIsOpenedPostMenu: value => set({ isOpenedPostMenu: value }),
+  setIsOpenedPostEditModalWindow: value => set({ isOpenedPostEditModalWindow: value })
 }));

@@ -1,11 +1,13 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { newPostStore, userStore, accountStore } from "../../store/store";
+import { userStore, accountStore, storeOfEditedPost } from "../../store/store";
 import style from "./NavBar.module.css";
 import * as Icon from "react-bootstrap-icons";
 
 const NavBar: React.FC = () => {
-  const setIsOpenedNewPostModalWindow = newPostStore(state => state.setIsOpenedNewPostModalWindow);
+  const setIsOpenedNewPostModalWindow = storeOfEditedPost(
+    state => state.setIsOpenedNewPostModalWindow
+  );
   const user = userStore(state => state.user);
   const account = accountStore(state => state.user);
   const setReloudAccountPage = accountStore(state => state.setReloudAccountPage);

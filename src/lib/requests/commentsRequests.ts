@@ -66,30 +66,42 @@ async function addLikeToComment(post_id: string, comment_id: number, token: stri
   }
 }
 
-async function deleteComment(post_id: string, comment_id: number, token: string) {
-  const deletedComment = await axios({
-    method: "delete",
-    url: `http://localhost:3001/p/${post_id}?comment_id=${comment_id}`,
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-      authorization: `Bearer ${token}`
-    }
-  });
+async function deleteComment(post_id: string, comment_id: number, token: string): Promise<void> {
+  try {
+    const deletedComment = await axios({
+      method: "delete",
+      url: `http://localhost:3001/p/${post_id}?comment_id=${comment_id}`,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        authorization: `Bearer ${token}`
+      }
+    });
 
-  console.log(deletedComment.data.data);
+    console.log(deletedComment.data.data);
+  } catch (e) {
+    console.log(e);
+  }
 }
 
-async function deleteLikeFromComment(post_id: string, comment_id: number, token: string) {
-  const deletedLike = await axios({
-    method: "delete",
-    url: `http://localhost:3001/p/${post_id}?liked_comment_id=${comment_id}`,
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-      authorization: `Bearer ${token}`
-    }
-  });
+async function deleteLikeFromComment(
+  post_id: string,
+  comment_id: number,
+  token: string
+): Promise<void> {
+  try {
+    const deletedLike = await axios({
+      method: "delete",
+      url: `http://localhost:3001/p/${post_id}?liked_comment_id=${comment_id}`,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        authorization: `Bearer ${token}`
+      }
+    });
 
-  console.log(deletedLike.data.data);
+    console.log(deletedLike.data.data);
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 export { getComments, addComment, addLikeToComment, deleteComment, deleteLikeFromComment };

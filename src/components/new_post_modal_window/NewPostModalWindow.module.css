@@ -25,7 +25,7 @@
   z-index: 2;
 }
 .alertModalWindow {
-  width: 500px;
+  width: 400px;
   height: 140px;
   background-color: white;
   border-radius: 13px;
@@ -39,11 +39,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 14px;
 }
 .textBorder {
   border-top: 1px solid lightgrey;
   border-bottom: 1px solid lightgrey;
-  color: red;
+  color: rgb(245, 67, 67);
+  font-weight: 700;
   cursor: pointer;
 }
 

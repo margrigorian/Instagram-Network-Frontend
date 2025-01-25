@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { accountStore, postStore, userStore } from "../../store/store";
+import { userStore, accountStore, postStore, storeOfEditedPost } from "../../store/store";
 import { IPost } from "../../lib/types/storeTypes";
 import { deleteComment, getComments } from "../../lib/requests/commentsRequests";
 import PostContent from "../post_content/PostContent";
+import PostEditModalWindow from "../post_edit_modal_window/PostEditModalWindow";
 import style from "./PostModalWindow.module.css";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import KeyboardArrowLeftOutlinedIcon from "@mui/icons-material/KeyboardArrowLeftOutlined";
@@ -30,6 +31,12 @@ const PostModalWindow: React.FC<{ posts: IPost[] }> = array => {
   );
   const deleteCommentFromStore = postStore(state => state.deleteCommentFromStore);
   const deleteSubcommentFromStore = postStore(state => state.deleteSubcommentFromStore);
+  const isOpenedPostEditModalWindow = postStore(state => state.isOpenedPostEditModalWindow);
+  const setIsOpenedPostEditModalWindow = postStore(state => state.setIsOpenedPostEditModalWindow);
+  // передача данных для редактирования поста
+  const setPostId = storeOfEditedPost(state => state.setPostId);
+  const setImagesOfEditedPost = storeOfEditedPost(state => state.setImagesOfEditedPost);
+  const setPostCaption = storeOfEditedPost(state => state.setPostCaption);
 
   useEffect(() => {
     makeRequest(post.id);
@@ -90,7 +97,7 @@ const PostModalWindow: React.FC<{ posts: IPost[] }> = array => {
     <div
       className={style.container}
       onClick={e => {
-        if (isOpenedCommentMenu || isOpenedPostMenu) {
+        if (isOpenedCommentMenu || isOpenedPostMenu || isOpenedPostEditModalWindow) {
           e.stopPropagation();
         } else {
           handleModalClose();
@@ -122,7 +129,18 @@ const PostModalWindow: React.FC<{ posts: IPost[] }> = array => {
                 >
                   Удалить
                 </div>
-                <div className={style.menuButton}>Редактировать</div>
+                <div
+                  className={style.menuButton}
+                  onClick={() => {
+                    setIsOpenedPostMenu(false);
+                    setIsOpenedPostEditModalWindow(true);
+                    setPostId(post.id);
+                    setImagesOfEditedPost(post.images);
+                    setPostCaption(post.caption);
+                  }}
+                >
+                  Редактировать
+                </div>
                 <div
                   className={style.cancelButton}
                   onClick={() => {
@@ -148,6 +166,7 @@ const PostModalWindow: React.FC<{ posts: IPost[] }> = array => {
           </div>
         </div>
       )}
+      {isOpenedPostEditModalWindow && <PostEditModalWindow post={post} />}
       {isOpenedCommentMenu && (
         <div
           className={style.menuContainer}

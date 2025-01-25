@@ -60,30 +60,43 @@ export interface IAccountStore extends IAccount {
   setFollowing: (arr: { login: string }[]) => void;
   setPosts: (arr: IPost[]) => void;
   addNewPost: (post: IPost) => void;
+  updatePostInStore: (
+    post_id: string,
+    caption: string,
+    hashtags: string[],
+    user_links: string[]
+  ) => void;
   increaseCommentsNumberAfterAdding: (id: string) => void;
   decreaseCommentsNumberAfterDeleting: (post_id: string, number_of_comments: number) => void;
   addLikeOnPost: (post_id: string, login: string) => void;
   deleteLikeFromPostInStore: (post_id: string, login: string) => void;
+  deleteImageOfPostInStore: (post_id: string, img_index: number) => void;
   deletePostFromStore: (post_id: string) => void;
   setIsOpenedAuthorizationWarningModalWindow: (value: boolean) => void;
   setReloudAccountPage: () => void;
 }
 
-export interface INewPostStore {
+export interface IStoreOfEditedPost {
   isOpenedNewPostModalWindow: boolean;
   isOpenedModalWindowOfReadyNewPost: boolean;
-  images: File[];
+  // объединить File и IImage в один массив images не получается, в компонентах возникают сложности
+  files: File[];
   isOpenedCollectionOfImagesWindow: boolean;
+  postId: string | null;
   indexOfCurrentImage: number;
   postCaption: string;
+  imagesOfEditedPost: IImage[];
   setIsOpenedNewPostModalWindow: (value: boolean) => void;
   setIsOpenedModalWindowOfReadyNewPost: (value: boolean) => void;
-  setImages: (image: File) => void;
+  setFiles: (value: File) => void;
   setIsOpenedCollectionOfImagesWindow: (value: boolean) => void;
-  deleteCurrentImage: (index: number) => void;
-  deleteAllImages: () => void;
+  deleteCurrentFile: (index: number) => void;
+  deleteAllFiles: () => void;
+  setPostId: (id: string) => void;
   setIndexOfCurrentImage: (index: number) => void;
   setPostCaption: (text: string) => void;
+  setImagesOfEditedPost: (images: IImage[]) => void;
+  deleteImageInEditedPost: (index: number) => void;
 }
 
 export interface IPostStore {
@@ -93,6 +106,7 @@ export interface IPostStore {
   isOpenedCommentMenu: boolean;
   currentComment: ICurrentComment | null;
   isOpenedPostMenu: boolean;
+  isOpenedPostEditModalWindow: boolean;
   setIsOpenedPostModalWindow: (value: boolean) => void;
   setIndexOfCurrentPost: (index: number) => void;
   setComments: (array: IComment[]) => void;
@@ -110,6 +124,7 @@ export interface IPostStore {
     login: string
   ) => void;
   setIsOpenedPostMenu: (value: boolean) => void;
+  setIsOpenedPostEditModalWindow: (value: boolean) => void;
 }
 
 export interface IComment {

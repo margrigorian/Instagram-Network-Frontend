@@ -1,25 +1,27 @@
 import React, { useRef, useState } from "react";
-import { newPostStore } from "../../store/store";
+import { storeOfEditedPost } from "../../store/store";
 import style from "./CollectionOfImagesInNewPost.module.css";
 import * as Icon from "react-bootstrap-icons";
 import KeyboardArrowLeftOutlinedIcon from "@mui/icons-material/KeyboardArrowLeftOutlined";
 import KeyboardArrowRightOutlinedIcon from "@mui/icons-material/KeyboardArrowRightOutlined";
 
 const CollectionOfImagesInNewPost: React.FC = () => {
-  const images = newPostStore(state => state.images);
-  const setImages = newPostStore(state => state.setImages);
-  const isOpenedCollectionOfImagesWindow = newPostStore(
+  const files = storeOfEditedPost(state => state.files);
+  const setFiles = storeOfEditedPost(state => state.setFiles);
+  const isOpenedCollectionOfImagesWindow = storeOfEditedPost(
     state => state.isOpenedCollectionOfImagesWindow
   );
-  const setIsOpenedCollectionOfImagesWindow = newPostStore(
+  const setIsOpenedCollectionOfImagesWindow = storeOfEditedPost(
     state => state.setIsOpenedCollectionOfImagesWindow
   );
-  const deleteCurrentImage = newPostStore(state => state.deleteCurrentImage);
-  const indexOfCurrentImage = newPostStore(state => state.indexOfCurrentImage);
-  const setIndexOfCurrentImage = newPostStore(state => state.setIndexOfCurrentImage);
+  const deleteCurrentFile = storeOfEditedPost(state => state.deleteCurrentFile);
+  const indexOfCurrentImage = storeOfEditedPost(state => state.indexOfCurrentImage);
+  const setIndexOfCurrentImage = storeOfEditedPost(state => state.setIndexOfCurrentImage);
 
   const imagePicker = useRef(null);
   const [initialIndexOfTheImageCollection, setInitialIndexOfTheImageCollection] = useState(0);
+
+  console.log(`Current=${indexOfCurrentImage}`, `Initial=${initialIndexOfTheImageCollection}`);
 
   return (
     <div className={style.container}>
@@ -27,13 +29,14 @@ const CollectionOfImagesInNewPost: React.FC = () => {
       <div></div>
       {isOpenedCollectionOfImagesWindow && (
         <div className={style.containerOfCollection}>
-          {images.map((el, i) =>
+          {files.map((el, i) =>
             //   чтобы отрисовывалось по три картинки в коллекции
             i >= initialIndexOfTheImageCollection && i <= initialIndexOfTheImageCollection + 2 ? (
               <div
                 key={`imageId-${i}`}
                 style={{
-                  backgroundImage: `url(${URL.createObjectURL(el)})`
+                  // проверка, требуемая типизацией
+                  backgroundImage: el instanceof File ? `url(${URL.createObjectURL(el)})` : ""
                 }}
                 className={style.imagesContainer}
                 onClick={() => {
@@ -46,12 +49,21 @@ const CollectionOfImagesInNewPost: React.FC = () => {
                       className={style.crossIconContainer}
                       onClick={e => {
                         e.stopPropagation();
-
-                        if (i !== 0) {
-                          setIndexOfCurrentImage(i - 1);
+                        if (
+                          initialIndexOfTheImageCollection === 0 &&
+                          i !== 0 &&
+                          files.length - i === 1
+                        ) {
+                          setIndexOfCurrentImage(indexOfCurrentImage - 1);
+                        } else if (
+                          initialIndexOfTheImageCollection !== 0 &&
+                          files.length - initialIndexOfTheImageCollection <= 3
+                        ) {
                           setInitialIndexOfTheImageCollection(initialIndexOfTheImageCollection - 1);
+                          setIndexOfCurrentImage(indexOfCurrentImage - 1);
                         }
-                        deleteCurrentImage(i);
+
+                        deleteCurrentFile(i);
                       }}
                     >
                       <Icon.X size={"20px"} color="white" />
@@ -62,7 +74,7 @@ const CollectionOfImagesInNewPost: React.FC = () => {
                         className={`${style.arrow} ${style.leftArrow}`}
                         onClick={e => {
                           e.stopPropagation();
-                          if (initialIndexOfTheImageCollection + 3 >= images.length - 1) {
+                          if (initialIndexOfTheImageCollection + 3 >= files.length - 1) {
                             setInitialIndexOfTheImageCollection(
                               initialIndexOfTheImageCollection - 1
                             );
@@ -73,13 +85,13 @@ const CollectionOfImagesInNewPost: React.FC = () => {
                           }
                         }}
                       />
-                    ) : i === initialIndexOfTheImageCollection + 2 && i !== images.length - 1 ? (
+                    ) : i === initialIndexOfTheImageCollection + 2 && i !== files.length - 1 ? (
                       <KeyboardArrowRightOutlinedIcon
                         className={`${style.arrow} ${style.rightArrow}`}
                         style={{ marginTop: "10px" }}
                         onClick={e => {
                           e.stopPropagation();
-                          if (images.length - 1 - 3 === 0) {
+                          if (initialIndexOfTheImageCollection + 3 >= files.length - 1) {
                             setInitialIndexOfTheImageCollection(
                               initialIndexOfTheImageCollection + 1
                             );
@@ -112,12 +124,12 @@ const CollectionOfImagesInNewPost: React.FC = () => {
                           }
                         }}
                       />
-                    ) : i === initialIndexOfTheImageCollection + 2 && i !== images.length - 1 ? (
+                    ) : i === initialIndexOfTheImageCollection + 2 && i !== files.length - 1 ? (
                       <KeyboardArrowRightOutlinedIcon
                         className={`${style.arrow} ${style.rightArrow}`}
                         onClick={e => {
                           e.stopPropagation();
-                          if (initialIndexOfTheImageCollection + 3 >= images.length - 1) {
+                          if (initialIndexOfTheImageCollection + 3 >= files.length - 1) {
                             setInitialIndexOfTheImageCollection(
                               initialIndexOfTheImageCollection + 1
                             );
@@ -145,9 +157,11 @@ const CollectionOfImagesInNewPost: React.FC = () => {
             ref={imagePicker}
             onChange={evt => {
               const inputsFile = evt.target as HTMLInputElement;
+
               // проверка для исключения ошибки
               if (inputsFile.files && inputsFile.files[0]) {
-                setImages(inputsFile.files[0]);
+                console.log(inputsFile.files[0]);
+                setFiles(inputsFile.files[0]);
               }
             }}
           />

@@ -1,38 +1,40 @@
 import React, { useRef, useState } from "react";
-import { newPostStore } from "../../store/store";
-import ImageContainerForNewPost from "../image_container_for_new_post/ImageContainerForNewPost";
+import { storeOfEditedPost } from "../../store/store";
+import ImageContainerOfEditedPost from "../ImageContainerOfEditedPost/ImageContainerOfEditedPost";
 import ModalWindowOfReadyNewPost from "../modal_window_of_ready_new_post/ModalWindowOfReadyNewPost";
 import style from "./NewPostModalWindow.module.css";
 import * as Icon from "react-bootstrap-icons";
 
 const NewPostModalWindow: React.FC = () => {
-  const setIsOpenedNewPostModalWindow = newPostStore(state => state.setIsOpenedNewPostModalWindow);
-  const isOpenedModalWindowOfReadyNewPost = newPostStore(
+  const setIsOpenedNewPostModalWindow = storeOfEditedPost(
+    state => state.setIsOpenedNewPostModalWindow
+  );
+  const isOpenedModalWindowOfReadyNewPost = storeOfEditedPost(
     state => state.isOpenedModalWindowOfReadyNewPost
   );
-  const setIsOpenedModalWindowOfReadyNewPost = newPostStore(
+  const setIsOpenedModalWindowOfReadyNewPost = storeOfEditedPost(
     state => state.setIsOpenedModalWindowOfReadyNewPost
   );
   const [modalWindowForDeletingThePublication, setModalWindowForDeletingThePublication] =
     useState(false);
-  const images = newPostStore(state => state.images);
-  const setImages = newPostStore(state => state.setImages);
-  const isOpenedCollectionOfImagesWindow = newPostStore(
+  const files = storeOfEditedPost(state => state.files);
+  const setFiles = storeOfEditedPost(state => state.setFiles);
+  const isOpenedCollectionOfImagesWindow = storeOfEditedPost(
     state => state.isOpenedCollectionOfImagesWindow
   );
-  const setIsOpenedCollectionOfImagesWindow = newPostStore(
+  const setIsOpenedCollectionOfImagesWindow = storeOfEditedPost(
     state => state.setIsOpenedCollectionOfImagesWindow
   );
-  const deleteAllImages = newPostStore(state => state.deleteAllImages);
-  const setIndexOfCurrentImage = newPostStore(state => state.setIndexOfCurrentImage);
-  const setPostCaption = newPostStore(state => state.setPostCaption);
+  const deleteAllFiles = storeOfEditedPost(state => state.deleteAllFiles);
+  const setIndexOfCurrentImage = storeOfEditedPost(state => state.setIndexOfCurrentImage);
+  const setPostCaption = storeOfEditedPost(state => state.setPostCaption);
 
   const imagePicker = useRef(null);
 
   return (
     <div
       onClick={() => {
-        if (images.length > 0) {
+        if (files.length > 0) {
           setModalWindowForDeletingThePublication(true);
         } else {
           setIsOpenedNewPostModalWindow(false);
@@ -54,7 +56,9 @@ const NewPostModalWindow: React.FC = () => {
           }}
         >
           <div className={style.alertModalWindow}>
-            <div className={style.alertModalWindowText}>Удалить публикацию?</div>
+            <div className={style.alertModalWindowText} style={{ fontSize: "16px" }}>
+              Удалить публикацию?
+            </div>
             <div
               className={`${style.alertModalWindowText} ${style.textBorder}`}
               onClick={() => {
@@ -64,7 +68,7 @@ const NewPostModalWindow: React.FC = () => {
                 setIsOpenedNewPostModalWindow(false);
                 setIsOpenedModalWindowOfReadyNewPost(false);
                 // удаление всех загруженных фото
-                deleteAllImages();
+                deleteAllFiles();
                 // удаление подписи
                 setPostCaption("");
               }}
@@ -73,7 +77,7 @@ const NewPostModalWindow: React.FC = () => {
             </div>
             <div
               className={style.alertModalWindowText}
-              style={{ color: "#2196f3", cursor: "pointer" }}
+              style={{ cursor: "pointer" }}
               onClick={() => {
                 setModalWindowForDeletingThePublication(false);
               }}
@@ -93,7 +97,7 @@ const NewPostModalWindow: React.FC = () => {
             e.stopPropagation();
           }}
         >
-          {images.length === 0 ? (
+          {files.length === 0 ? (
             <div style={{ height: "100%" }}>
               <div className={style.titleTexOfThePostCreation}>Создание публикации</div>
               <div className={style.modalWindowContent}>
@@ -108,7 +112,7 @@ const NewPostModalWindow: React.FC = () => {
                     const inputsFile = evt.target as HTMLInputElement;
                     // проверка для исключения ошибки
                     if (inputsFile.files && inputsFile.files[0]) {
-                      setImages(inputsFile.files[0]);
+                      setFiles(inputsFile.files[0]);
                     }
                   }}
                 />
@@ -133,7 +137,7 @@ const NewPostModalWindow: React.FC = () => {
                   size={"25px"}
                   cursor={"pointer"}
                   onClick={() => {
-                    deleteAllImages();
+                    deleteAllFiles();
                     setIndexOfCurrentImage(0);
                   }}
                 />
@@ -153,7 +157,7 @@ const NewPostModalWindow: React.FC = () => {
                   Далее
                 </div>
               </div>
-              <ImageContainerForNewPost />
+              <ImageContainerOfEditedPost />
             </div>
           )}
         </div>
