@@ -1,9 +1,9 @@
 import React, { useState, Dispatch, SetStateAction } from "react";
+import style from "./GenderSelectionBlock.module.css";
 import FormControl from "@mui/material/FormControl";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
-import style from "./GenderSelectionBlock.module.css";
 import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
 
 interface IGenderSelectionInfoProps {

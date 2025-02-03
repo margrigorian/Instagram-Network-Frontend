@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from "react";
-import style from "./AccountPage.module.css";
-import { NavLink, useParams } from "react-router-dom";
-import { getAccountInfo } from "../../lib/requests/userRequests";
-import { userStore, accountStore, postStore } from "../../store/store";
+import { useParams, NavLink } from "react-router-dom";
 import NavBar from "../../components/navbar/NavBar";
 import AccountUserInfo from "../../components/account_user_info/AccountUserInfo";
 import PostModalWindow from "../../components/post_modal_window/PostModalWindow";
-import * as Icon from "react-bootstrap-icons";
+import { userStore, accountStore, postStore } from "../../store/store";
+import { getAccountInfo } from "../../lib/requests/accountRequests";
+import style from "./AccountPage.module.css";
+import copyImage from "../../pictures/copy.png";
 import GridOnOutlinedIcon from "@mui/icons-material/GridOnOutlined";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
-import copyImage from "../../pictures/copy.png";
+import * as Icon from "react-bootstrap-icons";
 
 const AccountPage: React.FC = () => {
   const { login } = useParams();
   const user = userStore(state => state.user);
   const account = accountStore(state => state.user);
   const setUser = accountStore(state => state.setUser);
-  const setFollowers = accountStore(state => state.setFollowers);
-  const setFollowing = accountStore(state => state.setFollowing);
+  const setFollowersCount = accountStore(state => state.setFollowersCount);
+  const setFollowingsCount = accountStore(state => state.setFollowingsCount);
   const posts = accountStore(state => state.posts);
   const setPosts = accountStore(state => state.setPosts);
   const isOpenedPostModalWindow = postStore(state => state.isOpenedPostModalWindow);
@@ -57,14 +57,14 @@ const AccountPage: React.FC = () => {
 
       if (account?.data) {
         setUser(account.data.user);
-        setFollowers(account.data.followers);
-        setFollowing(account.data.following);
+        setFollowersCount(account.data.followers_count);
+        setFollowingsCount(account.data.followings_count);
         setPosts(account.data.posts);
       } else {
         // аккаунт не найден, обнуляем, чтобы старое не сохранялось
         setUser(null);
-        setFollowers([]);
-        setFollowing([]);
+        setFollowersCount(0);
+        setFollowingsCount(0);
         setPosts([]);
       }
     }

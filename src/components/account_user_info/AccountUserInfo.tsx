@@ -1,21 +1,38 @@
 import React from "react";
-import { userStore, accountStore } from "../../store/store";
 import { NavLink } from "react-router-dom";
+import { userStore, accountStore } from "../../store/store";
+import { postSubscriptionOnAccount } from "../../lib/requests/accountRequests";
 import style from "./AccountUserInfo.module.css";
-import * as Icon from "react-bootstrap-icons";
-import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
-import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 import PersonAddAltOutlinedIcon from "@mui/icons-material/PersonAddAltOutlined";
+import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
+import * as Icon from "react-bootstrap-icons";
 
 const AccountUserInfo: React.FC = () => {
   const user = userStore(state => state.user);
+  const token = userStore(state => state.token);
+  const followers = userStore(state => state.followers);
+  const followings = userStore(state => state.followings);
+  const addFollowing = userStore(state => state.addFollowing);
   const account = accountStore(state => state.user);
   const posts = accountStore(state => state.posts);
-  const followers = accountStore(state => state.followers);
-  const following = accountStore(state => state.following);
-
+  const followersCount = accountStore(state => state.followers_count);
+  const followingsCount = accountStore(state => state.followings_count);
+  const increaseFollowersCount = accountStore(state => state.increaseFollowersCount);
+  const setIsOpenedAuthorizationWarningModalWindow = accountStore(
+    state => state.setIsOpenedAuthorizationWarningModalWindow
+  );
+  // проверка связи с юзера с текущим акаунтом
   const isFollower = followers.find(el => el.login === account?.login);
-  const isSubscription = following.find(el => el.login === account?.login);
+  const isSubscription = followings.find(el => el.login === account?.login);
+
+  async function addSubscriptionOnAccount() {
+    // проверка, требуемая типизацией
+    if (account?.login && token) {
+      await postSubscriptionOnAccount(account.login, token);
+      addFollowing(account.login);
+      increaseFollowersCount();
+    }
+  }
 
   return (
     <div>
@@ -52,10 +69,7 @@ const AccountUserInfo: React.FC = () => {
                 <div className={style.login}>{account?.login}</div>
                 {account?.verification ? <div className={style.verificationIcon}></div> : ""}
               </div>
-              <button className={`${style.button} ${style.subscriptionsButton}`}>
-                Подписки
-                <KeyboardArrowDownOutlinedIcon sx={{ fontSize: "22px" }} />
-              </button>
+              <button className={`${style.button} ${style.subscriptionsButton}`}>Отменить</button>
               <button style={{ padding: "10px 20px 7px 20px" }} className={style.button}>
                 Отправить сообщение
               </button>
@@ -75,10 +89,27 @@ const AccountUserInfo: React.FC = () => {
                 <div className={style.login}>{account?.login}</div>
                 {account?.verification ? <div className={style.verificationIcon}></div> : ""}
               </div>
-              <button className={style.blueButton}>
+              <button
+                className={style.blueButton}
+                onClick={() => {
+                  if (user) {
+                    addSubscriptionOnAccount();
+                  } else {
+                    setIsOpenedAuthorizationWarningModalWindow(true);
+                  }
+                }}
+              >
                 {isFollower ? "Подписаться в ответ" : "Подписаться"}
               </button>
-              <button style={{ padding: "10px 20px 7px 20px" }} className={style.button}>
+              <button
+                style={{ padding: "10px 20px 7px 20px" }}
+                className={style.button}
+                onClick={() => {
+                  if (user === null) {
+                    setIsOpenedAuthorizationWarningModalWindow(true);
+                  }
+                }}
+              >
                 Отправить сообщение
               </button>
               {account?.recommendation ? (
@@ -97,12 +128,30 @@ const AccountUserInfo: React.FC = () => {
               <span className={style.spanOfNumber}>{posts.length}</span>
               публикаций
             </div>
-            <div className={style.followersContainer}>
-              <span className={style.spanOfNumber}>{followers.length}</span>
+            <div
+              className={style.followersContainer}
+              onClick={() => {
+                if (user) {
+                  //
+                } else {
+                  setIsOpenedAuthorizationWarningModalWindow(true);
+                }
+              }}
+            >
+              <span className={style.spanOfNumber}>{followersCount}</span>
               подписчиков
             </div>
-            <div style={{ cursor: "pointer" }}>
-              <span className={style.spanOfNumber}>{following.length}</span>
+            <div
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                if (user) {
+                  //
+                } else {
+                  setIsOpenedAuthorizationWarningModalWindow(true);
+                }
+              }}
+            >
+              <span className={style.spanOfNumber}>{followingsCount}</span>
               подписок
             </div>
           </div>

@@ -1,9 +1,9 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { postStore, accountStore, userStore } from "../../store/store";
-import TextWithLinks from "../post_caption/TextWithLinks";
-import { IComment } from "../../lib/types/storeTypes";
+import TextWithLinks from "../text_with_links/TextWithLinks";
+import { userStore, accountStore, postStore } from "../../store/store";
 import { addLikeToComment, deleteLikeFromComment } from "../../lib/requests/commentsRequests";
+import { IComment } from "../../lib/types/storeTypes";
 import style from "./Comment.module.css";
 import * as Icon from "react-bootstrap-icons";
 

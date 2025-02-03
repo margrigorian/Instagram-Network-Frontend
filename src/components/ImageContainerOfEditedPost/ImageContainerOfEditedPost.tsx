@@ -1,11 +1,11 @@
 import React from "react";
-import { userStore, accountStore, postStore, storeOfEditedPost } from "../../store/store";
 import CollectionOfImagesInNewPost from "../collection_of_images_in_new_post/CollectionOfImagesInNewPost";
+import { userStore, accountStore, postStore, storeOfEditedPost } from "../../store/store";
 import { deleteImage } from "../../lib/requests/postsRequests";
+import style from "./ImageContainerOfEditedPost.module.css";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import KeyboardArrowLeftOutlinedIcon from "@mui/icons-material/KeyboardArrowLeftOutlined";
 import KeyboardArrowRightOutlinedIcon from "@mui/icons-material/KeyboardArrowRightOutlined";
-import style from "./ImageContainerOfEditedPost.module.css";
 
 const ImageContainerForNewPost: React.FC = () => {
   const token = userStore(state => state.token);

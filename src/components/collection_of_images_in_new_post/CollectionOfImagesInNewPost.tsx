@@ -1,9 +1,9 @@
-import React, { useRef, useState } from "react";
+import React, { useState, useRef } from "react";
 import { storeOfEditedPost } from "../../store/store";
 import style from "./CollectionOfImagesInNewPost.module.css";
-import * as Icon from "react-bootstrap-icons";
 import KeyboardArrowLeftOutlinedIcon from "@mui/icons-material/KeyboardArrowLeftOutlined";
 import KeyboardArrowRightOutlinedIcon from "@mui/icons-material/KeyboardArrowRightOutlined";
+import * as Icon from "react-bootstrap-icons";
 
 const CollectionOfImagesInNewPost: React.FC = () => {
   const files = storeOfEditedPost(state => state.files);

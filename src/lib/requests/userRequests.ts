@@ -1,5 +1,5 @@
 import axios from "axios";
-import { IUser, IAccount, IAvatar } from "../types/storeTypes";
+import { IUser, IAvatar } from "../types/storeTypes";
 import { IUserInfoBody } from "../types/bodyTypesRequested";
 
 interface IResponse<T> {
@@ -10,30 +10,6 @@ interface IResponse<T> {
 type Message = {
   message: string;
 };
-
-async function getAccountInfo(login: string | undefined): Promise<IResponse<IAccount> | null> {
-  try {
-    // useParams имеет тип string | undefined
-    if (login) {
-      const data = await axios({
-        method: "get",
-        url: `http://localhost:3001/accounts/${login}`,
-        headers: {
-          "Content-Type": "application/json; charset=utf-8"
-        }
-      });
-
-      return data.data.data;
-    } else {
-      return null;
-    }
-  } catch (err) {
-    // из ошибки не получается вытащить body
-    console.log(err);
-    // чтобы на фронте отрисовать отсутствие такого аккаунта
-    return null;
-  }
-}
 
 async function postAvatar(data: FormData, token: string): Promise<IResponse<IAvatar> | undefined> {
   try {
@@ -110,4 +86,4 @@ async function putUserInfo(
   }
 }
 
-export { getAccountInfo, postAvatar, putAvatar, deleteAvatar, putUserInfo };
+export { postAvatar, putAvatar, deleteAvatar, putUserInfo };

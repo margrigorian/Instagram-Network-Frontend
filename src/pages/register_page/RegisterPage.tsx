@@ -1,16 +1,15 @@
 import React, { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { NavLink } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { checkLogin, makeRegistration } from "../../lib/requests/authRequests";
+import { useNavigate, NavLink } from "react-router-dom";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { userStore } from "../../store/store";
+import { checkLogin, makeRegistration } from "../../lib/requests/authRequests";
 import { IRegistartionFormData } from "../../lib/types/bodyTypesRequested";
 import style from "./RegisterPage.module.css";
 import { ThemeProvider } from "@mui/material/styles";
 import { textFieldTheme } from "../../theme/theme";
+import FacebookIcon from "@mui/icons-material/Facebook";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
-import FacebookIcon from "@mui/icons-material/Facebook";
 import * as Icon from "react-bootstrap-icons";
 
 const RegisterPage: React.FC = () => {

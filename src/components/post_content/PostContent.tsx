@@ -1,22 +1,26 @@
-import React, { useRef, useState } from "react";
+import React, { useState, useRef } from "react";
 import { NavLink } from "react-router-dom";
-import { userStore, postStore, accountStore } from "../../store/store";
-import TextWithLinks from "../post_caption/TextWithLinks";
+import TextWithLinks from "../text_with_links/TextWithLinks";
 import Comment from "../comment/Comment";
+import { userStore, accountStore, postStore } from "../../store/store";
 import { postDateCalculation } from "../../lib/postDateCalculation";
+import { addComment } from "../../lib/requests/commentsRequests";
+import { addLikeToPost, deleteLikeFromPost } from "../../lib/requests/postsRequests";
+import { postSubscriptionOnAccount } from "../../lib/requests/accountRequests";
 import { IPost } from "../../lib/types/storeTypes";
 import style from "./PostContent.module.css";
 import * as Icon from "react-bootstrap-icons";
-import { addComment } from "../../lib/requests/commentsRequests";
-import { addLikeToPost, deleteLikeFromPost } from "../../lib/requests/postsRequests";
 
 const PostContent: React.FC<{ post: IPost }> = post => {
   const user = userStore(state => state.user);
   const token = userStore(state => state.token);
-  const following = userStore(state => state.following);
-  const isFollowing = following.find(el => el.login === user?.login);
+  const followings = userStore(state => state.followings);
+  const isFollowing = followings.find(el => el.login === post.post.user_login);
+  const addFollowing = userStore(state => state.addFollowing);
   const comments = postStore(state => state.comments);
   const addCommentToStore = postStore(state => state.addComment);
+  const account = accountStore(state => state.user);
+  const increaseFollowersCount = accountStore(state => state.increaseFollowersCount);
   const increaseCommentsNumberAfterAdding = accountStore(
     state => state.increaseCommentsNumberAfterAdding
   );
@@ -109,7 +113,22 @@ const PostContent: React.FC<{ post: IPost }> = post => {
           {post.post.user_login !== user?.login && !isFollowing && (
             <div className={style.subscriptionContainer}>
               <Icon.Dot className={style.dotIcon} />
-              <div className={style.subscriptionButton}>Подписаться</div>
+              <div
+                className={style.subscriptionButton}
+                onClick={async () => {
+                  // проверка, требуемая типизацией
+                  if (token) {
+                    await postSubscriptionOnAccount(post.post.user_login, token);
+                    addFollowing(post.post.user_login);
+                    if (account?.login === post.post.user_login) {
+                      // если пост со страницы просматриваемого нами аккаунта
+                      increaseFollowersCount();
+                    }
+                  }
+                }}
+              >
+                Подписаться
+              </div>
             </div>
           )}
         </div>

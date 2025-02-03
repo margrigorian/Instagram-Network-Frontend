@@ -1,7 +1,7 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import { userStore } from "../../store/store";
 import NavBar from "../../components/navbar/NavBar";
+import { userStore } from "../../store/store";
 import style from "./HomepAge.module.css";
 
 const HomePage: React.FC = () => {

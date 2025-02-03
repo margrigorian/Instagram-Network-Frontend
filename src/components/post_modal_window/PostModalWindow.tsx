@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { userStore, accountStore, postStore, storeOfEditedPost } from "../../store/store";
-import { IPost } from "../../lib/types/storeTypes";
-import { deleteComment, getComments } from "../../lib/requests/commentsRequests";
 import PostContent from "../post_content/PostContent";
 import PostEditModalWindow from "../post_edit_modal_window/PostEditModalWindow";
+import { userStore, accountStore, postStore, storeOfEditedPost } from "../../store/store";
+import { getComments, deleteComment } from "../../lib/requests/commentsRequests";
+import { deletePost } from "../../lib/requests/postsRequests";
+import { IPost } from "../../lib/types/storeTypes";
 import style from "./PostModalWindow.module.css";
-import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import KeyboardArrowLeftOutlinedIcon from "@mui/icons-material/KeyboardArrowLeftOutlined";
 import KeyboardArrowRightOutlinedIcon from "@mui/icons-material/KeyboardArrowRightOutlined";
-import { deletePost } from "../../lib/requests/postsRequests";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 
 const PostModalWindow: React.FC<{ posts: IPost[] }> = array => {
   const user = userStore(state => state.user);

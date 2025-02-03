@@ -4,30 +4,35 @@ import { IUserStore, IAccountStore, IStoreOfEditedPost, IPostStore } from "../li
 export const userStore = create<IUserStore>(set => ({
   user: null,
   followers: [],
-  following: [],
+  followings: [],
   token: null,
 
   setUser: obj => set({ user: obj }),
   setFollowers: followers => set({ followers: followers }),
-  setFollowing: following => set({ following: following }),
+  setFollowings: following => set({ followings: following }),
   setAvatar: image =>
     set(state => ({
       user: state.user ? { ...state.user, avatar: image } : null
     })),
-  setToken: token => set({ token: token })
+  setToken: token => set({ token: token }),
+  addFollowing: login =>
+    set(state => ({
+      followings: [...state.followings, { login }]
+    }))
 }));
 
 export const accountStore = create<IAccountStore>(set => ({
   user: null,
-  followers: [],
-  following: [],
+  followers_count: 0,
+  followings_count: 0,
   posts: [],
   isOpenedAuthorizationWarningModalWindow: false,
   reloudAccountPage: false,
 
   setUser: obj => set({ user: obj }),
-  setFollowers: arr => set({ followers: arr }),
-  setFollowing: arr => set({ following: arr }),
+  setFollowersCount: value => set({ followers_count: value }),
+  setFollowingsCount: value => set({ followings_count: value }),
+  increaseFollowersCount: () => set(state => ({ followers_count: state.followers_count + 1 })),
   setPosts: arr => set({ posts: arr }),
   addNewPost: post =>
     set(state => ({

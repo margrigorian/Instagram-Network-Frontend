@@ -11,14 +11,15 @@ export interface IUser {
 export interface IUserStore {
   user: IUser | null;
   followers: { login: string }[];
-  following: { login: string }[];
+  followings: { login: string }[];
   token: string | null;
 
   setUser: (obj: IUser) => void;
   setFollowers: (array: { login: string }[]) => void;
-  setFollowing: (array: { login: string }[]) => void;
+  setFollowings: (array: { login: string }[]) => void;
   setAvatar: (image: string | null) => void;
   setToken: (token: string) => void;
+  addFollowing: (login: string) => void;
 }
 
 export interface IAvatar {
@@ -47,8 +48,8 @@ interface IImage {
 
 export interface IAccount {
   user: IUser | null;
-  followers: { login: string }[];
-  following: { login: string }[];
+  followers_count: number;
+  followings_count: number;
   posts: IPost[];
   isOpenedAuthorizationWarningModalWindow: boolean;
   reloudAccountPage: boolean;
@@ -56,8 +57,9 @@ export interface IAccount {
 
 export interface IAccountStore extends IAccount {
   setUser: (obj: IUser | null) => void;
-  setFollowers: (arr: { login: string }[]) => void;
-  setFollowing: (arr: { login: string }[]) => void;
+  setFollowersCount: (value: number) => void;
+  setFollowingsCount: (value: number) => void;
+  increaseFollowersCount: () => void;
   setPosts: (arr: IPost[]) => void;
   addNewPost: (post: IPost) => void;
   updatePostInStore: (

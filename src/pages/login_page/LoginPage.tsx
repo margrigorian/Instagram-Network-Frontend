@@ -1,22 +1,21 @@
 import React, { useState } from "react";
+import { useNavigate, NavLink } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { NavLink } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import { userStore } from "../../store/store";
 import { makeAuthorization } from "../../lib/requests/authRequests";
 import { ILoginFormData } from "../../lib/types/bodyTypesRequested";
 import style from "./LoginPage.module.css";
 import { ThemeProvider } from "@mui/material/styles";
-import InputAdornment from "@mui/material/InputAdornment";
 import { textFieldTheme } from "../../theme/theme";
 import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
 import FacebookIcon from "@mui/icons-material/Facebook";
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const setUser = userStore(state => state.setUser);
   const setFollowers = userStore(state => state.setFollowers);
-  const setFollowing = userStore(state => state.setFollowing);
+  const setFollowings = userStore(state => state.setFollowings);
   const setToken = userStore(state => state.setToken);
   const [isExistingError, setIsExistingError] = useState(false);
 
@@ -34,7 +33,7 @@ const LoginPage: React.FC = () => {
     if (serverAnswer?.data?.user) {
       setUser(serverAnswer.data.user);
       setFollowers(serverAnswer.data.followers);
-      setFollowing(serverAnswer.data.following);
+      setFollowings(serverAnswer.data.following);
       setToken(serverAnswer.data.token);
       navigate("/home");
     } else {

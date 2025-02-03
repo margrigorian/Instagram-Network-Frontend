@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
-import { storeOfEditedPost } from "../../store/store";
 import ImageContainerOfEditedPost from "../ImageContainerOfEditedPost/ImageContainerOfEditedPost";
 import ModalWindowOfReadyNewPost from "../modal_window_of_ready_new_post/ModalWindowOfReadyNewPost";
+import { storeOfEditedPost } from "../../store/store";
 import style from "./NewPostModalWindow.module.css";
 import * as Icon from "react-bootstrap-icons";
 

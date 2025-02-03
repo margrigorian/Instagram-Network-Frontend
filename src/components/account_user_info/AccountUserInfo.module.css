@@ -54,9 +54,7 @@
   cursor: pointer;
 }
 .subscriptionsButton {
-  display: flex;
-  align-items: center;
-  padding: 7px 20px 3px 20px;
+  padding: 10px 20px 7px 20px;
 }
 .recommendationButton {
   margin-right: 10px;

@@ -1,10 +1,10 @@
 import React, { useMemo } from "react";
-import NewPostContent from "../new_post_content/NewPostContent";
 import ImageContainerOfEditedPost from "../ImageContainerOfEditedPost/ImageContainerOfEditedPost";
-import { userStore, postStore, storeOfEditedPost, accountStore } from "../../store/store";
+import NewPostContent from "../new_post_content/NewPostContent";
+import { userStore, accountStore, postStore, storeOfEditedPost } from "../../store/store";
 import { updatePost } from "../../lib/requests/postsRequests";
-import style from "./PostEditModalWindow.module.css";
 import { IPost } from "../../lib/types/storeTypes";
+import style from "./PostEditModalWindow.module.css";
 
 const PostEditModalWindow: React.FC<{ post: IPost }> = ({ post }) => {
   const token = userStore(state => state.token);
