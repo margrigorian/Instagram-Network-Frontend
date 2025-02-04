@@ -109,7 +109,7 @@ const PostContent: React.FC<{ post: IPost }> = post => {
             {post.post.user_login}
           </NavLink>
           {post.post.verification ? <div className={style.verificationIcon}></div> : ""}
-          {/* Это должен быть не мой пост и я еще не должны быть подписана на пользователя */}
+          {/* Это должен быть не мой пост и я еще не должна быть подписана на пользователя */}
           {post.post.user_login !== user?.login && !isFollowing && (
             <div className={style.subscriptionContainer}>
               <Icon.Dot className={style.dotIcon} />

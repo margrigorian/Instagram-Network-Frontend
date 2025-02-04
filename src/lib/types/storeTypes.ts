@@ -51,6 +51,7 @@ export interface IAccount {
   followers_count: number;
   followings_count: number;
   posts: IPost[];
+  isOpenedFollowersAndFollowingsModalWindow: boolean;
   isOpenedAuthorizationWarningModalWindow: boolean;
   reloudAccountPage: boolean;
 }
@@ -60,6 +61,7 @@ export interface IAccountStore extends IAccount {
   setFollowersCount: (value: number) => void;
   setFollowingsCount: (value: number) => void;
   increaseFollowersCount: () => void;
+  increaseFollowingsCount: () => void;
   setPosts: (arr: IPost[]) => void;
   addNewPost: (post: IPost) => void;
   updatePostInStore: (
@@ -74,6 +76,7 @@ export interface IAccountStore extends IAccount {
   deleteLikeFromPostInStore: (post_id: string, login: string) => void;
   deleteImageOfPostInStore: (post_id: string, img_index: number) => void;
   deletePostFromStore: (post_id: string) => void;
+  setIsOpenedFollowersAndFollowingsModalWindow: (value: boolean) => void;
   setIsOpenedAuthorizationWarningModalWindow: (value: boolean) => void;
   setReloudAccountPage: () => void;
 }
@@ -99,6 +102,14 @@ export interface IStoreOfEditedPost {
   setPostCaption: (text: string) => void;
   setImagesOfEditedPost: (images: IImage[]) => void;
   deleteImageInEditedPost: (index: number) => void;
+}
+
+export interface IFollowerOrFollowing {
+  login: string;
+  username: string | null;
+  avatar: string | null;
+  verification: boolean;
+  follow_account?: boolean;
 }
 
 export interface IPostStore {

@@ -26,6 +26,7 @@ export const accountStore = create<IAccountStore>(set => ({
   followers_count: 0,
   followings_count: 0,
   posts: [],
+  isOpenedFollowersAndFollowingsModalWindow: false,
   isOpenedAuthorizationWarningModalWindow: false,
   reloudAccountPage: false,
 
@@ -33,6 +34,7 @@ export const accountStore = create<IAccountStore>(set => ({
   setFollowersCount: value => set({ followers_count: value }),
   setFollowingsCount: value => set({ followings_count: value }),
   increaseFollowersCount: () => set(state => ({ followers_count: state.followers_count + 1 })),
+  increaseFollowingsCount: () => set(state => ({ followings_count: state.followings_count + 1 })),
   setPosts: arr => set({ posts: arr }),
   addNewPost: post =>
     set(state => ({
@@ -110,6 +112,8 @@ export const accountStore = create<IAccountStore>(set => ({
     set(state => ({
       posts: state.posts.filter(post => post.id !== post_id)
     })),
+  setIsOpenedFollowersAndFollowingsModalWindow: value =>
+    set({ isOpenedFollowersAndFollowingsModalWindow: value }),
   setIsOpenedAuthorizationWarningModalWindow: value =>
     set({ isOpenedAuthorizationWarningModalWindow: value }),
   setReloudAccountPage: () => set(state => ({ reloudAccountPage: !state.reloudAccountPage }))

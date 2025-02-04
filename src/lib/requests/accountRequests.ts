@@ -1,5 +1,5 @@
 import axios from "axios";
-import { IAccount } from "../types/storeTypes";
+import { IAccount, IFollowerOrFollowing } from "../types/storeTypes";
 
 interface IResponse<T> {
   data: T | null;
@@ -34,6 +34,33 @@ async function getAccountInfo(login: string | undefined): Promise<IResponse<IAcc
   }
 }
 
+async function getAccounts(
+  login: string,
+  path: string,
+  search: string,
+  token: string
+): Promise<IFollowerOrFollowing[] | undefined> {
+  try {
+    let searchParam = "";
+    if (search) {
+      searchParam = `search=${search}`;
+    }
+
+    const accounts = await axios({
+      method: "get",
+      url: `http://localhost:3001/accounts/${login}/${path}?${searchParam}`,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        authorization: `Bearer ${token}`
+      }
+    });
+
+    return accounts.data.data.data;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 async function postSubscriptionOnAccount(login: string, token: string): Promise<void> {
   try {
     const subscription = await axios({
@@ -51,4 +78,4 @@ async function postSubscriptionOnAccount(login: string, token: string): Promise<
   }
 }
 
-export { getAccountInfo, postSubscriptionOnAccount };
+export { getAccountInfo, getAccounts, postSubscriptionOnAccount };

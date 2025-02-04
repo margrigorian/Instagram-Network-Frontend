@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, NavLink } from "react-router-dom";
 import NavBar from "../../components/navbar/NavBar";
 import AccountUserInfo from "../../components/account_user_info/AccountUserInfo";
+import FollowersAndFollowingsModalWindow from "../../components/followers_and_followings_modal_window/FollowersAndFollowingsModalWindow";
 import PostModalWindow from "../../components/post_modal_window/PostModalWindow";
 import { userStore, accountStore, postStore } from "../../store/store";
 import { getAccountInfo } from "../../lib/requests/accountRequests";
@@ -23,6 +24,12 @@ const AccountPage: React.FC = () => {
   const isOpenedPostModalWindow = postStore(state => state.isOpenedPostModalWindow);
   const setIsOpenedPostModalWindow = postStore(state => state.setIsOpenedPostModalWindow);
   const setIndexOfCurrentPost = postStore(state => state.setIndexOfCurrentPost);
+  const isOpenedFollowersAndFollowingsModalWindow = accountStore(
+    state => state.isOpenedFollowersAndFollowingsModalWindow
+  );
+  const setIsOpenedFollowersAndFollowingsModalWindow = accountStore(
+    state => state.setIsOpenedFollowersAndFollowingsModalWindow
+  );
   const isOpenedAuthorizationWarningModalWindow = accountStore(
     state => state.isOpenedAuthorizationWarningModalWindow
   );
@@ -40,8 +47,13 @@ const AccountPage: React.FC = () => {
   //   setIsOpenedPostModalWindow();
   // };
 
-  // смена url при открытии модального окна
-  const handleModalOpen = (postId: string, lengthOfImagesArray: number): void => {
+  const handleFollowersAndFollowingsModalOpen = (path: string): void => {
+    window.history.pushState({}, "", `/accounts/${account?.login}/${path}`);
+    setIsOpenedFollowersAndFollowingsModalWindow(true);
+  };
+
+  // смена url при открытии модального окна поста
+  const handlePostModalOpen = (postId: string, lengthOfImagesArray: number): void => {
     const postUrl = lengthOfImagesArray > 1 ? `/p/${postId}/?img_index=1` : `/p/${postId}/`; // Новый URL
     window.history.pushState({}, "", postUrl);
     setIsOpenedPostModalWindow(true);
@@ -102,6 +114,7 @@ const AccountPage: React.FC = () => {
           </div>
         </div>
       )}
+      {isOpenedFollowersAndFollowingsModalWindow && <FollowersAndFollowingsModalWindow />}
       {isOpenedPostModalWindow && <PostModalWindow posts={posts} />}
       {/* header при неавторизации */}
       {!user ? (
@@ -126,7 +139,9 @@ const AccountPage: React.FC = () => {
           <div className={style.loading}></div>
         ) : account ? (
           <div>
-            <AccountUserInfo />
+            <AccountUserInfo
+              handleFollowersAndFollowingsModalOpen={handleFollowersAndFollowingsModalOpen}
+            />
 
             <div className={style.highlightsContainer}>
               <div className={style.highlightsCircle}>
@@ -167,7 +182,7 @@ const AccountPage: React.FC = () => {
                     onClick={() => {
                       if (user) {
                         setIndexOfCurrentPost(i);
-                        handleModalOpen(el.id, el.images.length);
+                        handlePostModalOpen(el.id, el.images.length);
                       } else {
                         setIsOpenedAuthorizationWarningModalWindow(true);
                       }

@@ -7,7 +7,13 @@ import PersonAddAltOutlinedIcon from "@mui/icons-material/PersonAddAltOutlined";
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 import * as Icon from "react-bootstrap-icons";
 
-const AccountUserInfo: React.FC = () => {
+interface IAccountUserInfoProps {
+  handleFollowersAndFollowingsModalOpen: (path: string) => void;
+}
+
+const AccountUserInfo: React.FC<IAccountUserInfoProps> = ({
+  handleFollowersAndFollowingsModalOpen
+}) => {
   const user = userStore(state => state.user);
   const token = userStore(state => state.token);
   const followers = userStore(state => state.followers);
@@ -132,7 +138,7 @@ const AccountUserInfo: React.FC = () => {
               className={style.followersContainer}
               onClick={() => {
                 if (user) {
-                  //
+                  handleFollowersAndFollowingsModalOpen("followers");
                 } else {
                   setIsOpenedAuthorizationWarningModalWindow(true);
                 }
@@ -145,7 +151,7 @@ const AccountUserInfo: React.FC = () => {
               style={{ cursor: "pointer" }}
               onClick={() => {
                 if (user) {
-                  //
+                  handleFollowersAndFollowingsModalOpen("following");
                 } else {
                   setIsOpenedAuthorizationWarningModalWindow(true);
                 }
