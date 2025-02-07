@@ -1,5 +1,6 @@
 import React from "react";
-import { userStore, storeOfEditedPost } from "../../store/store";
+import { userStore } from "../../store/userStore";
+import { storeOfEditedPost } from "../../store/postStore";
 import style from "./NewPostContent.module.css";
 import * as Icon from "react-bootstrap-icons";
 

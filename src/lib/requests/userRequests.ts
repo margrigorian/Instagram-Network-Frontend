@@ -1,6 +1,6 @@
 import axios from "axios";
-import { IUser, IAvatar } from "../types/storeTypes";
-import { IUserInfoBody } from "../types/bodyTypesRequested";
+import { IUserInfoBody } from "./types/bodyTypesRequested";
+import { IUser, IAvatar } from "../../store/types/userStoreTypes";
 
 interface IResponse<T> {
   data: T | null;

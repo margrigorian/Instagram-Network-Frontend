@@ -1,5 +1,5 @@
 import axios from "axios";
-import { IPost } from "../types/storeTypes";
+import { IPost } from "../../store/types/postStoreTypes";
 
 interface IResponse<T> {
   data: T | null;

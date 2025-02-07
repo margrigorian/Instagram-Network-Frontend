@@ -1,7 +1,11 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { userStore, accountStore } from "../../store/store";
-import { postSubscriptionOnAccount } from "../../lib/requests/accountRequests";
+import { userStore } from "../../store/userStore";
+import { accountStore } from "../../store/accountStore";
+import {
+  postSubscriptionOnAccount,
+  deleteSubscriptionOnAccount
+} from "../../lib/requests/accountRequests";
 import style from "./AccountUserInfo.module.css";
 import PersonAddAltOutlinedIcon from "@mui/icons-material/PersonAddAltOutlined";
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
@@ -19,11 +23,13 @@ const AccountUserInfo: React.FC<IAccountUserInfoProps> = ({
   const followers = userStore(state => state.followers);
   const followings = userStore(state => state.followings);
   const addFollowing = userStore(state => state.addFollowing);
+  const deleteFollowing = userStore(state => state.deleteFollowing);
   const account = accountStore(state => state.user);
   const posts = accountStore(state => state.posts);
   const followersCount = accountStore(state => state.followers_count);
   const followingsCount = accountStore(state => state.followings_count);
   const increaseFollowersCount = accountStore(state => state.increaseFollowersCount);
+  const decreaseFollowersCount = accountStore(state => state.decreaseFollowersCount);
   const setIsOpenedAuthorizationWarningModalWindow = accountStore(
     state => state.setIsOpenedAuthorizationWarningModalWindow
   );
@@ -37,6 +43,15 @@ const AccountUserInfo: React.FC<IAccountUserInfoProps> = ({
       await postSubscriptionOnAccount(account.login, token);
       addFollowing(account.login);
       increaseFollowersCount();
+    }
+  }
+
+  async function removeSubscriptionOnAccount() {
+    // проверка, требуемая типизацией
+    if (account?.login && token) {
+      await deleteSubscriptionOnAccount(account.login, token);
+      deleteFollowing(account.login);
+      decreaseFollowersCount();
     }
   }
 
@@ -75,7 +90,14 @@ const AccountUserInfo: React.FC<IAccountUserInfoProps> = ({
                 <div className={style.login}>{account?.login}</div>
                 {account?.verification ? <div className={style.verificationIcon}></div> : ""}
               </div>
-              <button className={`${style.button} ${style.subscriptionsButton}`}>Отменить</button>
+              <button
+                className={`${style.button} ${style.subscriptionsButton}`}
+                onClick={() => {
+                  removeSubscriptionOnAccount();
+                }}
+              >
+                Отменить
+              </button>
               <button style={{ padding: "10px 20px 7px 20px" }} className={style.button}>
                 Отправить сообщение
               </button>

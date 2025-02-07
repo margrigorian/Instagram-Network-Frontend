@@ -1,5 +1,5 @@
 import React, { useRef, Dispatch, SetStateAction } from "react";
-import { userStore } from "../../store/store";
+import { userStore } from "../../store/userStore";
 import { postAvatar, putAvatar, deleteAvatar } from "../../lib/requests/userRequests";
 import style from "./ChangeAvatarModalWindow.module.css";
 

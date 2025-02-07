@@ -34,7 +34,6 @@ const GenderSelectionBlock: React.FC<IGenderSelectionInfoProps> = ({
     genderValue = "Предпочитаю не указывать";
   } else {
     genderValue = "Свой вариант";
-    setIndividualGenderType(backendGenderValue);
   }
   const [frontendGenderValue, setFrontendGenderValue] = useState(genderValue);
 
@@ -79,10 +78,6 @@ const GenderSelectionBlock: React.FC<IGenderSelectionInfoProps> = ({
                   onClick={() => {
                     setFrontendGenderValue("Женский");
                     setBackendGenderValue("#1female");
-                    // чтобы исключить лишний рендеринг
-                    if (individualGenderType) {
-                      setIndividualGenderType("");
-                    }
                     setIsOpenedModalGenderSelectionWindow(false);
                   }}
                   className={style.genderListItem}
@@ -126,10 +121,6 @@ const GenderSelectionBlock: React.FC<IGenderSelectionInfoProps> = ({
                   onClick={() => {
                     setFrontendGenderValue("Мужской");
                     setBackendGenderValue("#2male");
-                    // чтобы исключить лишний рендеринг
-                    if (individualGenderType) {
-                      setIndividualGenderType("");
-                    }
                     setIsOpenedModalGenderSelectionWindow(false);
                   }}
                   className={style.genderListItem}
@@ -175,6 +166,7 @@ const GenderSelectionBlock: React.FC<IGenderSelectionInfoProps> = ({
                     onClick={e => {
                       const radioButton = e.target as HTMLInputElement;
                       setFrontendGenderValue(radioButton.value);
+                      setBackendGenderValue(individualGenderType);
                     }}
                     label="Свой вариант"
                     labelPlacement="start"
@@ -208,12 +200,13 @@ const GenderSelectionBlock: React.FC<IGenderSelectionInfoProps> = ({
                   value={individualGenderType}
                   onClick={() => {
                     // чтобы исключить лишний рендеринг
-                    if (individualGenderType !== "Свой вариант") {
+                    if (frontendGenderValue !== "Свой вариант") {
                       setFrontendGenderValue("Свой вариант");
                     }
                   }}
                   onChange={e => {
                     setIndividualGenderType(e.target.value);
+                    setBackendGenderValue(e.target.value);
                   }}
                   className={style.individualGenderTypeInput}
                   style={
@@ -226,10 +219,6 @@ const GenderSelectionBlock: React.FC<IGenderSelectionInfoProps> = ({
                   onClick={() => {
                     setFrontendGenderValue("Предпочитаю не указывать");
                     setBackendGenderValue(null);
-                    // чтобы исключить лишний рендеринг
-                    if (individualGenderType) {
-                      setIndividualGenderType("");
-                    }
                     setIsOpenedModalGenderSelectionWindow(false);
                   }}
                   className={style.genderListItem}

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { IAccount, IFollowerOrFollowing } from "../types/storeTypes";
+import { IAccount, IFollowerOrFollowing } from "../../store/types/accountStoreTypes";
 
 interface IResponse<T> {
   data: T | null;
@@ -78,4 +78,72 @@ async function postSubscriptionOnAccount(login: string, token: string): Promise<
   }
 }
 
-export { getAccountInfo, getAccounts, postSubscriptionOnAccount };
+async function postSubscriptionOnFollowerOrFollowing(
+  acoount_login: string,
+  path: string,
+  login_of_following: string,
+  token: string
+): Promise<void> {
+  try {
+    const subscription = await axios({
+      method: "post",
+      url: `http://localhost:3001/accounts/${acoount_login}/${path}?login_of_following=${login_of_following}`,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        authorization: `Bearer ${token}`
+      }
+    });
+
+    console.log(subscription.data.data);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function deleteSubscriptionOnAccount(login: string, token: string): Promise<void> {
+  try {
+    const subscription = await axios({
+      method: "delete",
+      url: `http://localhost:3001/accounts/${login}`,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        authorization: `Bearer ${token}`
+      }
+    });
+
+    console.log(subscription.data.data);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function deleteFollowerOrSubscription(
+  acoount_login: string,
+  path: string,
+  login_of_following: string,
+  token: string
+): Promise<void> {
+  try {
+    const subscription = await axios({
+      method: "delete",
+      url: `http://localhost:3001/accounts/${acoount_login}/${path}?login_of_following=${login_of_following}`,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        authorization: `Bearer ${token}`
+      }
+    });
+
+    console.log(subscription.data.data);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export {
+  getAccountInfo,
+  getAccounts,
+  postSubscriptionOnAccount,
+  postSubscriptionOnFollowerOrFollowing,
+  deleteSubscriptionOnAccount,
+  deleteFollowerOrSubscription
+};

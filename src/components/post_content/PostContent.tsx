@@ -2,12 +2,14 @@ import React, { useState, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import TextWithLinks from "../text_with_links/TextWithLinks";
 import Comment from "../comment/Comment";
-import { userStore, accountStore, postStore } from "../../store/store";
+import { userStore } from "../../store/userStore";
+import { accountStore } from "../../store/accountStore";
+import { postStore } from "../../store/postStore";
 import { postDateCalculation } from "../../lib/postDateCalculation";
 import { addComment } from "../../lib/requests/commentsRequests";
 import { addLikeToPost, deleteLikeFromPost } from "../../lib/requests/postsRequests";
 import { postSubscriptionOnAccount } from "../../lib/requests/accountRequests";
-import { IPost } from "../../lib/types/storeTypes";
+import { IPost } from "../../store/types/postStoreTypes";
 import style from "./PostContent.module.css";
 import * as Icon from "react-bootstrap-icons";
 

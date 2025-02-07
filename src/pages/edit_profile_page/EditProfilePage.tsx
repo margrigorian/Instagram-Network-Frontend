@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 import NavBar from "../../components/navbar/NavBar";
 import ChangeAvatarModalWindow from "../../components/change_avatar_modal_window/ChangeAvatarModalWindow";
 import GenderSelectionBlock from "../../components/gender_selection_block/GenderSelectionBlock";
-import { userStore } from "../../store/store";
+import { userStore } from "../../store/userStore";
 import { putUserInfo } from "../../lib/requests/userRequests";
 import style from "./EditProfilePage.module.css";
 import { IOSSwitch } from "../../theme/theme";
@@ -22,13 +22,16 @@ const EditProfilePage: React.FC = () => {
   const [textAbout, setTextAbout] = useState(user && user.about ? user.about : "");
   // чтобы исключить undefined
   const [backendGenderValue, setBackendGenderValue] = useState(user ? user.gender : null);
-  const [individualGenderType, setIndividualGenderType] = useState("");
+  // чтобы в случае "своего варианта" в input сразу отоборажались данные пользователя
+  const [individualGenderType, setIndividualGenderType] = useState(
+    user?.gender && user.gender !== "#1female" && user.gender !== "#2male" ? user.gender : ""
+  );
   const [recommendation, setRecommendation] = useState(user ? user.recommendation : true);
 
   async function updateUserInfo(): Promise<void> {
     const data = {
       about: textAbout,
-      gender: individualGenderType ? individualGenderType : backendGenderValue,
+      gender: backendGenderValue,
       recommendation
     };
 
@@ -41,6 +44,7 @@ const EditProfilePage: React.FC = () => {
       }
     }
   }
+  console.log(backendGenderValue);
 
   return (
     <div>
@@ -149,7 +153,7 @@ const EditProfilePage: React.FC = () => {
                 // кнопка станет доступной при изменениях
                 disabled={
                   user.about !== textAbout ||
-                  user.gender !== backendGenderValue ||
+                  (user.gender !== backendGenderValue && backendGenderValue !== "") ||
                   user.recommendation !== recommendation
                     ? false
                     : true
@@ -160,7 +164,7 @@ const EditProfilePage: React.FC = () => {
                 }}
                 className={
                   user.about !== textAbout ||
-                  user.gender !== backendGenderValue ||
+                  (user.gender !== backendGenderValue && backendGenderValue !== "") ||
                   user.recommendation !== recommendation
                     ? style.sendButton
                     : style.disabledSendButton

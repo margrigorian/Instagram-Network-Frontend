@@ -1,9 +1,11 @@
 import React, { useMemo } from "react";
 import ImageContainerOfEditedPost from "../ImageContainerOfEditedPost/ImageContainerOfEditedPost";
 import NewPostContent from "../new_post_content/NewPostContent";
-import { userStore, accountStore, postStore, storeOfEditedPost } from "../../store/store";
+import { userStore } from "../../store/userStore";
+import { accountStore } from "../../store/accountStore";
+import { postStore, storeOfEditedPost } from "../../store/postStore";
 import { updatePost } from "../../lib/requests/postsRequests";
-import { IPost } from "../../lib/types/storeTypes";
+import { IPost } from "../../store/types/postStoreTypes";
 import style from "./PostEditModalWindow.module.css";
 
 const PostEditModalWindow: React.FC<{ post: IPost }> = ({ post }) => {

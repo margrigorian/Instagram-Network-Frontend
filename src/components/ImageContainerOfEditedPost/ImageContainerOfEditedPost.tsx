@@ -1,6 +1,8 @@
 import React from "react";
 import CollectionOfImagesInNewPost from "../collection_of_images_in_new_post/CollectionOfImagesInNewPost";
-import { userStore, accountStore, postStore, storeOfEditedPost } from "../../store/store";
+import { userStore } from "../../store/userStore";
+import { accountStore } from "../../store/accountStore";
+import { postStore, storeOfEditedPost } from "../../store/postStore";
 import { deleteImage } from "../../lib/requests/postsRequests";
 import style from "./ImageContainerOfEditedPost.module.css";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";

@@ -1,6 +1,6 @@
 import axios from "axios";
-import { IComment } from "../types/storeTypes";
-import { ICommentBody } from "../types/bodyTypesRequested";
+import { IComment } from "../../store/types/postStoreTypes";
+import { ICommentBody } from "./types/bodyTypesRequested";
 
 interface IResponse<T> {
   data: T | null;

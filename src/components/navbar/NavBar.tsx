@@ -1,6 +1,8 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { userStore, accountStore, storeOfEditedPost } from "../../store/store";
+import { userStore } from "../../store/userStore";
+import { accountStore } from "../../store/accountStore";
+import { storeOfEditedPost } from "../../store/postStore";
 import style from "./NavBar.module.css";
 import * as Icon from "react-bootstrap-icons";
 

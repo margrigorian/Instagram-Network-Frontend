@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate, NavLink } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { userStore } from "../../store/store";
+import { userStore } from "../../store/userStore";
 import { makeAuthorization } from "../../lib/requests/authRequests";
-import { ILoginFormData } from "../../lib/types/bodyTypesRequested";
+import { ILoginFormData } from "../../lib/requests/types/bodyTypesRequested";
 import style from "./LoginPage.module.css";
 import { ThemeProvider } from "@mui/material/styles";
 import { textFieldTheme } from "../../theme/theme";

@@ -1,6 +1,6 @@
 import axios from "axios";
-import { ILoginFormData, IRegistartionFormData } from "../types/bodyTypesRequested";
-import { IUser } from "../types/storeTypes";
+import { ILoginFormData, IRegistartionFormData } from "./types/bodyTypesRequested";
+import { IUser } from "../../store/types/userStoreTypes";
 
 interface IResponse<T> {
   data: T | null;

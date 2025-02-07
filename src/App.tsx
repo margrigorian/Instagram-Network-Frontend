@@ -1,15 +1,16 @@
-import style from "./App.module.css";
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { userStore, postStore, storeOfEditedPost } from "./store/store";
-import ScrollToTop from "./hoc/ScrollToTheTop";
+import { userStore } from "./store/userStore";
+import { postStore, storeOfEditedPost } from "./store/postStore";
 // import NavBar from "./components/navbar/NavBar";
-import NewPostModalWindow from "./components/new_post_modal_window/NewPostModalWindow";
 import LoginPage from "./pages/login_page/LoginPage";
 import RegisterPage from "./pages/register_page/RegisterPage";
 import HomePage from "./pages/home_page/HomePage";
 import AccountPage from "./pages/account_page/AccountPage";
 import EditProfilePage from "./pages/edit_profile_page/EditProfilePage";
+import NewPostModalWindow from "./components/new_post_modal_window/NewPostModalWindow";
+import ScrollToTop from "./hoc/ScrollToTheTop";
+import style from "./App.module.css";
 
 const App: React.FC = () => {
   const user = userStore(state => state.user);

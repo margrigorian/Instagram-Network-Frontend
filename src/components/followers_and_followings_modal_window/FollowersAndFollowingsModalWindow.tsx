@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, NavLink } from "react-router-dom";
-import { userStore, accountStore } from "../../store/store";
-import { getAccounts, postSubscriptionOnAccount } from "../../lib/requests/accountRequests";
-import { IFollowerOrFollowing } from "../../lib/types/storeTypes";
+import { userStore } from "../../store/userStore";
+import { accountStore } from "../../store/accountStore";
+import {
+  getAccounts,
+  postSubscriptionOnFollowerOrFollowing,
+  deleteFollowerOrSubscription
+} from "../../lib/requests/accountRequests";
+import { IFollowerOrFollowing } from "../../store/types/accountStoreTypes";
 import style from "./FollowersAndFollowingsModalWindow.module.css";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import * as Icon from "react-bootstrap-icons";
@@ -12,7 +17,10 @@ const FollowersAndFollowingsModalWindow: React.FC = () => {
   const user = userStore(state => state.user);
   const token = userStore(state => state.token);
   const addFollowing = userStore(state => state.addFollowing);
+  const deleteFollowing = userStore(state => state.deleteFollowing);
   const increaseFollowingsCount = accountStore(state => state.increaseFollowingsCount);
+  const decreaseFollowersCount = accountStore(state => state.decreaseFollowersCount);
+  const decreaseFollowingsCount = accountStore(state => state.decreaseFollowingsCount);
   const setIsOpenedFollowersAndFollowingsModalWindow = accountStore(
     state => state.setIsOpenedFollowersAndFollowingsModalWindow
   );
@@ -44,11 +52,11 @@ const FollowersAndFollowingsModalWindow: React.FC = () => {
     makeRequest();
   }, [search]);
 
-  async function addSubscription(login: string) {
-    if (token) {
-      await postSubscriptionOnAccount(login, token);
+  async function addSubscription(login_of_following: string) {
+    if (account && token) {
+      await postSubscriptionOnFollowerOrFollowing(account.login, path, login_of_following, token);
       const updatedAccountsArr = accounts.map(item => {
-        if (item.login === login) {
+        if (item.login === login_of_following) {
           item.follow_account = true;
           return item;
         } else {
@@ -56,10 +64,40 @@ const FollowersAndFollowingsModalWindow: React.FC = () => {
         }
       });
       setAccounts(updatedAccountsArr);
-      addFollowing(login);
+      addFollowing(login_of_following);
       // чтобы были отображены изменения на нашей странице
-      if (account?.login === user?.login) {
+      if (account.login === user?.login) {
         increaseFollowingsCount();
+      }
+    }
+  }
+
+  async function removeFollowerOrSubscription(login_of_following: string) {
+    // проверка, требуемая типизацией
+    if (account?.login && token) {
+      await deleteFollowerOrSubscription(account.login, path, login_of_following, token);
+      let updatedAccountsArr;
+      if (account.login === user?.login) {
+        updatedAccountsArr = accounts.filter(item => item.login !== login_of_following);
+      } else {
+        updatedAccountsArr = accounts.map(item => {
+          if (item.login === login_of_following) {
+            item.follow_account = false;
+            return item;
+          } else {
+            return item;
+          }
+        });
+      }
+      setAccounts(updatedAccountsArr);
+      deleteFollowing(login_of_following);
+      // чтобы были отображены изменения на нашей странице
+      if (account.login === user?.login) {
+        if (path === "followers") {
+          decreaseFollowersCount();
+        } else {
+          decreaseFollowingsCount();
+        }
       }
     }
   }
@@ -162,10 +200,24 @@ const FollowersAndFollowingsModalWindow: React.FC = () => {
                 </div>
                 {account?.login === user?.login ? (
                   path === "followers" ? (
-                    <div className={`${style.button} ${style.deleteButton}`}>Удалить</div>
+                    <div
+                      className={`${style.button} ${style.deleteButton}`}
+                      onClick={() => {
+                        removeFollowerOrSubscription(el.login);
+                      }}
+                    >
+                      Удалить
+                    </div>
                   ) : (
                     // будет при path === "followings"
-                    <div className={`${style.button} ${style.deleteButton}`}>Отменить</div>
+                    <div
+                      className={`${style.button} ${style.deleteButton}`}
+                      onClick={() => {
+                        removeFollowerOrSubscription(el.login);
+                      }}
+                    >
+                      Отменить
+                    </div>
                   )
                 ) : el.login === user?.login ? (
                   <div></div>
@@ -179,7 +231,14 @@ const FollowersAndFollowingsModalWindow: React.FC = () => {
                     Подписаться
                   </div>
                 ) : (
-                  <div className={`${style.button} ${style.deleteButton}`}>Отменить</div>
+                  <div
+                    className={`${style.button} ${style.deleteButton}`}
+                    onClick={() => {
+                      removeFollowerOrSubscription(el.login);
+                    }}
+                  >
+                    Отменить
+                  </div>
                 )}
               </div>
             ))

@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { storeOfEditedPost } from "../../store/store";
+import { storeOfEditedPost } from "../../store/postStore";
 import style from "./CollectionOfImagesInNewPost.module.css";
 import KeyboardArrowLeftOutlinedIcon from "@mui/icons-material/KeyboardArrowLeftOutlined";
 import KeyboardArrowRightOutlinedIcon from "@mui/icons-material/KeyboardArrowRightOutlined";
@@ -20,8 +20,6 @@ const CollectionOfImagesInNewPost: React.FC = () => {
 
   const imagePicker = useRef(null);
   const [initialIndexOfTheImageCollection, setInitialIndexOfTheImageCollection] = useState(0);
-
-  console.log(`Current=${indexOfCurrentImage}`, `Initial=${initialIndexOfTheImageCollection}`);
 
   return (
     <div className={style.container}>

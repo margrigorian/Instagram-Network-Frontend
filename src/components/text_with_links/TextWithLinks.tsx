@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { postStore, accountStore } from "../../store/store";
+import { accountStore } from "../../store/accountStore";
+import { postStore } from "../../store/postStore";
 import style from "./TextWithLinks.module.css";
 
 interface ITextProps {
