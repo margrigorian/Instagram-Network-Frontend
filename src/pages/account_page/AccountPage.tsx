@@ -7,7 +7,8 @@ import PostModalWindow from "../../components/post_modal_window/PostModalWindow"
 import { userStore } from "../../store/userStore";
 import { accountStore } from "../../store/accountStore";
 import { postStore } from "../../store/postStore";
-import { getAccountInfo } from "../../lib/requests/accountRequests";
+import { searchStore } from "../../store/searchStore";
+import { getAccountInfoWithSearchAccounts } from "../../lib/requests/accountRequests";
 import style from "./AccountPage.module.css";
 import copyImage from "../../pictures/copy.png";
 import GridOnOutlinedIcon from "@mui/icons-material/GridOnOutlined";
@@ -23,6 +24,8 @@ const AccountPage: React.FC = () => {
   const setFollowingsCount = accountStore(state => state.setFollowingsCount);
   const posts = accountStore(state => state.posts);
   const setPosts = accountStore(state => state.setPosts);
+  const search = searchStore(state => state.search);
+  const setSearchAccounts = searchStore(state => state.setSearchAccounts);
   const isOpenedPostModalWindow = postStore(state => state.isOpenedPostModalWindow);
   const setIsOpenedPostModalWindow = postStore(state => state.setIsOpenedPostModalWindow);
   const setIndexOfCurrentPost = postStore(state => state.setIndexOfCurrentPost);
@@ -61,30 +64,50 @@ const AccountPage: React.FC = () => {
     setIsOpenedPostModalWindow(true);
   };
 
+  // информация, необходимая для регулирования очистки searchAccounts
+  const url: string = window.location.pathname;
+  const urlArr = url.split("/");
+  const path = urlArr[urlArr.length - 1];
+
   useEffect(() => {
     async function makeRequest() {
-      const account = await getAccountInfo(login);
-      // есть результаты getAccountInfo, закрываем loading
-      setLoading(false);
-      // при этом, если вынести loading в store, возникает бесконечный цикл
-      // страница безостановочно будет перезагружается
+      if (login) {
+        const accountInfoWithSearchAccounts = await getAccountInfoWithSearchAccounts(login, search);
+        if (search) {
+          // проверка, требуемая типизацией
+          if (accountInfoWithSearchAccounts?.data?.searchAccounts) {
+            console.log(1);
 
-      if (account?.data) {
-        setUser(account.data.user);
-        setFollowersCount(account.data.followers_count);
-        setFollowingsCount(account.data.followings_count);
-        setPosts(account.data.posts);
-      } else {
-        // аккаунт не найден, обнуляем, чтобы старое не сохранялось
-        setUser(null);
-        setFollowersCount(0);
-        setFollowingsCount(0);
-        setPosts([]);
+            setSearchAccounts(accountInfoWithSearchAccounts.data.searchAccounts);
+          }
+        } else {
+          // есть результаты, закрываем loading
+          setLoading(false);
+          // при этом, если вынести loading в store, возникает бесконечный цикл
+          // страница безостановочно будет перезагружается
+
+          if (path !== "followers" && path !== "following") {
+            setSearchAccounts([]);
+          }
+
+          if (accountInfoWithSearchAccounts?.data?.accountInfo) {
+            setUser(accountInfoWithSearchAccounts.data.accountInfo.user);
+            setFollowersCount(accountInfoWithSearchAccounts.data.accountInfo.followers_count);
+            setFollowingsCount(accountInfoWithSearchAccounts.data.accountInfo.followings_count);
+            setPosts(accountInfoWithSearchAccounts.data.accountInfo.posts);
+          } else {
+            // аккаунт не найден, обнуляем, чтобы старое не сохранялось
+            setUser(null);
+            setFollowersCount(0);
+            setFollowingsCount(0);
+            setPosts([]);
+          }
+        }
       }
     }
 
     makeRequest();
-  }, [reloudAccountPage]);
+  }, [search, reloudAccountPage]);
 
   return (
     <div>

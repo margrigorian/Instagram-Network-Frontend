@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import NavBar from "../../components/navbar/NavBar";
 import ChangeAvatarModalWindow from "../../components/change_avatar_modal_window/ChangeAvatarModalWindow";
 import GenderSelectionBlock from "../../components/gender_selection_block/GenderSelectionBlock";
 import { userStore } from "../../store/userStore";
+import { searchStore } from "../../store/searchStore";
 import { putUserInfo } from "../../lib/requests/userRequests";
+import { getSearchAccounts } from "../../lib/requests/accountRequests";
 import style from "./EditProfilePage.module.css";
 import { IOSSwitch } from "../../theme/theme";
 import * as Icon from "react-bootstrap-icons";
@@ -44,7 +46,24 @@ const EditProfilePage: React.FC = () => {
       }
     }
   }
-  console.log(backendGenderValue);
+
+  const search = searchStore(state => state.search);
+  const setSearchAccounts = searchStore(state => state.setSearchAccounts);
+
+  useEffect(() => {
+    async function makeRequest() {
+      // проверка, требуемая типизацией
+      if (token) {
+        const requestedAccounts = await getSearchAccounts(search, token);
+
+        if (requestedAccounts) {
+          setSearchAccounts(requestedAccounts);
+        }
+      }
+    }
+
+    makeRequest();
+  }, [search]);
 
   return (
     <div>

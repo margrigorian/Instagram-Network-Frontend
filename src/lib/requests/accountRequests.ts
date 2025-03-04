@@ -1,5 +1,6 @@
 import axios from "axios";
-import { IAccount, IFollowerOrFollowing } from "../../store/types/accountStoreTypes";
+import { IAccountInfoWithSearchAccounts } from "../../store/types/accountStoreTypes";
+import { ISearchAccount } from "../../store/types/searchStoreTypes";
 
 interface IResponse<T> {
   data: T | null;
@@ -10,22 +11,25 @@ type Message = {
   message: string;
 };
 
-async function getAccountInfo(login: string | undefined): Promise<IResponse<IAccount> | null> {
+async function getAccountInfoWithSearchAccounts(
+  login: string,
+  search: string
+): Promise<IResponse<IAccountInfoWithSearchAccounts> | null> {
   try {
-    // useParams имеет тип string | undefined
-    if (login) {
-      const data = await axios({
-        method: "get",
-        url: `http://localhost:3001/accounts/${login}`,
-        headers: {
-          "Content-Type": "application/json; charset=utf-8"
-        }
-      });
-
-      return data.data.data;
-    } else {
-      return null;
+    let searchParam = "";
+    if (search) {
+      searchParam = `search=${search}`;
     }
+
+    const data = await axios({
+      method: "get",
+      url: `http://localhost:3001/accounts/${login}?${searchParam}`,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8"
+      }
+    });
+
+    return data.data.data;
   } catch (err) {
     // из ошибки не получается вытащить body
     console.log(err);
@@ -34,12 +38,36 @@ async function getAccountInfo(login: string | undefined): Promise<IResponse<IAcc
   }
 }
 
-async function getAccounts(
+async function getSearchAccounts(
+  search: string,
+  token: string
+): Promise<ISearchAccount[] | undefined> {
+  try {
+    let searchParam = "";
+    if (search) {
+      searchParam = `search=${search}`;
+    }
+
+    const accounts = await axios({
+      method: "get",
+      url: `http://localhost:3001/profile/edit?${searchParam}`,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        authorization: `Bearer ${token}`
+      }
+    });
+    return accounts.data.data.data;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function getFollowersOrFollowings(
   login: string,
   path: string,
   search: string,
   token: string
-): Promise<IFollowerOrFollowing[] | undefined> {
+): Promise<ISearchAccount[] | undefined> {
   try {
     let searchParam = "";
     if (search) {
@@ -140,8 +168,9 @@ async function deleteFollowerOrSubscription(
 }
 
 export {
-  getAccountInfo,
-  getAccounts,
+  getAccountInfoWithSearchAccounts,
+  getSearchAccounts,
+  getFollowersOrFollowings,
   postSubscriptionOnAccount,
   postSubscriptionOnFollowerOrFollowing,
   deleteSubscriptionOnAccount,

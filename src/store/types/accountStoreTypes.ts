@@ -1,5 +1,6 @@
 import { IUser } from "./userStoreTypes";
 import { IPost } from "./postStoreTypes";
+import { ISearchAccount } from "./searchStoreTypes";
 
 export interface IAccount {
   user: IUser | null;
@@ -38,10 +39,7 @@ export interface IAccountStore extends IAccount {
   setReloudAccountPage: () => void;
 }
 
-export interface IFollowerOrFollowing {
-  login: string;
-  username: string | null;
-  avatar: string | null;
-  verification: boolean;
-  follow_account?: boolean;
+export interface IAccountInfoWithSearchAccounts {
+  accountInfo: IAccount | null;
+  searchAccounts: ISearchAccount[];
 }

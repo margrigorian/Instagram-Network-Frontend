@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, NavLink } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import SearchInput from "../search_input/SearchInput";
+import SearchUser from "../search_user/SearchUser";
 import { userStore } from "../../store/userStore";
 import { accountStore } from "../../store/accountStore";
+import { searchStore } from "../../store/searchStore";
 import {
-  getAccounts,
+  getFollowersOrFollowings,
   postSubscriptionOnFollowerOrFollowing,
   deleteFollowerOrSubscription
 } from "../../lib/requests/accountRequests";
-import { IFollowerOrFollowing } from "../../store/types/accountStoreTypes";
 import style from "./FollowersAndFollowingsModalWindow.module.css";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-import * as Icon from "react-bootstrap-icons";
 
 const FollowersAndFollowingsModalWindow: React.FC = () => {
   const account = accountStore(state => state.user);
@@ -24,27 +25,37 @@ const FollowersAndFollowingsModalWindow: React.FC = () => {
   const setIsOpenedFollowersAndFollowingsModalWindow = accountStore(
     state => state.setIsOpenedFollowersAndFollowingsModalWindow
   );
-  const setReloudAccountPage = accountStore(state => state.setReloudAccountPage);
+
+  const search = searchStore(state => state.search);
+  const setSearch = searchStore(state => state.setSearch);
+  const searchAccounts = searchStore(state => state.searchAccounts);
+  const setSearchAccounts = searchStore(state => state.setSearchAccounts);
 
   const navigate = useNavigate();
   function handleModalClose() {
     navigate(-1);
     setIsOpenedFollowersAndFollowingsModalWindow(false);
+    setSearch("");
+    setSearchAccounts([]);
   }
 
   const url: string = window.location.pathname;
   const urlArr = url.split("/");
   const path = urlArr[urlArr.length - 1];
-  const [search, setSearch] = useState("");
-  const [accounts, setAccounts] = useState<IFollowerOrFollowing[]>([]);
 
   useEffect(() => {
     async function makeRequest() {
       // проверка, требуемая типизацией
       if (account && token) {
-        const requestedAccounts = await getAccounts(account.login, path, search, token);
+        const requestedAccounts = await getFollowersOrFollowings(
+          account.login,
+          path,
+          search,
+          token
+        );
+
         if (requestedAccounts) {
-          setAccounts(requestedAccounts);
+          setSearchAccounts(requestedAccounts);
         }
       }
     }
@@ -55,7 +66,7 @@ const FollowersAndFollowingsModalWindow: React.FC = () => {
   async function addSubscription(login_of_following: string) {
     if (account && token) {
       await postSubscriptionOnFollowerOrFollowing(account.login, path, login_of_following, token);
-      const updatedAccountsArr = accounts.map(item => {
+      const updatedAccountsArr = searchAccounts.map(item => {
         if (item.login === login_of_following) {
           item.follow_account = true;
           return item;
@@ -63,7 +74,7 @@ const FollowersAndFollowingsModalWindow: React.FC = () => {
           return item;
         }
       });
-      setAccounts(updatedAccountsArr);
+      setSearchAccounts(updatedAccountsArr);
       addFollowing(login_of_following);
       // чтобы были отображены изменения на нашей странице
       if (account.login === user?.login) {
@@ -78,9 +89,9 @@ const FollowersAndFollowingsModalWindow: React.FC = () => {
       await deleteFollowerOrSubscription(account.login, path, login_of_following, token);
       let updatedAccountsArr;
       if (account.login === user?.login) {
-        updatedAccountsArr = accounts.filter(item => item.login !== login_of_following);
+        updatedAccountsArr = searchAccounts.filter(item => item.login !== login_of_following);
       } else {
-        updatedAccountsArr = accounts.map(item => {
+        updatedAccountsArr = searchAccounts.map(item => {
           if (item.login === login_of_following) {
             item.follow_account = false;
             return item;
@@ -89,7 +100,7 @@ const FollowersAndFollowingsModalWindow: React.FC = () => {
           }
         });
       }
-      setAccounts(updatedAccountsArr);
+      setSearchAccounts(updatedAccountsArr);
       deleteFollowing(login_of_following);
       // чтобы были отображены изменения на нашей странице
       if (account.login === user?.login) {
@@ -117,7 +128,9 @@ const FollowersAndFollowingsModalWindow: React.FC = () => {
       >
         <div className={style.header}>
           <div style={{ width: "27px" }}></div>
-          <div style={{ fontWeight: "500" }}>Подписчики</div>
+          <div style={{ fontWeight: "500" }}>
+            {path === "followers" ? "Подписчики" : "Подписки"}
+          </div>
           <CloseOutlinedIcon
             sx={{ fontSize: "28px", cursor: "pointer" }}
             onClick={() => {
@@ -126,78 +139,13 @@ const FollowersAndFollowingsModalWindow: React.FC = () => {
           />
         </div>
         <div className={style.searchContainer}>
-          <div className={style.searchInputContainer}>
-            <Icon.Search style={{ color: "grey" }} />
-            <input
-              placeholder="Поиск"
-              className={style.searchInput}
-              value={search}
-              onChange={e => {
-                setSearch(e.target.value);
-              }}
-            />
-            {search ? (
-              <Icon.XCircleFill
-                style={{ fontSize: "14px", cursor: "pointer" }}
-                onClick={() => {
-                  setSearch("");
-                }}
-              />
-            ) : (
-              <div></div>
-            )}
-          </div>
+          <SearchInput />
         </div>
         <div className={style.accountsContainer}>
-          {accounts.length > 0 ? (
-            accounts.map((el, i) => (
+          {searchAccounts.length > 0 ? (
+            searchAccounts.map((el, i) => (
               <div key={`accountId-${i}`} className={style.accountContainer}>
-                <div className={style.account}>
-                  <NavLink
-                    to={`/accounts/${el.login}`}
-                    onClick={() => {
-                      // чтобы перезагрузилась страница и выполнился request по новому юзеру
-                      setReloudAccountPage();
-                      setIsOpenedFollowersAndFollowingsModalWindow(false);
-                    }}
-                  >
-                    {el.avatar ? (
-                      <img src={el.avatar} className={style.avatarIcon} />
-                    ) : (
-                      <Icon.PersonCircle className={style.defaultAvatar} />
-                    )}
-                  </NavLink>
-                  <div className={style.accountInfoContainer}>
-                    <div className={style.loginContainer}>
-                      <NavLink
-                        to={`/accounts/${el.login}`}
-                        onClick={() => {
-                          // чтобы перезагрузилась страница и выполнился request по новому юзеру
-                          setReloudAccountPage();
-                          setIsOpenedFollowersAndFollowingsModalWindow(false);
-                        }}
-                        className={style.login}
-                      >
-                        {el.login}
-                      </NavLink>
-                      {el.verification ? <div className={style.verificationIcon}></div> : ""}
-                      {account?.login === user?.login && !el?.follow_account && (
-                        <div className={style.subscriptionContainer}>
-                          <Icon.Dot style={{ fontSize: "8px" }} />
-                          <div
-                            className={style.subscriptionButton}
-                            onClick={() => {
-                              addSubscription(el.login);
-                            }}
-                          >
-                            Подписаться
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                    {el.username ? <div className={style.username}>{el.username}</div> : ""}
-                  </div>
-                </div>
+                <SearchUser searchUser={el} addSubscription={addSubscription} />
                 {account?.login === user?.login ? (
                   path === "followers" ? (
                     <div

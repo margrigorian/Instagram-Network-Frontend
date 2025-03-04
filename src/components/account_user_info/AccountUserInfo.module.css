@@ -1,12 +1,13 @@
 .userInfoContainer {
   display: flex;
   align-items: center;
+  justify-content: space-evenly;
 }
 
 .avatar {
-  margin: 0 11%;
   width: 150px;
   height: 150px;
+  margin: 0 20px;
   border: 1px solid lightgrey;
   border-radius: 50%;
   background-size: 100% 100%;
@@ -14,13 +15,13 @@
   cursor: pointer;
 }
 .defaultAvatar {
-  margin: 0 11%;
+  margin: 0 20px;
   width: 150px;
   height: 150px;
   color: lightgrey;
   cursor: pointer;
 }
-.sittingsContainer {
+.settingsContainer {
   display: flex;
   align-items: center;
 }
@@ -30,8 +31,12 @@
   margin-right: 20px;
 }
 .login {
+  max-width: 160px;
   font-size: 20px;
   margin-right: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .verificationIcon {
   background-image: url("../../pictures/free-icon-verify.png");

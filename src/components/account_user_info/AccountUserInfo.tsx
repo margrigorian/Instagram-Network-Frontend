@@ -67,7 +67,7 @@ const AccountUserInfo: React.FC<IAccountUserInfoProps> = ({
         <div>
           {user?.login === account?.login ? (
             // страница профиля
-            <div className={style.sittingsContainer}>
+            <div className={style.settingsContainer}>
               <div className={style.loginContainer}>
                 <div className={style.login}>{account?.login}</div>
                 {account?.verification ? <div className={style.verificationIcon}></div> : ""}
@@ -85,7 +85,7 @@ const AccountUserInfo: React.FC<IAccountUserInfoProps> = ({
           ) : // другие аккаунты
           isSubscription ? (
             // мы подписаны
-            <div className={style.sittingsContainer}>
+            <div className={style.settingsContainer}>
               <div className={style.loginContainer}>
                 <div className={style.login}>{account?.login}</div>
                 {account?.verification ? <div className={style.verificationIcon}></div> : ""}
@@ -112,7 +112,7 @@ const AccountUserInfo: React.FC<IAccountUserInfoProps> = ({
             </div>
           ) : (
             // мы не подписаны
-            <div className={style.sittingsContainer}>
+            <div className={style.settingsContainer}>
               <div className={style.loginContainer}>
                 <div className={style.login}>{account?.login}</div>
                 {account?.verification ? <div className={style.verificationIcon}></div> : ""}
