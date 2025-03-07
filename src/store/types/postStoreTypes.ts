@@ -18,6 +18,24 @@ interface IImage {
 }
 
 export interface IPostStore {
+  // работа с массивом постов аккаунта или со страницы explore
+  posts: IPost[];
+  setPosts: (arr: IPost[]) => void;
+  addNewPost: (post: IPost) => void;
+  updatePostInStore: (
+    post_id: string,
+    caption: string,
+    hashtags: string[],
+    user_links: string[]
+  ) => void;
+  increaseCommentsNumberAfterAdding: (id: string) => void;
+  decreaseCommentsNumberAfterDeleting: (post_id: string, number_of_comments: number) => void;
+  addLikeOnPost: (post_id: string, login: string) => void;
+  deleteLikeFromPostInStore: (post_id: string, login: string) => void;
+  deleteImageOfPostInStore: (post_id: string, img_index: number) => void;
+  deletePostFromStore: (post_id: string) => void;
+
+  // работа с конкретным постом в PostModalWindow
   isOpenedPostModalWindow: boolean;
   indexOfCurrentPost: number;
   comments: IComment[];

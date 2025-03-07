@@ -23,10 +23,10 @@ const PostContent: React.FC<{ post: IPost }> = post => {
   const addCommentToStore = postStore(state => state.addComment);
   const account = accountStore(state => state.user);
   const increaseFollowersCount = accountStore(state => state.increaseFollowersCount);
-  const increaseCommentsNumberAfterAdding = accountStore(
+  const increaseCommentsNumberAfterAdding = postStore(
     state => state.increaseCommentsNumberAfterAdding
   );
-  const deleteLikeFromPostInStore = accountStore(state => state.deleteLikeFromPostInStore);
+  const deleteLikeFromPostInStore = postStore(state => state.deleteLikeFromPostInStore);
   const setIsOpenedPostMenu = postStore(state => state.setIsOpenedPostMenu);
   const setIsOpenedPostModalWindow = postStore(state => state.setIsOpenedPostModalWindow);
   const setReloudAccountPage = accountStore(state => state.setReloudAccountPage);
@@ -67,7 +67,7 @@ const PostContent: React.FC<{ post: IPost }> = post => {
   // БЛОК ДОБАВЛЕНИЯ И УДАЛЕНИЯ ЛАЙКА
   const likes = post.post.likes;
   const user_like = likes.find(el => el === user?.login);
-  const addLikeOnPost = accountStore(state => state.addLikeOnPost);
+  const addLikeOnPost = postStore(state => state.addLikeOnPost);
 
   async function addUserLikeToPost(): Promise<void> {
     // проверка, требуемая типизацией

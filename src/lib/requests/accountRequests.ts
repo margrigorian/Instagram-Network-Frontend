@@ -1,6 +1,5 @@
 import axios from "axios";
-import { IAccountInfoWithSearchAccounts } from "../../store/types/accountStoreTypes";
-import { ISearchAccount } from "../../store/types/searchStoreTypes";
+import { IAccountInfoWithSearchAccounts, ISearchAccount } from "../../store/types/searchStoreTypes";
 
 interface IResponse<T> {
   data: T | null;
@@ -18,12 +17,12 @@ async function getAccountInfoWithSearchAccounts(
   try {
     let searchParam = "";
     if (search) {
-      searchParam = `search=${search}`;
+      searchParam = `?search=${search}`;
     }
 
     const data = await axios({
       method: "get",
-      url: `http://localhost:3001/accounts/${login}?${searchParam}`,
+      url: `http://localhost:3001/accounts/${login}${searchParam}`,
       headers: {
         "Content-Type": "application/json; charset=utf-8"
       }
@@ -45,12 +44,12 @@ async function getSearchAccounts(
   try {
     let searchParam = "";
     if (search) {
-      searchParam = `search=${search}`;
+      searchParam = `?search=${search}`;
     }
 
     const accounts = await axios({
       method: "get",
-      url: `http://localhost:3001/profile/edit?${searchParam}`,
+      url: `http://localhost:3001/profile/edit${searchParam}`,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         authorization: `Bearer ${token}`
@@ -71,12 +70,12 @@ async function getFollowersOrFollowings(
   try {
     let searchParam = "";
     if (search) {
-      searchParam = `search=${search}`;
+      searchParam = `?search=${search}`;
     }
 
     const accounts = await axios({
       method: "get",
-      url: `http://localhost:3001/accounts/${login}/${path}?${searchParam}`,
+      url: `http://localhost:3001/accounts/${login}/${path}${searchParam}`,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         authorization: `Bearer ${token}`

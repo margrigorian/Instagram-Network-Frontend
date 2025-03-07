@@ -8,5 +8,5 @@ export const searchStore = create<ISearchStore>(set => ({
 
   setIsOpenedSearchDrawer: value => set({ isOpenedSearchDrawer: value }),
   setSearch: text => set({ search: text }),
-  setSearchAccounts: searchAccounts => set({ searchAccounts: searchAccounts })
+  setSearchAccounts: searchAccounts => set({ searchAccounts })
 }));

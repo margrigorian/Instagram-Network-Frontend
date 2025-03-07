@@ -8,6 +8,7 @@ import HomePage from "./pages/home_page/HomePage";
 import AccountPage from "./pages/account_page/AccountPage";
 import EditProfilePage from "./pages/edit_profile_page/EditProfilePage";
 import NewPostModalWindow from "./components/new_post_modal_window/NewPostModalWindow";
+import ExplorePage from "./pages/expore_page/ExplorePage";
 import { userStore } from "./store/userStore";
 import { postStore, storeOfEditedPost } from "./store/postStore";
 import ScrollToTop from "./hoc/ScrollToTheTop";
@@ -35,6 +36,7 @@ const App: React.FC = () => {
           <Route path="/home" element={<HomePage />}></Route>
           <Route path="/accounts/:login" element={<AccountPage />}></Route>
           <Route path="/profile/edit" element={<EditProfilePage />}></Route>
+          <Route path="/explore" element={<ExplorePage />}></Route>
         </Routes>
       </BrowserRouter>
     </div>

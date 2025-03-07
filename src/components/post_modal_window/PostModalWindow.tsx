@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import PostContent from "../post_content/PostContent";
 import PostEditModalWindow from "../post_edit_modal_window/PostEditModalWindow";
 import { userStore } from "../../store/userStore";
-import { accountStore } from "../../store/accountStore";
 import { postStore, storeOfEditedPost } from "../../store/postStore";
 import { getComments, deleteComment } from "../../lib/requests/commentsRequests";
 import { deletePost } from "../../lib/requests/postsRequests";
@@ -24,11 +23,11 @@ const PostModalWindow: React.FC<{ posts: IPost[] }> = array => {
   const setComments = postStore(state => state.setComments);
   const isOpenedPostMenu = postStore(state => state.isOpenedPostMenu);
   const setIsOpenedPostMenu = postStore(state => state.setIsOpenedPostMenu);
-  const deletePostFromStore = accountStore(state => state.deletePostFromStore);
+  const deletePostFromStore = postStore(state => state.deletePostFromStore);
   const isOpenedCommentMenu = postStore(state => state.isOpenedCommentMenu);
   const setIsOpenedCommentMenu = postStore(state => state.setIsOpenedCommentMenu);
   const currentComment = postStore(state => state.currentComment);
-  const decreaseCommentsNumberAfterDeleting = accountStore(
+  const decreaseCommentsNumberAfterDeleting = postStore(
     state => state.decreaseCommentsNumberAfterDeleting
   );
   const deleteCommentFromStore = postStore(state => state.deleteCommentFromStore);

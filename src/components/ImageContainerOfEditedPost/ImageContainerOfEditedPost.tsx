@@ -1,7 +1,6 @@
 import React from "react";
 import CollectionOfImagesInNewPost from "../collection_of_images_in_new_post/CollectionOfImagesInNewPost";
 import { userStore } from "../../store/userStore";
-import { accountStore } from "../../store/accountStore";
 import { postStore, storeOfEditedPost } from "../../store/postStore";
 import { deleteImage } from "../../lib/requests/postsRequests";
 import style from "./ImageContainerOfEditedPost.module.css";
@@ -29,7 +28,7 @@ const ImageContainerForNewPost: React.FC = () => {
   const isOpenedPostEditModalWindow = postStore(state => state.isOpenedPostEditModalWindow);
   const imagesOfEditedPost = storeOfEditedPost(state => state.imagesOfEditedPost);
   const deleteImageInEditedPost = storeOfEditedPost(state => state.deleteImageInEditedPost);
-  const deleteImageOfPostInStore = accountStore(state => state.deleteImageOfPostInStore);
+  const deleteImageOfPostInStore = postStore(state => state.deleteImageOfPostInStore);
 
   async function deletePostImage(img_index: number) {
     // проверка, требуемая типизацией

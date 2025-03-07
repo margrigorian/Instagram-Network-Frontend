@@ -1,5 +1,6 @@
 import axios from "axios";
 import { IPost } from "../../store/types/postStoreTypes";
+import { IExploredPostsWithSearchAccounts } from "../../store/types/searchStoreTypes";
 
 interface IResponse<T> {
   data: T | null;
@@ -121,4 +122,42 @@ async function deleteImage(post_id: string, img_index: number, token: string): P
   }
 }
 
-export { postPublication, updatePost, addLikeToPost, deleteLikeFromPost, deletePost, deleteImage };
+async function getExploredPostsWithSearchAccounts(
+  keyword: string,
+  search: string,
+  token: string
+): Promise<IResponse<IExploredPostsWithSearchAccounts> | undefined> {
+  try {
+    let keywordParam = "";
+    if (keyword) {
+      keywordParam = `?keyword=${keyword}`;
+    }
+    let searchParam = "";
+    if (search) {
+      searchParam = `?search=${search}`;
+    }
+
+    const data = await axios({
+      method: "get",
+      url: `http://localhost:3001/explore${keywordParam}${searchParam}`,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        authorization: `Bearer ${token}`
+      }
+    });
+
+    return data.data.data;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export {
+  postPublication,
+  updatePost,
+  addLikeToPost,
+  deleteLikeFromPost,
+  deletePost,
+  deleteImage,
+  getExploredPostsWithSearchAccounts
+};

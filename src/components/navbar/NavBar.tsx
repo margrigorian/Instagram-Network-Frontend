@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { userStore } from "../../store/userStore";
 import { accountStore } from "../../store/accountStore";
-import { storeOfEditedPost } from "../../store/postStore";
+import { postStore, storeOfEditedPost } from "../../store/postStore";
 import { searchStore } from "../../store/searchStore";
 import style from "./NavBar.module.css";
 import * as Icon from "react-bootstrap-icons";
@@ -15,8 +15,12 @@ const NavBar: React.FC = () => {
   const account = accountStore(state => state.user);
   const isOpenedSearchDrawer = searchStore(state => state.isOpenedSearchDrawer);
   const setIsOpenedSearchDrawer = searchStore(state => state.setIsOpenedSearchDrawer);
+  const search = searchStore(state => state.search);
   const setSearch = searchStore(state => state.setSearch);
+  const searchAccounts = searchStore(state => state.searchAccounts);
   const setSearchAccounts = searchStore(state => state.setSearchAccounts);
+  const posts = postStore(state => state.posts);
+  const setPosts = postStore(state => state.setPosts);
   const setReloudAccountPage = accountStore(state => state.setReloudAccountPage);
 
   return (
@@ -29,8 +33,15 @@ const NavBar: React.FC = () => {
           onClick={() => {
             if (isOpenedSearchDrawer) {
               setIsOpenedSearchDrawer(false);
-              setSearch("");
-              setSearchAccounts([]);
+              if (search) {
+                setSearch("");
+              }
+              if (searchAccounts.length > 0) {
+                setSearchAccounts([]);
+              }
+            }
+            if (posts.length > 0) {
+              setPosts([]);
             }
           }}
         >
@@ -42,8 +53,12 @@ const NavBar: React.FC = () => {
           onClick={() => {
             if (isOpenedSearchDrawer) {
               setIsOpenedSearchDrawer(false);
-              setSearch("");
-              setSearchAccounts([]);
+              if (search) {
+                setSearch("");
+              }
+              if (searchAccounts.length > 0) {
+                setSearchAccounts([]);
+              }
             } else {
               setIsOpenedSearchDrawer(true);
             }
@@ -52,10 +67,27 @@ const NavBar: React.FC = () => {
           <Icon.Search className={style.navBarIcon} />
           <div>Поисковой запрос</div>
         </div>
-        <div className={style.navBarItemContainer}>
+        <NavLink
+          to={"/explore"}
+          className={style.navBarItemContainer}
+          onClick={() => {
+            if (isOpenedSearchDrawer) {
+              setIsOpenedSearchDrawer(false);
+              if (search) {
+                setSearch("");
+              }
+              if (searchAccounts.length > 0) {
+                setSearchAccounts([]);
+              }
+            }
+            if (posts.length > 0) {
+              setPosts([]);
+            }
+          }}
+        >
           <Icon.Compass className={style.navBarIcon} />
           <div>Интересное</div>
-        </div>
+        </NavLink>
         <div className={style.navBarItemContainer}>
           <Icon.Film className={style.navBarIcon} />
           <div>Reels</div>
@@ -72,8 +104,12 @@ const NavBar: React.FC = () => {
           onClick={() => {
             if (isOpenedSearchDrawer) {
               setIsOpenedSearchDrawer(false);
-              setSearch("");
-              setSearchAccounts([]);
+              if (search) {
+                setSearch("");
+              }
+              if (searchAccounts.length > 0) {
+                setSearchAccounts([]);
+              }
             }
             setIsOpenedNewPostModalWindow(true);
           }}
@@ -87,8 +123,12 @@ const NavBar: React.FC = () => {
           onClick={() => {
             if (isOpenedSearchDrawer) {
               setIsOpenedSearchDrawer(false);
-              setSearch("");
-              setSearchAccounts([]);
+              if (search) {
+                setSearch("");
+              }
+              if (searchAccounts.length > 0) {
+                setSearchAccounts([]);
+              }
             }
             if (user?.login !== account?.login) setReloudAccountPage();
           }}

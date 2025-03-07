@@ -2,6 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { userStore } from "../../store/userStore";
 import { accountStore } from "../../store/accountStore";
+import { postStore } from "../../store/postStore";
 import {
   postSubscriptionOnAccount,
   deleteSubscriptionOnAccount
@@ -25,7 +26,7 @@ const AccountUserInfo: React.FC<IAccountUserInfoProps> = ({
   const addFollowing = userStore(state => state.addFollowing);
   const deleteFollowing = userStore(state => state.deleteFollowing);
   const account = accountStore(state => state.user);
-  const posts = accountStore(state => state.posts);
+  const posts = postStore(state => state.posts);
   const followersCount = accountStore(state => state.followers_count);
   const followingsCount = accountStore(state => state.followings_count);
   const increaseFollowersCount = accountStore(state => state.increaseFollowersCount);

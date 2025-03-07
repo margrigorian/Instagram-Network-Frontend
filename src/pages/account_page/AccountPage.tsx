@@ -10,10 +10,10 @@ import { postStore } from "../../store/postStore";
 import { searchStore } from "../../store/searchStore";
 import { getAccountInfoWithSearchAccounts } from "../../lib/requests/accountRequests";
 import style from "./AccountPage.module.css";
-import copyImage from "../../pictures/copy.png";
 import GridOnOutlinedIcon from "@mui/icons-material/GridOnOutlined";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import * as Icon from "react-bootstrap-icons";
+import PostDisplay from "../../components/post_display/PostDisplay";
 
 const AccountPage: React.FC = () => {
   const { login } = useParams();
@@ -22,13 +22,11 @@ const AccountPage: React.FC = () => {
   const setUser = accountStore(state => state.setUser);
   const setFollowersCount = accountStore(state => state.setFollowersCount);
   const setFollowingsCount = accountStore(state => state.setFollowingsCount);
-  const posts = accountStore(state => state.posts);
-  const setPosts = accountStore(state => state.setPosts);
+  const posts = postStore(state => state.posts);
+  const setPosts = postStore(state => state.setPosts);
   const search = searchStore(state => state.search);
   const setSearchAccounts = searchStore(state => state.setSearchAccounts);
   const isOpenedPostModalWindow = postStore(state => state.isOpenedPostModalWindow);
-  const setIsOpenedPostModalWindow = postStore(state => state.setIsOpenedPostModalWindow);
-  const setIndexOfCurrentPost = postStore(state => state.setIndexOfCurrentPost);
   const isOpenedFollowersAndFollowingsModalWindow = accountStore(
     state => state.isOpenedFollowersAndFollowingsModalWindow
   );
@@ -45,23 +43,9 @@ const AccountPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const reloudAccountPage = accountStore(state => state.reloudAccountPage);
 
-  // делает переключение на другую страницу (почему?), не подходит
-  // const navigate = useNavigate();
-  // const handleModalOpen = () => {
-  //   navigate("/my-modal", { replace: true });
-  //   setIsOpenedPostModalWindow();
-  // };
-
   const handleFollowersAndFollowingsModalOpen = (path: string): void => {
     window.history.pushState({}, "", `/accounts/${account?.login}/${path}`);
     setIsOpenedFollowersAndFollowingsModalWindow(true);
-  };
-
-  // смена url при открытии модального окна поста
-  const handlePostModalOpen = (postId: string, lengthOfImagesArray: number): void => {
-    const postUrl = lengthOfImagesArray > 1 ? `/p/${postId}/?img_index=1` : `/p/${postId}/`; // Новый URL
-    window.history.pushState({}, "", postUrl);
-    setIsOpenedPostModalWindow(true);
   };
 
   // информация, необходимая для регулирования очистки searchAccounts
@@ -76,8 +60,6 @@ const AccountPage: React.FC = () => {
         if (search) {
           // проверка, требуемая типизацией
           if (accountInfoWithSearchAccounts?.data?.searchAccounts) {
-            console.log(1);
-
             setSearchAccounts(accountInfoWithSearchAccounts.data.searchAccounts);
           }
         } else {
@@ -94,7 +76,9 @@ const AccountPage: React.FC = () => {
             setUser(accountInfoWithSearchAccounts.data.accountInfo.user);
             setFollowersCount(accountInfoWithSearchAccounts.data.accountInfo.followers_count);
             setFollowingsCount(accountInfoWithSearchAccounts.data.accountInfo.followings_count);
-            setPosts(accountInfoWithSearchAccounts.data.accountInfo.posts);
+            if (accountInfoWithSearchAccounts.data.accountInfo.posts) {
+              setPosts(accountInfoWithSearchAccounts.data.accountInfo.posts);
+            }
           } else {
             // аккаунт не найден, обнуляем, чтобы старое не сохранялось
             setUser(null);
@@ -159,7 +143,7 @@ const AccountPage: React.FC = () => {
       ) : (
         ""
       )}
-      <div style={user ? { marginLeft: "242px" } : {}} className={style.container}>
+      <div style={user ? { marginLeft: "258px" } : {}} className={style.container}>
         {loading ? (
           <div className={style.loading}></div>
         ) : account ? (
@@ -200,44 +184,7 @@ const AccountPage: React.FC = () => {
             {posts.length > 0 ? (
               <div className={style.postsContainer}>
                 {posts.map((el, i) => (
-                  <div
-                    key={`postsId-${el.id}`}
-                    style={{ backgroundImage: `url(${el.images[0].image})` }}
-                    className={style.post}
-                    onClick={() => {
-                      if (user) {
-                        setIndexOfCurrentPost(i);
-                        handlePostModalOpen(el.id, el.images.length);
-                      } else {
-                        setIsOpenedAuthorizationWarningModalWindow(true);
-                      }
-                    }}
-                  >
-                    <div className={style.postsDisplay}>
-                      {el.images.length > 1 ? (
-                        <img src={copyImage} className={style.collectionIcon} />
-                      ) : (
-                        ""
-                      )}
-                      <div className={style.evaluationDisplay}>
-                        <div
-                          style={
-                            el.images.length > 1 ? { paddingTop: "33%" } : { paddingTop: "45%" }
-                          }
-                          className={style.evaluationContainer}
-                        >
-                          <div className={style.likesNumberContainer}>
-                            <Icon.HeartFill size={"18px"} />
-                            {el.likes.length}
-                          </div>
-                          <div className={style.commentsNumberContainer}>
-                            <Icon.ChatFill size={"18px"} />
-                            {el.comments_number}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <PostDisplay key={`postsId-${el.id}`} post={el} indexOfCurrentPost={i} />
                 ))}
               </div>
             ) : (

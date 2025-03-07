@@ -84,9 +84,8 @@
 }
 
 .container {
-  width: 72.9vw;
-  margin: 0 auto;
-  padding: 35px 43px 43px 43px;
+  width: 931px;
+  padding: 35px;
 }
 
 .highlightsContainer {
@@ -176,56 +175,6 @@
 .postsContainer {
   display: flex;
   flex-wrap: wrap;
-}
-.post {
-  width: 305px;
-  height: 305px;
-  border: 1px solid lightgrey;
-  margin-bottom: 4px;
-  margin-right: 4px;
-  background-size: cover;
-  background-position: center;
-}
-.postsDisplay {
-  width: 100%;
-  height: 100%;
-}
-.postsDisplay:hover {
-  background-color: rgba(53, 53, 53, 0.5);
-  cursor: pointer;
-}
-.postsDisplay:hover .evaluationDisplay {
-  display: block;
-}
-.collectionIcon {
-  margin: 10px 10px 0 88%;
-  width: 27px;
-  height: 27px;
-}
-.evaluationDisplay {
-  display: none;
-}
-.evaluationContainer {
-  width: 100px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-left: auto;
-  margin-right: auto;
-  color: white;
-  font-weight: 500;
-}
-.likesNumberContainer {
-  width: 35%;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-}
-.commentsNumberContainer {
-  width: 35%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 .noPostsContainer {

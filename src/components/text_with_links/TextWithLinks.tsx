@@ -57,12 +57,14 @@ const TextWithLinks: React.FC<ITextProps> = text => {
                 el.key === "@"
                   ? `/accounts/${text.text.slice(el.indexes[0] + 1, el.indexes[1])}`
                   : // посты по тэгу
-                    `/explore/tags/${text.text.slice(el.indexes[0] + 1, el.indexes[1])}`
+                    `/explore?keyword=${text.text.slice(el.indexes[0] + 1, el.indexes[1])}`
               }
               onClick={() => {
                 setIsOpenedPostModalWindow(false);
-                // чтобы перезагрузился AccountPage и выполнился request по новому юзеру
-                setReloudAccountPage();
+                if (el.key === "@") {
+                  // чтобы перезагрузился AccountPage и выполнился request по новому юзеру
+                  setReloudAccountPage();
+                }
               }}
               className={style.link}
             >

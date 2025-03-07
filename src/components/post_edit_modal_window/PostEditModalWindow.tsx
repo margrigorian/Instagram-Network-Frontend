@@ -2,7 +2,6 @@ import React, { useMemo } from "react";
 import ImageContainerOfEditedPost from "../ImageContainerOfEditedPost/ImageContainerOfEditedPost";
 import NewPostContent from "../new_post_content/NewPostContent";
 import { userStore } from "../../store/userStore";
-import { accountStore } from "../../store/accountStore";
 import { postStore, storeOfEditedPost } from "../../store/postStore";
 import { updatePost } from "../../lib/requests/postsRequests";
 import { IPost } from "../../store/types/postStoreTypes";
@@ -18,7 +17,7 @@ const PostEditModalWindow: React.FC<{ post: IPost }> = ({ post }) => {
   const setIndexOfCurrentImage = storeOfEditedPost(state => state.setIndexOfCurrentImage);
   const postCaption = storeOfEditedPost(state => state.postCaption);
   const setPostCaption = storeOfEditedPost(state => state.setPostCaption);
-  const updatePostInStore = accountStore(state => state.updatePostInStore);
+  const updatePostInStore = postStore(state => state.updatePostInStore);
 
   async function updateUserPost() {
     // проверка, требуемая типизацией

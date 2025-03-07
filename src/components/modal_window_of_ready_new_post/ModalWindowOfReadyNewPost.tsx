@@ -3,7 +3,7 @@ import ImageContainerOfEditedPost from "../ImageContainerOfEditedPost/ImageConta
 import NewPostContent from "../new_post_content/NewPostContent";
 import { userStore } from "../../store/userStore";
 import { accountStore } from "../../store/accountStore";
-import { storeOfEditedPost } from "../../store/postStore";
+import { postStore, storeOfEditedPost } from "../../store/postStore";
 import { postPublication } from "../../lib/requests/postsRequests";
 import style from "./ModalWindowOfReadyNewPost.module.css";
 import * as Icon from "react-bootstrap-icons";
@@ -28,7 +28,7 @@ const ModalWindowOfReadyNewPost: React.FC = () => {
   // размещение нового поста на фронт
   const user = userStore(state => state.user);
   const account = accountStore(state => state.user);
-  const addNewPost = accountStore(state => state.addNewPost);
+  const addNewPost = postStore(state => state.addNewPost);
 
   async function postPublicationOnAccountPage(): Promise<void> {
     const formData = new FormData();
