@@ -1,6 +1,9 @@
 import axios from "axios";
-import { IPost } from "../../store/types/postStoreTypes";
-import { IExploredPostsWithSearchAccounts } from "../../store/types/searchStoreTypes";
+import {
+  IPost,
+  IPostsWithRecommendationsAndSearchAccounts
+} from "../../store/types/postStoreTypes";
+import { IExploredPostsWithSearchAccounts } from "../../store/types/postStoreTypes";
 
 interface IResponse<T> {
   data: T | null;
@@ -122,6 +125,73 @@ async function deleteImage(post_id: string, img_index: number, token: string): P
   }
 }
 
+async function getPostsWithRecommendationsAndSearchAccounts(
+  token: string,
+  search: string
+): Promise<IResponse<IPostsWithRecommendationsAndSearchAccounts> | undefined> {
+  try {
+    let searchParam = "";
+    if (search) {
+      searchParam = `?search=${search}`;
+    }
+
+    const data = await axios({
+      method: "get",
+      url: `http://localhost:3001/home${searchParam}`,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        authorization: `Bearer ${token}`
+      }
+    });
+
+    return data.data.data;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+async function addLikeToPostOrFollowAccountFromHomePage(
+  param: string,
+  value: string,
+  token: string
+): Promise<void> {
+  try {
+    const like = await axios({
+      method: "post",
+      url: `http://localhost:3001/home?${param}=${value}`,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        authorization: `Bearer ${token}`
+      }
+    });
+
+    console.log(like.data.data);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function deleteLikeFromPostOrUnfollowAccountFromHomePage(
+  param: string,
+  value: string,
+  token: string
+): Promise<void> {
+  try {
+    const deletedLike = await axios({
+      method: "delete",
+      url: `http://localhost:3001/home?${param}=${value}`,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        authorization: `Bearer ${token}`
+      }
+    });
+
+    console.log(deletedLike.data.data);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 async function getExploredPostsWithSearchAccounts(
   keyword: string,
   search: string,
@@ -159,5 +229,8 @@ export {
   deleteLikeFromPost,
   deletePost,
   deleteImage,
+  getPostsWithRecommendationsAndSearchAccounts,
+  addLikeToPostOrFollowAccountFromHomePage,
+  deleteLikeFromPostOrUnfollowAccountFromHomePage,
   getExploredPostsWithSearchAccounts
 };

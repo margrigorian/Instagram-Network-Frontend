@@ -12,6 +12,7 @@ import { postSubscriptionOnAccount } from "../../lib/requests/accountRequests";
 import { IPost } from "../../store/types/postStoreTypes";
 import style from "./PostContent.module.css";
 import * as Icon from "react-bootstrap-icons";
+import EvaluationIconsBlock from "../evaluation_icons_block/EvaluationIconsBlock";
 
 const PostContent: React.FC<{ post: IPost }> = post => {
   const user = userStore(state => state.user);
@@ -149,6 +150,7 @@ const PostContent: React.FC<{ post: IPost }> = post => {
           ) : (
             <Icon.PersonCircle className={style.defaultAvatar} />
           )}
+          {/* свойство display: inline не срабатывает */}
           <div className={style.caption}>
             <div className={style.loginAndVerificationIconContainer}>
               <NavLink
@@ -175,87 +177,47 @@ const PostContent: React.FC<{ post: IPost }> = post => {
         </div>
         <div className={style.commentsContainer}>
           {comments.map(comment => (
-            <div key={`commentId-${comment.id}`}>
+            <div key={`commentId-${comment.id}`} style={{ marginBottom: "25px" }}>
               <Comment
                 key={`commentId-${comment.id}`}
                 post_id={post.post.id}
                 comment={comment}
                 handleClick={handleClick}
               />
-              <div style={{ marginTop: "30px" }}>
-                {comment.subcomments?.map(subcomment => (
-                  <Comment
-                    key={`subcommentId-${subcomment.id}`}
-                    post_id={post.post.id}
-                    comment={subcomment}
-                    handleClick={handleClick}
-                  />
-                ))}
-              </div>
+              {comment.subcomments && comment.subcomments?.length > 0 ? (
+                <div style={{ marginTop: "25px" }}>
+                  {comment.subcomments?.map(subcomment => (
+                    <Comment
+                      key={`subcommentId-${subcomment.id}`}
+                      post_id={post.post.id}
+                      comment={subcomment}
+                      handleClick={handleClick}
+                    />
+                  ))}
+                </div>
+              ) : (
+                ""
+              )}
             </div>
           ))}
         </div>
       </div>
-      <div>
-        <div className={style.evaluationContainer}>
-          <div className={style.iconsContainer}>
-            <div className={style.evaluationIconsContainer}>
-              {user_like ? (
-                <Icon.HeartFill
-                  className={style.evaluationIcon}
-                  style={{ color: "red" }}
-                  onClick={() => {
-                    deleteUserLikeFromPost();
-                  }}
-                />
-              ) : (
-                <Icon.Heart
-                  className={style.evaluationIcon}
-                  onClick={() => {
-                    addUserLikeToPost();
-                  }}
-                />
-              )}
-              <Icon.Chat className={style.evaluationIcon} />
-              <Icon.Send className={style.evaluationIcon} />
-            </div>
-            <Icon.Bookmark className={style.evaluationIcon} />
-          </div>
-          {post.post.likes.length > 0 && (
-            <div>
-              <div className={style.likesCount}>
-                <div>
-                  Нравится{" "}
-                  <NavLink
-                    to={`/accounts/${post.post.likes[0]}`}
-                    onClick={() => {
-                      // чтобы перезагрузилась страница и выполнился request по новому юзеру
-                      setReloudAccountPage();
-                      setIsOpenedPostModalWindow(false);
-                    }}
-                    className={style.login}
-                  >
-                    {post.post.likes[0]}
-                  </NavLink>
-                </div>
-                {post.post.likes.length > 1 ? (
-                  <div>
-                    &nbsp;и <span style={{ fontWeight: "500" }}>{post.post.likes.length - 1}</span>
-                  </div>
-                ) : (
-                  ""
-                )}
-              </div>
-            </div>
-          )}
-          <div
-            className={style.postDate}
-            style={post.post.likes.length === 0 ? { marginTop: "10px" } : {}}
-          >
-            {postDateCalculation(post.post.time)}
-          </div>
+
+      <div className={style.evaluationContainer}>
+        <EvaluationIconsBlock
+          post={post.post}
+          user_like={user_like}
+          addUserLikeToPost={addUserLikeToPost}
+          deleteUserLikeFromPost={deleteUserLikeFromPost}
+        />
+        <div
+          className={style.postDate}
+          style={post.post.likes.length === 0 ? { marginTop: "10px" } : {}}
+        >
+          {postDateCalculation(post.post.time)}
         </div>
       </div>
+
       <div className={style.commentTextAreaContainer}>
         <Icon.EmojiSmile style={{ fontSize: "23px" }} />
         <textarea

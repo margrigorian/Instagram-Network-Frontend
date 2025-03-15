@@ -3,16 +3,16 @@ import { NavLink } from "react-router-dom";
 import { userStore } from "../../store/userStore";
 import { accountStore } from "../../store/accountStore";
 import { searchStore } from "../../store/searchStore";
-import { ISearchAccount } from "../../store/types/searchStoreTypes";
-import style from "./SearchUser.module.css";
+import { IListedAccount } from "../../store/types/accountStoreTypes";
+import style from "./ListedAccount.module.css";
 import * as Icon from "react-bootstrap-icons";
 
-interface ISearchProps {
-  searchUser: ISearchAccount;
+interface IListedAccountProps {
+  listedAccount: IListedAccount;
   addSubscription?: ((login: string) => void) | null;
 }
 
-const SearchUser: React.FC<ISearchProps> = ({ searchUser, addSubscription }) => {
+const ListedAccount: React.FC<IListedAccountProps> = ({ listedAccount, addSubscription }) => {
   const account = accountStore(state => state.user);
   const user = userStore(state => state.user);
   const setReloudAccountPage = accountStore(state => state.setReloudAccountPage);
@@ -29,7 +29,7 @@ const SearchUser: React.FC<ISearchProps> = ({ searchUser, addSubscription }) => 
   return (
     <div className={style.account}>
       <NavLink
-        to={`/accounts/${searchUser.login}`}
+        to={`/accounts/${listedAccount.login}`}
         onClick={() => {
           // чтобы перезагрузилась страница и выполнился request по новому юзеру
           setReloudAccountPage();
@@ -41,8 +41,8 @@ const SearchUser: React.FC<ISearchProps> = ({ searchUser, addSubscription }) => 
           setSearchAccounts([]);
         }}
       >
-        {searchUser.avatar ? (
-          <img src={searchUser.avatar} className={style.avatarIcon} />
+        {listedAccount.avatar ? (
+          <img src={listedAccount.avatar} className={style.avatarIcon} />
         ) : (
           <Icon.PersonCircle className={style.defaultAvatar} />
         )}
@@ -50,7 +50,7 @@ const SearchUser: React.FC<ISearchProps> = ({ searchUser, addSubscription }) => 
       <div>
         <div className={style.loginContainer}>
           <NavLink
-            to={`/accounts/${searchUser.login}`}
+            to={`/accounts/${listedAccount.login}`}
             onClick={() => {
               // чтобы перезагрузилась страница и выполнился request по новому юзеру
               setReloudAccountPage();
@@ -63,11 +63,11 @@ const SearchUser: React.FC<ISearchProps> = ({ searchUser, addSubscription }) => 
             }}
             className={style.login}
           >
-            {searchUser.login}
+            {listedAccount.login}
           </NavLink>
-          {searchUser.verification ? <div className={style.verificationIcon}></div> : ""}
+          {listedAccount.verification ? <div className={style.verificationIcon}></div> : ""}
           {account?.login === user?.login &&
-            !searchUser?.follow_account &&
+            !listedAccount?.follow_account &&
             // так как функция указана как опциональное свойство
             addSubscription && (
               <div className={style.subscriptionContainer}>
@@ -75,7 +75,7 @@ const SearchUser: React.FC<ISearchProps> = ({ searchUser, addSubscription }) => 
                 <div
                   className={style.subscriptionButton}
                   onClick={() => {
-                    addSubscription(searchUser.login);
+                    addSubscription(listedAccount.login);
                   }}
                 >
                   Подписаться
@@ -83,10 +83,11 @@ const SearchUser: React.FC<ISearchProps> = ({ searchUser, addSubscription }) => 
               </div>
             )}
         </div>
-        {searchUser.username ? <div className={style.username}>{searchUser.username}</div> : ""}
+        <div className={style.username}>{listedAccount.username}</div>
+        <div className={style.followersLogins}>{listedAccount.followers}</div>
       </div>
     </div>
   );
 };
 
-export default SearchUser;
+export default ListedAccount;

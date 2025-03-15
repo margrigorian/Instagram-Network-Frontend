@@ -1,0 +1,36 @@
+.evaluationContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 24px;
+}
+.iconsContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.evaluationIconsContainer {
+  width: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.evaluationIcon:hover {
+  color: grey;
+  cursor: pointer;
+}
+
+.likesCount {
+  display: inline-flex;
+  font-size: 14px;
+}
+.login {
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  color: black;
+}
+.login:hover {
+  color: grey;
+  cursor: pointer;
+}

@@ -45,7 +45,7 @@ const ModalWindowOfReadyNewPost: React.FC = () => {
 
       // user?.username === account?.username - в случае, если мы находимся на странице другого пользователя
       // иначе пост добавиться на фронте в массив posts[] аккаунта и отобразиться на чужой странице
-      if (publication?.data && user?.login === account?.login) {
+      if (publication?.data && (user?.login === account?.login || account === null)) {
         addNewPost(publication.data);
       }
     }

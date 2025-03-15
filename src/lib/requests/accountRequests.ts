@@ -1,5 +1,8 @@
 import axios from "axios";
-import { IAccountInfoWithSearchAccounts, ISearchAccount } from "../../store/types/searchStoreTypes";
+import {
+  IAccountInfoWithSearchAccounts,
+  IListedAccount
+} from "../../store/types/accountStoreTypes";
 
 interface IResponse<T> {
   data: T | null;
@@ -40,7 +43,7 @@ async function getAccountInfoWithSearchAccounts(
 async function getSearchAccounts(
   search: string,
   token: string
-): Promise<ISearchAccount[] | undefined> {
+): Promise<IListedAccount[] | undefined> {
   try {
     let searchParam = "";
     if (search) {
@@ -66,7 +69,7 @@ async function getFollowersOrFollowings(
   path: string,
   search: string,
   token: string
-): Promise<ISearchAccount[] | undefined> {
+): Promise<IListedAccount[] | undefined> {
   try {
     let searchParam = "";
     if (search) {

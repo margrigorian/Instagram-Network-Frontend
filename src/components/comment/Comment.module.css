@@ -29,12 +29,13 @@
 }
 .comment {
   display: flex;
+  align-items: flex-start;
   font-size: 14px;
   font-weight: 500;
 }
 .loginAndVerificationIconContainer {
   display: inline-flex;
-  align-items: center;
+  align-items: flex-end;
 }
 .login {
   text-decoration: none;

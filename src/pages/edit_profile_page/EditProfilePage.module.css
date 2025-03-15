@@ -189,6 +189,7 @@
   font-size: 14px;
   opacity: 0;
   animation: modal 3s ease forwards;
+  z-index: 2;
 }
 
 @keyframes modal {

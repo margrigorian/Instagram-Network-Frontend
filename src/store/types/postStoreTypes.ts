@@ -1,3 +1,5 @@
+import { IListedAccount, IRecommendedAccount } from "./accountStoreTypes";
+
 export interface IPost {
   id: string;
   caption: string;
@@ -104,4 +106,15 @@ interface ICurrentComment {
   under_comment: number | null;
   user_login: string;
   number_of_subcomments: number;
+}
+
+export interface IPostsWithRecommendationsAndSearchAccounts {
+  posts: IPost[];
+  recommendedAccounts: IRecommendedAccount[];
+  searchAccounts: IListedAccount[];
+}
+
+export interface IExploredPostsWithSearchAccounts {
+  exploredPosts: IPost[];
+  searchAccounts: IListedAccount[];
 }

@@ -11,13 +11,17 @@ type Message = {
   message: string;
 };
 
-async function getComments(post_id: string): Promise<IResponse<IComment[]> | undefined> {
+async function getComments(
+  post_id: string,
+  token: string
+): Promise<IResponse<IComment[]> | undefined> {
   try {
     const comments = await axios({
       method: "get",
       url: `http://localhost:3001/p/${post_id}`,
       headers: {
-        "Content-Type": "application/json; charset=utf-8"
+        "Content-Type": "application/json; charset=utf-8",
+        authorization: `Bearer ${token}`
       }
     });
 

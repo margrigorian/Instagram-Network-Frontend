@@ -5,7 +5,7 @@ export interface IAccount {
   user: IUser | null;
   followers_count: number;
   followings_count: number;
-  // указание постов необходимо только для типизации
+  // указание постов необходимо только для типизации при request
   // сами они сохраняются в postStore
   posts?: IPost[];
   isOpenedFollowersAndFollowingsModalWindow: boolean;
@@ -24,4 +24,26 @@ export interface IAccountStore extends IAccount {
   setIsOpenedFollowersAndFollowingsModalWindow: (value: boolean) => void;
   setIsOpenedAuthorizationWarningModalWindow: (value: boolean) => void;
   setReloudAccountPage: () => void;
+}
+
+export interface IListedAccount {
+  login: string;
+  username?: string | null;
+  avatar: string | null;
+  verification: boolean;
+  follow_account?: boolean;
+  followers?: string;
+}
+
+export interface IRecommendedAccount {
+  login: string;
+  avatar: string | null;
+  verification: boolean;
+  followers: string;
+  follow_account?: boolean;
+}
+
+export interface IAccountInfoWithSearchAccounts {
+  accountInfo: IAccount | null;
+  searchAccounts: IListedAccount[];
 }

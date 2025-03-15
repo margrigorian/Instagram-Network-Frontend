@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import SearchInput from "../search_input/SearchInput";
-import SearchUser from "../search_user/SearchUser";
+import ListedAccount from "../listed_account/ListedAccount";
 import { userStore } from "../../store/userStore";
 import { accountStore } from "../../store/accountStore";
 import { searchStore } from "../../store/searchStore";
@@ -145,7 +145,7 @@ const FollowersAndFollowingsModalWindow: React.FC = () => {
           {searchAccounts.length > 0 ? (
             searchAccounts.map((el, i) => (
               <div key={`accountId-${i}`} className={style.accountContainer}>
-                <SearchUser searchUser={el} addSubscription={addSubscription} />
+                <ListedAccount listedAccount={el} addSubscription={addSubscription} />
                 {account?.login === user?.login ? (
                   path === "followers" ? (
                     <div

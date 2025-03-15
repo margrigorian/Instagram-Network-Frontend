@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import PostContent from "../post_content/PostContent";
 import PostEditModalWindow from "../post_edit_modal_window/PostEditModalWindow";
 import { userStore } from "../../store/userStore";
@@ -44,9 +44,11 @@ const PostModalWindow: React.FC<{ posts: IPost[] }> = array => {
   }, []);
 
   async function makeRequest(id: string): Promise<void> {
-    const comments = await getComments(id);
-    if (comments?.data) {
-      setComments(comments.data);
+    if (token) {
+      const comments = await getComments(id, token);
+      if (comments?.data) {
+        setComments(comments.data);
+      }
     }
   }
 
@@ -95,215 +97,221 @@ const PostModalWindow: React.FC<{ posts: IPost[] }> = array => {
   }
 
   return (
-    <div
-      className={style.container}
-      onClick={e => {
-        if (isOpenedCommentMenu || isOpenedPostMenu || isOpenedPostEditModalWindow) {
-          e.stopPropagation();
-        } else {
-          handleModalClose();
-        }
-      }}
-    >
-      {isOpenedPostMenu && (
+    <div>
+      {user ? (
         <div
-          className={style.menuContainer}
-          onClick={() => {
-            setIsOpenedPostMenu(false);
+          className={style.container}
+          onClick={e => {
+            if (isOpenedCommentMenu || isOpenedPostMenu || isOpenedPostEditModalWindow) {
+              e.stopPropagation();
+            } else {
+              handleModalClose();
+            }
           }}
         >
-          <div
-            className={style.commentMenu}
-            onClick={e => {
-              e.stopPropagation();
-            }}
-          >
-            {post.user_login === user?.login ? (
-              <div>
-                <div
-                  className={style.redMenuButton}
-                  onClick={() => {
-                    deleteUserPost();
-                    setIsOpenedPostMenu(false);
-                    handleModalClose();
-                  }}
-                >
-                  Удалить
-                </div>
-                <div
-                  className={style.menuButton}
-                  onClick={() => {
-                    setIsOpenedPostMenu(false);
-                    setIsOpenedPostEditModalWindow(true);
-                    setPostId(post.id);
-                    setImagesOfEditedPost(post.images);
-                    setPostCaption(post.caption);
-                  }}
-                >
-                  Редактировать
-                </div>
-                <div
-                  className={style.cancelButton}
-                  onClick={() => {
-                    setIsOpenedPostMenu(false);
-                  }}
-                >
-                  Отмена
-                </div>
-              </div>
-            ) : (
-              <div>
-                <div className={style.redMenuButton}>Пожаловаться</div>
-                <div
-                  className={style.cancelButton}
-                  onClick={() => {
-                    setIsOpenedPostMenu(false);
-                  }}
-                >
-                  Отмена
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-      {isOpenedPostEditModalWindow && <PostEditModalWindow post={post} />}
-      {isOpenedCommentMenu && (
-        <div
-          className={style.menuContainer}
-          onClick={() => {
-            setIsOpenedCommentMenu(false);
-          }}
-        >
-          <div
-            className={style.commentMenu}
-            onClick={e => {
-              e.stopPropagation();
-            }}
-          >
-            {/* если свой комментарий, кнопки "пожаловаться" не будет  */}
-            {currentComment?.user_login !== user?.login && (
-              <div className={style.redButton}>Пожаловаться</div>
-            )}
-            {/* мой комментарий или же мой пост */}
-            {currentComment?.user_login === user?.login || post.user_login === user?.login ? (
+          {isOpenedPostMenu && (
+            <div
+              className={style.menuContainer}
+              onClick={() => {
+                setIsOpenedPostMenu(false);
+              }}
+            >
               <div
-                className={style.redMenuButton}
-                onClick={() => {
-                  deleteUserComment();
-                  setIsOpenedCommentMenu(false);
+                className={style.commentMenu}
+                onClick={e => {
+                  e.stopPropagation();
                 }}
               >
-                Удалить
+                {post.user_login === user?.login ? (
+                  <div>
+                    <div
+                      className={style.redMenuButton}
+                      onClick={() => {
+                        deleteUserPost();
+                        setIsOpenedPostMenu(false);
+                        handleModalClose();
+                      }}
+                    >
+                      Удалить
+                    </div>
+                    <div
+                      className={style.menuButton}
+                      onClick={() => {
+                        setIsOpenedPostMenu(false);
+                        setIsOpenedPostEditModalWindow(true);
+                        setPostId(post.id);
+                        setImagesOfEditedPost(post.images);
+                        setPostCaption(post.caption);
+                      }}
+                    >
+                      Редактировать
+                    </div>
+                    <div
+                      className={style.cancelButton}
+                      onClick={() => {
+                        setIsOpenedPostMenu(false);
+                      }}
+                    >
+                      Отмена
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <div className={style.redMenuButton}>Пожаловаться</div>
+                    <div
+                      className={style.cancelButton}
+                      onClick={() => {
+                        setIsOpenedPostMenu(false);
+                      }}
+                    >
+                      Отмена
+                    </div>
+                  </div>
+                )}
               </div>
-            ) : (
-              ""
-            )}
+            </div>
+          )}
+          {isOpenedPostEditModalWindow && <PostEditModalWindow post={post} />}
+          {isOpenedCommentMenu && (
             <div
-              className={style.menuButton}
+              className={style.menuContainer}
               onClick={() => {
                 setIsOpenedCommentMenu(false);
               }}
             >
-              Отмена
+              <div
+                className={style.commentMenu}
+                onClick={e => {
+                  e.stopPropagation();
+                }}
+              >
+                {/* если свой комментарий, кнопки "пожаловаться" не будет  */}
+                {currentComment?.user_login !== user?.login && (
+                  <div className={style.redMenuButton}>Пожаловаться</div>
+                )}
+                {/* мой комментарий или же мой пост */}
+                {currentComment?.user_login === user?.login || post.user_login === user?.login ? (
+                  <div
+                    className={style.redMenuButton}
+                    onClick={() => {
+                      deleteUserComment();
+                      setIsOpenedCommentMenu(false);
+                    }}
+                  >
+                    Удалить
+                  </div>
+                ) : (
+                  ""
+                )}
+                <div
+                  className={style.cancelButton}
+                  onClick={() => {
+                    setIsOpenedCommentMenu(false);
+                  }}
+                >
+                  Отмена
+                </div>
+              </div>
+            </div>
+          )}
+          {indexOfCurrentPost > 0 ? (
+            <KeyboardArrowLeftOutlinedIcon
+              className={style.postArrow}
+              sx={{ fontSize: "32px", marginLeft: "20px" }}
+              onClick={e => {
+                e.stopPropagation();
+                setIndexOfCurrentPost(indexOfCurrentPost - 1);
+                // чтобы каждый пост отображался с первой фотографии
+                setIndexOfImage(0);
+                // через изменения в store обновить url не получится,
+                // ререндеринг страницы происходит после выполения всех функций
+                // поэтому:
+                updatingTheURLAfterAPostOrImageChange(
+                  array.posts[indexOfCurrentPost - 1].id,
+                  array.posts[indexOfCurrentPost - 1].images.length,
+                  1
+                );
+                makeRequest(array.posts[indexOfCurrentPost - 1].id);
+              }}
+            />
+          ) : (
+            <div style={{ width: "52px" }}></div>
+          )}
+          <div className={style.modal} onClick={e => e.stopPropagation()}>
+            <div
+              style={{
+                backgroundImage: `url(${post.images[indexOfImage].image})`
+              }}
+              className={style.imageContainer}
+            >
+              {indexOfImage !== 0 ? (
+                <KeyboardArrowLeftOutlinedIcon
+                  className={style.imageArrow}
+                  onClick={() => {
+                    setIndexOfImage(indexOfImage - 1);
+                    // пост текущий, а изображения сменяюстя
+                    updatingTheURLAfterAPostOrImageChange(
+                      post.id,
+                      post.images.length,
+                      post.images[indexOfImage].img_index - 1
+                    );
+                  }}
+                />
+              ) : (
+                <div></div>
+              )}
+              {indexOfImage < post.images.length - 1 ? (
+                <KeyboardArrowRightOutlinedIcon
+                  className={style.imageArrow}
+                  onClick={() => {
+                    setIndexOfImage(indexOfImage + 1);
+                    // пост текущий, а изображения сменяются
+                    updatingTheURLAfterAPostOrImageChange(
+                      post.id,
+                      post.images.length,
+                      post.images[indexOfImage].img_index + 1
+                    );
+                  }}
+                />
+              ) : (
+                <div></div>
+              )}
+            </div>
+            <div className={style.postInfo}>
+              <PostContent post={post} />
             </div>
           </div>
+          <div className={style.closeAndArrowIconsContainer}>
+            <CloseOutlinedIcon className={style.closeIcon} sx={{ fontSize: "28px" }} />
+            {indexOfCurrentPost < array.posts.length - 1 ? (
+              <KeyboardArrowRightOutlinedIcon
+                className={style.postArrow}
+                sx={{ fontSize: "32px" }}
+                onClick={e => {
+                  e.stopPropagation();
+                  setIndexOfCurrentPost(indexOfCurrentPost + 1);
+                  // чтобы каждый пост отображался с первой фотографии
+                  setIndexOfImage(0);
+                  // через изменения в store обновить url не получится,
+                  // ререндеринг страницы происходит после выполения всех функций
+                  // поэтому:
+                  updatingTheURLAfterAPostOrImageChange(
+                    array.posts[indexOfCurrentPost + 1].id,
+                    array.posts[indexOfCurrentPost + 1].images.length,
+                    1
+                  );
+                  makeRequest(array.posts[indexOfCurrentPost + 1].id);
+                }}
+              />
+            ) : (
+              <div style={{ width: "32px" }}></div>
+            )}
+            <div style={{ height: "28px" }}></div>
+          </div>
         </div>
-      )}
-      {indexOfCurrentPost > 0 ? (
-        <KeyboardArrowLeftOutlinedIcon
-          className={style.postArrow}
-          sx={{ fontSize: "32px", marginLeft: "20px" }}
-          onClick={e => {
-            e.stopPropagation();
-            setIndexOfCurrentPost(indexOfCurrentPost - 1);
-            // чтобы каждый пост отображался с первой фотографии
-            setIndexOfImage(0);
-            // через изменения в store обновить url не получится,
-            // ререндеринг страницы происходит после выполения всех функций
-            // поэтому:
-            updatingTheURLAfterAPostOrImageChange(
-              array.posts[indexOfCurrentPost - 1].id,
-              array.posts[indexOfCurrentPost - 1].images.length,
-              1
-            );
-            makeRequest(array.posts[indexOfCurrentPost - 1].id);
-          }}
-        />
       ) : (
-        <div style={{ width: "52px" }}></div>
+        <Navigate to="/" replace />
       )}
-      <div className={style.modal} onClick={e => e.stopPropagation()}>
-        <div
-          style={{
-            backgroundImage: `url(${post.images[indexOfImage].image})`
-          }}
-          className={style.imageContainer}
-        >
-          {indexOfImage !== 0 ? (
-            <KeyboardArrowLeftOutlinedIcon
-              className={style.imageArrow}
-              onClick={() => {
-                setIndexOfImage(indexOfImage - 1);
-                // пост текущий, а изображения сменяюстя
-                updatingTheURLAfterAPostOrImageChange(
-                  post.id,
-                  post.images.length,
-                  post.images[indexOfImage].img_index - 1
-                );
-              }}
-            />
-          ) : (
-            <div></div>
-          )}
-          {indexOfImage < post.images.length - 1 ? (
-            <KeyboardArrowRightOutlinedIcon
-              className={style.imageArrow}
-              onClick={() => {
-                setIndexOfImage(indexOfImage + 1);
-                // пост текущий, а изображения сменяюстя
-                updatingTheURLAfterAPostOrImageChange(
-                  post.id,
-                  post.images.length,
-                  post.images[indexOfImage].img_index + 1
-                );
-              }}
-            />
-          ) : (
-            <div></div>
-          )}
-        </div>
-        <div className={style.postInfo}>
-          <PostContent post={post} />
-        </div>
-      </div>
-      <div className={style.closeAndArrowIconsContainer}>
-        <CloseOutlinedIcon className={style.closeIcon} sx={{ fontSize: "28px" }} />
-        {indexOfCurrentPost < array.posts.length - 1 ? (
-          <KeyboardArrowRightOutlinedIcon
-            className={style.postArrow}
-            sx={{ fontSize: "32px" }}
-            onClick={e => {
-              e.stopPropagation();
-              setIndexOfCurrentPost(indexOfCurrentPost + 1);
-              // чтобы каждый пост отображался с первой фотографии
-              setIndexOfImage(0);
-              // через изменения в store обновить url не получится,
-              // ререндеринг страницы происходит после выполения всех функций
-              // поэтому:
-              updatingTheURLAfterAPostOrImageChange(
-                array.posts[indexOfCurrentPost + 1].id,
-                array.posts[indexOfCurrentPost + 1].images.length,
-                1
-              );
-              makeRequest(array.posts[indexOfCurrentPost + 1].id);
-            }}
-          />
-        ) : (
-          <div style={{ width: "32px" }}></div>
-        )}
-        <div style={{ height: "28px" }}></div>
-      </div>
     </div>
   );
 };

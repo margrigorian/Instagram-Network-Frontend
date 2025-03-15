@@ -51,7 +51,6 @@ const ExplorePage: React.FC = () => {
 
     makeRequest();
   }, [search, keyword]);
-  console.log(keyword);
 
   return (
     <div>

@@ -1,6 +1,6 @@
 import React from "react";
 import SearchInput from "../search_input/SearchInput";
-import SearchUser from "../search_user/SearchUser";
+import ListedAccount from "../listed_account/ListedAccount";
 import { searchStore } from "../../store/searchStore";
 import style from "./SearchDrawer.module.css";
 import { Drawer } from "@mui/material";
@@ -36,7 +36,7 @@ const SearchDrawer: React.FC = () => {
           ) : (
             searchAccounts.map((el, i) => (
               <div key={`accountId-${i}`} className={style.accountContainer}>
-                <SearchUser searchUser={el} />
+                <ListedAccount listedAccount={el} />
               </div>
             ))
           )}
