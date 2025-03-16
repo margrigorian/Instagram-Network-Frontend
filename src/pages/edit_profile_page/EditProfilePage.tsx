@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, NavLink } from "react-router-dom";
 import NavBar from "../../components/navbar/NavBar";
 import ChangeAvatarModalWindow from "../../components/change_avatar_modal_window/ChangeAvatarModalWindow";
 import GenderSelectionBlock from "../../components/gender_selection_block/GenderSelectionBlock";
 import { userStore } from "../../store/userStore";
 import { searchStore } from "../../store/searchStore";
-import { putUserInfo } from "../../lib/requests/userRequests";
+import { putUserInfo, deleteAvatarOrAccount } from "../../lib/requests/userRequests";
 import { getSearchAccounts } from "../../lib/requests/accountRequests";
 import style from "./EditProfilePage.module.css";
 import { IOSSwitch } from "../../theme/theme";
@@ -15,6 +15,7 @@ const EditProfilePage: React.FC = () => {
   const user = userStore(state => state.user);
   const setUser = userStore(state => state.setUser);
   const token = userStore(state => state.token);
+  const setToken = userStore(state => state.setToken);
   const [isOpenedModalUploadWindow, setIsOpenedModalUploadWindow] = useState(false);
   const [isOpenedModalGenderSelectionWindow, setIsOpenedModalGenderSelectionWindow] =
     useState(false);
@@ -29,6 +30,8 @@ const EditProfilePage: React.FC = () => {
     user?.gender && user.gender !== "#1female" && user.gender !== "#2male" ? user.gender : ""
   );
   const [recommendation, setRecommendation] = useState(user ? user.recommendation : true);
+  const [isOpenedAccountDeletionModalWindow, setIsOpenedAccountDeletionModalWindow] =
+    useState(false);
 
   async function updateUserInfo(): Promise<void> {
     const data = {
@@ -44,6 +47,15 @@ const EditProfilePage: React.FC = () => {
         setUser(user.data);
         setisOpenedMdalWindowForSavingChanges(true);
       }
+    }
+  }
+
+  async function deleteAccount() {
+    if (token) {
+      await deleteAvatarOrAccount(token);
+      setUser(null);
+      setToken(null);
+      setIsOpenedAccountDeletionModalWindow(false);
     }
   }
 
@@ -79,9 +91,47 @@ const EditProfilePage: React.FC = () => {
             <ChangeAvatarModalWindow setIsOpenedModalUploadWindow={setIsOpenedModalUploadWindow} />
           )}
 
+          {isOpenedAccountDeletionModalWindow && (
+            <div
+              className={style.containerOfAccountDeletionModalWindow}
+              onClick={() => {
+                setIsOpenedAccountDeletionModalWindow(false);
+              }}
+            >
+              <div className={style.accountDeletionModalWindow} onClick={e => e.stopPropagation()}>
+                <div className={style.deletionText}>Аккаунт будет удален безвозвратно</div>
+                <div className={style.deleteButtonContainer}>
+                  <NavLink
+                    to={"/"}
+                    onClick={() => {
+                      deleteAccount();
+                    }}
+                    className={`${style.button} ${style.deleteButton}`}
+                  >
+                    Удалить
+                  </NavLink>
+                  <div
+                    className={`${style.button} ${style.cancelButton}`}
+                    onClick={() => {
+                      setIsOpenedAccountDeletionModalWindow(false);
+                    }}
+                  >
+                    Отмена
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           <NavBar />
           <div className={style.settingsContainer}>
             <div className={style.headerTextOfSettings}>Настройки</div>
+            <div
+              className={style.deleteAccountButton}
+              onClick={() => setIsOpenedAccountDeletionModalWindow(true)}
+            >
+              Удалить аккаунт
+            </div>
           </div>
           <div className={style.editContainer}>
             <div className={style.headerTextOfEditing}>Редактировать профиль</div>

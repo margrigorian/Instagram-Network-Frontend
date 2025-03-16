@@ -1,6 +1,6 @@
 import React, { useRef, Dispatch, SetStateAction } from "react";
 import { userStore } from "../../store/userStore";
-import { postAvatar, putAvatar, deleteAvatar } from "../../lib/requests/userRequests";
+import { postAvatar, putAvatar, deleteAvatarOrAccount } from "../../lib/requests/userRequests";
 import style from "./ChangeAvatarModalWindow.module.css";
 
 interface IModalWindowProps {
@@ -84,7 +84,7 @@ const ChangeAvatarModalWindow: React.FC<IModalWindowProps> = ({ setIsOpenedModal
           onClick={async () => {
             if (token) {
               if (user?.avatar !== null) {
-                await deleteAvatar(token);
+                await deleteAvatarOrAccount(token, "avatar");
               }
               setAvatar(null);
               setIsOpenedModalUploadWindow(false);

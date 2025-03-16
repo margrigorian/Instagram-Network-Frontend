@@ -12,6 +12,8 @@ const NavBar: React.FC = () => {
     state => state.setIsOpenedNewPostModalWindow
   );
   const user = userStore(state => state.user);
+  const setUser = userStore(state => state.setUser);
+  const setToken = userStore(state => state.setToken);
   const account = accountStore(state => state.user);
   const isOpenedSearchDrawer = searchStore(state => state.isOpenedSearchDrawer);
   const setIsOpenedSearchDrawer = searchStore(state => state.setIsOpenedSearchDrawer);
@@ -141,10 +143,17 @@ const NavBar: React.FC = () => {
           )}
           <div>Профиль</div>
         </NavLink>
-        <div className={style.navBarItemContainer}>
-          <Icon.List className={style.navBarIcon} />
-          <div>Еще</div>
-        </div>
+        <NavLink
+          to={"/"}
+          className={style.navBarItemContainer}
+          onClick={() => {
+            setUser(null);
+            setToken(null);
+          }}
+        >
+          <Icon.BoxArrowRight className={style.navBarIcon} />
+          <div>Выйти</div>
+        </NavLink>
       </div>
     </div>
   );

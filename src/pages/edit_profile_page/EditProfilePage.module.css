@@ -7,16 +7,73 @@
 
 .settingsContainer {
   position: fixed;
-  width: 280px;
+  width: 264px;
   height: 89.5vh;
-  margin-left: 242px;
-  padding: 35px 25px 30px 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-left: 258px;
+  padding: 35px 40px 30px 25px;
   border-right: 1.5px solid #b8d9f4;
 }
 .headerTextOfSettings {
-  padding-left: 20px;
   font-size: 20px;
   font-weight: bold;
+}
+.deleteAccountButton {
+  padding-bottom: 25px;
+  text-decoration: underline;
+  font-size: 14px;
+  color: rgb(144, 30, 30);
+  cursor: pointer;
+}
+
+.containerOfAccountDeletionModalWindow {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(40, 40, 40, 0.8);
+  z-index: 3;
+}
+.accountDeletionModalWindow {
+  width: 400px;
+  height: 160px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  border-radius: 13px;
+  background-color: white;
+}
+.deletionText {
+  color: rgb(144, 30, 30);
+}
+.deleteButtonContainer {
+  width: 300px;
+  display: flex;
+  justify-content: space-between;
+}
+.button {
+  width: 140px;
+  padding: 10px 0;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 7px;
+}
+.deleteButton {
+  color: white;
+  background-color: rgb(88, 19, 19);
+}
+.cancelButton {
+  border: none;
+  border: 1px solid;
+  cursor: pointer;
 }
 
 .editContainer {

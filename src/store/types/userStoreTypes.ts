@@ -14,11 +14,11 @@ export interface IUserStore {
   followings: { login: string }[];
   token: string | null;
 
-  setUser: (obj: IUser) => void;
+  setUser: (obj: IUser | null) => void;
   setFollowers: (array: { login: string }[]) => void;
   setFollowings: (array: { login: string }[]) => void;
   setAvatar: (image: string | null) => void;
-  setToken: (token: string) => void;
+  setToken: (token: string | null) => void;
   addFollowing: (login: string) => void;
   deleteFollowing: (login: string) => void;
 }

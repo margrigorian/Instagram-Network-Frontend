@@ -49,11 +49,16 @@ async function putAvatar(data: FormData, token: string): Promise<IResponse<IAvat
   }
 }
 
-async function deleteAvatar(token: string): Promise<void> {
+async function deleteAvatarOrAccount(token: string, key = ""): Promise<void> {
   try {
+    let param = "";
+    if (key === "avatar") {
+      param = `?avatar=false`;
+    }
+
     const data = await axios({
       method: "delete",
-      url: "http://localhost:3001/profile/edit",
+      url: `http://localhost:3001/profile/edit${param}`,
       headers: {
         authorization: `Bearer ${token}`
       }
@@ -86,4 +91,4 @@ async function putUserInfo(
   }
 }
 
-export { postAvatar, putAvatar, deleteAvatar, putUserInfo };
+export { postAvatar, putAvatar, deleteAvatarOrAccount, putUserInfo };

@@ -143,7 +143,10 @@ const AccountPage: React.FC = () => {
       ) : (
         ""
       )}
-      <div style={user ? { marginLeft: "258px" } : {}} className={style.container}>
+      <div
+        style={user ? { marginLeft: "258px" } : { margin: "0 auto" }}
+        className={style.container}
+      >
         {loading ? (
           <div className={style.loading}></div>
         ) : account ? (
