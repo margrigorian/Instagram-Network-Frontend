@@ -1,32 +1,49 @@
-.account {
+.container {
+  width: 99%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.contact {
   display: flex;
   align-items: center;
 }
-.avatarIcon {
-  width: 40px;
-  height: 40px;
+.dialogAvatar {
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   margin-right: 12px;
   background-size: 100% 100%;
   background-position: center;
 }
 .defaultAvatar {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   margin-right: 12px;
   color: grey;
 }
+.groupAvatar {
+  width: 50px;
+  height: 50px;
+  margin-right: 12px;
+  background-image: url("../../pictures/group.png");
+  background-size: 100% 100%;
+  background-position: center;
+}
+.chatInfoContainer {
+  display: flex;
+  flex-direction: column;
+  height: 40px;
+}
 .loginContainer {
-  max-width: 170px;
+  width: 210px;
   display: flex;
   align-items: flex-end;
 }
 .login {
   font-size: 14px;
-  font-weight: 500;
   text-decoration: none;
   color: black;
-  cursor: pointer;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -38,30 +55,28 @@
   background-size: 100% 100%;
   margin-left: 5px;
 }
-.subscriptionContainer {
+.messageContainer {
   display: flex;
   align-items: center;
-}
-.subscriptionButton {
   font-size: 12px;
-  font-weight: 500;
-  color: #2196f3;
-  cursor: pointer;
 }
-.subscriptionButton:hover {
-  color: #30487d;
-}
-.username {
-  font-size: 14px;
-  color: grey;
+.message {
+  max-width: 166px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.followersLogins {
-  font-size: 12px;
+.dotIcon {
+  margin: 0 2px;
+  font-size: 8px;
   color: grey;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+}
+.messageDate {
+  color: grey;
+}
+.unreadMessageCircleIcon {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #2196f3;
 }

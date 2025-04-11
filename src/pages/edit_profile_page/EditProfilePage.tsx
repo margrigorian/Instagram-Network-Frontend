@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Navigate, NavLink } from "react-router-dom";
+import { Socket } from "socket.io-client";
 import NavBar from "../../components/navbar/NavBar";
 import ChangeAvatarModalWindow from "../../components/change_avatar_modal_window/ChangeAvatarModalWindow";
 import GenderSelectionBlock from "../../components/gender_selection_block/GenderSelectionBlock";
@@ -11,7 +12,7 @@ import style from "./EditProfilePage.module.css";
 import { IOSSwitch } from "../../theme/theme";
 import * as Icon from "react-bootstrap-icons";
 
-const EditProfilePage: React.FC = () => {
+const EditProfilePage: React.FC<{ socket: Socket }> = ({ socket }) => {
   const user = userStore(state => state.user);
   const setUser = userStore(state => state.setUser);
   const token = userStore(state => state.token);
@@ -52,6 +53,7 @@ const EditProfilePage: React.FC = () => {
 
   async function deleteAccount() {
     if (token) {
+      socket.disconnect();
       await deleteAvatarOrAccount(token);
       setUser(null);
       setToken(null);
@@ -60,16 +62,22 @@ const EditProfilePage: React.FC = () => {
   }
 
   const search = searchStore(state => state.search);
+  const searchAccounts = searchStore(state => state.searchAccounts);
   const setSearchAccounts = searchStore(state => state.setSearchAccounts);
 
   useEffect(() => {
     async function makeRequest() {
       // проверка, требуемая типизацией
-      if (token) {
+      if (token && search) {
         const requestedAccounts = await getSearchAccounts(search, token);
 
         if (requestedAccounts) {
           setSearchAccounts(requestedAccounts);
+        }
+      } else {
+        // очищаем поиск
+        if (searchAccounts.length > 0) {
+          setSearchAccounts([]);
         }
       }
     }
@@ -123,7 +131,7 @@ const EditProfilePage: React.FC = () => {
             </div>
           )}
 
-          <NavBar />
+          <NavBar socket={socket} />
           <div className={style.settingsContainer}>
             <div className={style.headerTextOfSettings}>Настройки</div>
             <div

@@ -94,7 +94,7 @@ const HomePagePost: React.FC<IPostProps> = ({ post, handlePostModalOpen }) => {
           </NavLink>
           {post.verification ? <div className={style.verificationIcon}></div> : ""}
           <Icon.Dot className={style.dotIcon} />
-          <div className={style.postDate}>{postDateCalculation(post.time)}</div>
+          <div className={style.postDate}>{postDateCalculation(post.time, "post")}</div>
           {/* Не отображается, так как нет модального меню поста с кнопкой отписки */}
           {post.user_login !== user?.login && !isFollowing && (
             <div className={style.subscriptionContainer}>

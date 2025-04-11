@@ -33,6 +33,8 @@ export interface IListedAccount {
   verification: boolean;
   follow_account?: boolean;
   followers?: string;
+  // для указания удаленного контакта (в чат)
+  deleted?: boolean;
 }
 
 export interface IRecommendedAccount {

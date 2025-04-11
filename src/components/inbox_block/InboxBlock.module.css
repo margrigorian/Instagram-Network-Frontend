@@ -1,0 +1,28 @@
+.container {
+  position: fixed;
+  width: 340px;
+  height: 100vh;
+  border-right: 1px solid lightgrey;
+}
+.header {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 40px 20px 0 20px;
+}
+.inbox {
+  margin-top: 44px;
+  height: 76vh;
+  overflow: auto;
+}
+.chat {
+  padding: 8px 20px 4px 20px;
+}
+.chat:hover {
+  background-color: rgb(245, 245, 245);
+  cursor: pointer;
+}
+.notFoundText {
+  margin: 65px 0 0 20px;
+  font-size: 14px;
+  color: grey;
+}

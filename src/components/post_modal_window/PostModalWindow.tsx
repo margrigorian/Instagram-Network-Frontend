@@ -126,8 +126,8 @@ const PostModalWindow: React.FC<{ posts: IPost[] }> = array => {
                   <div>
                     <div
                       className={style.redMenuButton}
-                      onClick={() => {
-                        deleteUserPost();
+                      onClick={async () => {
+                        await deleteUserPost();
                         setIsOpenedPostMenu(false);
                         handleModalClose();
                       }}

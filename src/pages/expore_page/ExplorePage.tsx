@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { Navigate, useSearchParams } from "react-router-dom";
+import { Socket } from "socket.io-client";
 import NavBar from "../../components/navbar/NavBar";
 import PostDisplay from "../../components/post_display/PostDisplay";
 import PostModalWindow from "../../components/post_modal_window/PostModalWindow";
@@ -10,7 +11,7 @@ import { getExploredPostsWithSearchAccounts } from "../../lib/requests/postsRequ
 import style from "./ExplorePage.module.css";
 import * as Icon from "react-bootstrap-icons";
 
-const ExplorePage: React.FC = () => {
+const ExplorePage: React.FC<{ socket: Socket }> = ({ socket }) => {
   const user = userStore(state => state.user);
   const token = userStore(state => state.token);
   const search = searchStore(state => state.search);
@@ -31,33 +32,46 @@ const ExplorePage: React.FC = () => {
           token
         );
 
-        if (search) {
-          // проверка, требуемая типизацией
-          if (exploredPostsWithSearchAccounts?.data?.searchAccounts) {
-            setSearchAccounts(exploredPostsWithSearchAccounts.data.searchAccounts);
-          }
-        } else {
-          // очищаем поиск
-          if (searchAccounts.length > 0) {
-            setSearchAccounts([]);
-          }
-
-          if (exploredPostsWithSearchAccounts?.data?.exploredPosts) {
-            setPosts(exploredPostsWithSearchAccounts.data.exploredPosts);
-          }
+        if (exploredPostsWithSearchAccounts?.data?.exploredPosts) {
+          setPosts(exploredPostsWithSearchAccounts.data.exploredPosts);
         }
       }
     }
 
     makeRequest();
-  }, [search, keyword]);
+  }, [keyword]);
+
+  // чтобы при обнулении search не был произведен лишний запрос
+  useEffect(() => {
+    async function makeRequest() {
+      if (token && search) {
+        const exploredPostsWithSearchAccounts = await getExploredPostsWithSearchAccounts(
+          keyword,
+          search,
+          token
+        );
+
+        // проверка, требуемая типизацией
+        if (exploredPostsWithSearchAccounts?.data?.searchAccounts) {
+          setSearchAccounts(exploredPostsWithSearchAccounts.data.searchAccounts);
+        }
+      } else {
+        // очищаем поиск
+        if (searchAccounts.length > 0) {
+          setSearchAccounts([]);
+        }
+      }
+    }
+
+    makeRequest();
+  }, [search]);
 
   return (
     <div>
       {/* Без регистрации будет перенаправление на страницу login */}
       {user ? (
         <div>
-          <NavBar />
+          <NavBar socket={socket} />
           <div className={style.container}>
             {keyword && <div className={style.keyword}>#{keyword}</div>}
             {posts.length > 0 ? (

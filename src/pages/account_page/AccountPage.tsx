@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, NavLink } from "react-router-dom";
+import { Socket } from "socket.io-client";
 import NavBar from "../../components/navbar/NavBar";
 import AccountUserInfo from "../../components/account_user_info/AccountUserInfo";
 import FollowersAndFollowingsModalWindow from "../../components/followers_and_followings_modal_window/FollowersAndFollowingsModalWindow";
@@ -15,7 +16,7 @@ import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlin
 import * as Icon from "react-bootstrap-icons";
 import PostDisplay from "../../components/post_display/PostDisplay";
 
-const AccountPage: React.FC = () => {
+const AccountPage: React.FC<{ socket: Socket }> = ({ socket }) => {
   const { login } = useParams();
   const user = userStore(state => state.user);
   const account = accountStore(state => state.user);
@@ -25,6 +26,7 @@ const AccountPage: React.FC = () => {
   const posts = postStore(state => state.posts);
   const setPosts = postStore(state => state.setPosts);
   const search = searchStore(state => state.search);
+  const searchAccounts = searchStore(state => state.searchAccounts);
   const setSearchAccounts = searchStore(state => state.setSearchAccounts);
   const isOpenedPostModalWindow = postStore(state => state.isOpenedPostModalWindow);
   const isOpenedFollowersAndFollowingsModalWindow = accountStore(
@@ -57,45 +59,62 @@ const AccountPage: React.FC = () => {
     async function makeRequest() {
       if (login) {
         const accountInfoWithSearchAccounts = await getAccountInfoWithSearchAccounts(login, search);
+        // есть результаты, закрываем loading
+        setLoading(false);
+        // при этом, если вынести loading в store, возникает бесконечный цикл
+        // страница безостановочно будет перезагружается
+
+        if (path !== "followers" && path !== "following") {
+          setSearchAccounts([]);
+        }
+
+        if (accountInfoWithSearchAccounts?.data?.accountInfo) {
+          setUser(accountInfoWithSearchAccounts.data.accountInfo.user);
+          setFollowersCount(accountInfoWithSearchAccounts.data.accountInfo.followers_count);
+          setFollowingsCount(accountInfoWithSearchAccounts.data.accountInfo.followings_count);
+          if (accountInfoWithSearchAccounts.data.accountInfo.posts) {
+            setPosts(accountInfoWithSearchAccounts.data.accountInfo.posts);
+          }
+        } else {
+          // аккаунт не найден, обнуляем, чтобы старое не сохранялось
+          setUser(null);
+          setFollowersCount(0);
+          setFollowingsCount(0);
+          setPosts([]);
+        }
+      }
+    }
+
+    makeRequest();
+  }, [reloudAccountPage]);
+
+  useEffect(() => {
+    async function makeRequest() {
+      if (login) {
         if (search) {
+          const accountInfoWithSearchAccounts = await getAccountInfoWithSearchAccounts(
+            login,
+            search
+          );
           // проверка, требуемая типизацией
           if (accountInfoWithSearchAccounts?.data?.searchAccounts) {
             setSearchAccounts(accountInfoWithSearchAccounts.data.searchAccounts);
           }
         } else {
-          // есть результаты, закрываем loading
-          setLoading(false);
-          // при этом, если вынести loading в store, возникает бесконечный цикл
-          // страница безостановочно будет перезагружается
-
-          if (path !== "followers" && path !== "following") {
+          // очищаем поиск
+          if (searchAccounts.length > 0) {
             setSearchAccounts([]);
-          }
-
-          if (accountInfoWithSearchAccounts?.data?.accountInfo) {
-            setUser(accountInfoWithSearchAccounts.data.accountInfo.user);
-            setFollowersCount(accountInfoWithSearchAccounts.data.accountInfo.followers_count);
-            setFollowingsCount(accountInfoWithSearchAccounts.data.accountInfo.followings_count);
-            if (accountInfoWithSearchAccounts.data.accountInfo.posts) {
-              setPosts(accountInfoWithSearchAccounts.data.accountInfo.posts);
-            }
-          } else {
-            // аккаунт не найден, обнуляем, чтобы старое не сохранялось
-            setUser(null);
-            setFollowersCount(0);
-            setFollowingsCount(0);
-            setPosts([]);
           }
         }
       }
     }
 
     makeRequest();
-  }, [search, reloudAccountPage]);
+  }, [search]);
 
   return (
     <div>
-      {user ? <NavBar /> : undefined}
+      {user ? <NavBar socket={socket} /> : undefined}
       {/* Сработает при отсутствии авторизации */}
       {isOpenedAuthorizationWarningModalWindow && (
         <div

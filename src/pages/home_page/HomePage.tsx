@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Navigate, NavLink } from "react-router-dom";
+import { Socket } from "socket.io-client";
 import NavBar from "../../components/navbar/NavBar";
 import PostOfHomePage from "../../components/post_of_home_page/PostOfHomePage";
 import PostModalWindow from "../../components/post_modal_window/PostModalWindow";
+import ListedAccount from "../../components/listed_account/ListedAccount";
 import { userStore } from "../../store/userStore";
 import { postStore } from "../../store/postStore";
 import { searchStore } from "../../store/searchStore";
@@ -12,9 +14,8 @@ import {
   getPostsWithRecommendationsAndSearchAccounts
 } from "../../lib/requests/postsRequests";
 import style from "./HomePage.module.css";
-import ListedAccount from "../../components/listed_account/ListedAccount";
 
-const HomePage: React.FC = () => {
+const HomePage: React.FC<{ socket: Socket }> = ({ socket }) => {
   const user = userStore(state => state.user);
   const token = userStore(state => state.token);
   const posts = postStore(state => state.posts);
@@ -27,6 +28,7 @@ const HomePage: React.FC = () => {
   const addFollowing = userStore(state => state.addFollowing);
   const deleteFollowing = userStore(state => state.deleteFollowing);
   const search = searchStore(state => state.search);
+  const searchAccounts = searchStore(state => state.searchAccounts);
   const setSearchAccounts = searchStore(state => state.setSearchAccounts);
   const isOpenedPostModalWindow = postStore(state => state.isOpenedPostModalWindow);
   const setIsOpenedPostModalWindow = postStore(state => state.setIsOpenedPostModalWindow);
@@ -37,20 +39,34 @@ const HomePage: React.FC = () => {
       if (token) {
         const postsWithRecommendationsAndSearchAccounts =
           await getPostsWithRecommendationsAndSearchAccounts(token, search);
-        if (search) {
-          if (postsWithRecommendationsAndSearchAccounts?.data?.searchAccounts) {
-            setSearchAccounts(postsWithRecommendationsAndSearchAccounts.data.searchAccounts);
-          }
-        } else {
-          // есть результаты, закрываем loading
-          setLoading(false);
+        // есть результаты, закрываем loading
+        setLoading(false);
+        if (postsWithRecommendationsAndSearchAccounts?.data) {
+          setPosts(postsWithRecommendationsAndSearchAccounts.data.posts);
+          setRecommendedAccounts(
+            postsWithRecommendationsAndSearchAccounts.data.recommendedAccounts
+          );
+        }
+      }
+    }
 
-          if (postsWithRecommendationsAndSearchAccounts?.data) {
-            setPosts(postsWithRecommendationsAndSearchAccounts.data.posts);
-            setRecommendedAccounts(
-              postsWithRecommendationsAndSearchAccounts.data.recommendedAccounts
-            );
-          }
+    makeRequest();
+  }, []);
+
+  // чтобы при обнулении search не был произведен лишний запрос
+  useEffect(() => {
+    async function makeRequest() {
+      if (token && search) {
+        const postsWithRecommendationsAndSearchAccounts =
+          await getPostsWithRecommendationsAndSearchAccounts(token, search);
+        // проверка, требуемая типизацией
+        if (postsWithRecommendationsAndSearchAccounts?.data?.searchAccounts) {
+          setSearchAccounts(postsWithRecommendationsAndSearchAccounts.data.searchAccounts);
+        }
+      } else {
+        // очищаем поиск
+        if (searchAccounts.length > 0) {
+          setSearchAccounts([]);
         }
       }
     }
@@ -93,7 +109,7 @@ const HomePage: React.FC = () => {
 
   return (
     <div style={{ width: "100%" }}>
-      <NavBar />
+      <NavBar socket={socket} />
       {/* Без регистрации будет перенаправление на страницу login */}
       {user ? (
         <div className={style.container}>

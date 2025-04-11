@@ -1,5 +1,6 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { Socket } from "socket.io-client";
 import { userStore } from "../../store/userStore";
 import { accountStore } from "../../store/accountStore";
 import { postStore, storeOfEditedPost } from "../../store/postStore";
@@ -7,7 +8,7 @@ import { searchStore } from "../../store/searchStore";
 import style from "./NavBar.module.css";
 import * as Icon from "react-bootstrap-icons";
 
-const NavBar: React.FC = () => {
+const NavBar: React.FC<{ socket: Socket }> = ({ socket }) => {
   const setIsOpenedNewPostModalWindow = storeOfEditedPost(
     state => state.setIsOpenedNewPostModalWindow
   );
@@ -24,6 +25,14 @@ const NavBar: React.FC = () => {
   const posts = postStore(state => state.posts);
   const setPosts = postStore(state => state.setPosts);
   const setReloudAccountPage = accountStore(state => state.setReloudAccountPage);
+  const navigate = useNavigate();
+
+  async function logout() {
+    socket.disconnect();
+    setUser(null);
+    setToken(null);
+    navigate("/");
+  }
 
   return (
     <div className={style.container}>
@@ -94,10 +103,27 @@ const NavBar: React.FC = () => {
           <Icon.Film className={style.navBarIcon} />
           <div>Reels</div>
         </div>
-        <div className={style.navBarItemContainer}>
+        <NavLink
+          to={"/direct"}
+          className={style.navBarItemContainer}
+          onClick={() => {
+            if (isOpenedSearchDrawer) {
+              setIsOpenedSearchDrawer(false);
+              if (search) {
+                setSearch("");
+              }
+              if (searchAccounts.length > 0) {
+                setSearchAccounts([]);
+              }
+            }
+            if (posts.length > 0) {
+              setPosts([]);
+            }
+          }}
+        >
           <Icon.ChatText className={style.navBarIcon} />
           <div>Сообщения</div>
-        </div>
+        </NavLink>
         <div className={style.navBarItemContainer}>
           <Icon.Heart className={style.navBarIcon} />
           <div>Уведомления</div>
@@ -143,17 +169,10 @@ const NavBar: React.FC = () => {
           )}
           <div>Профиль</div>
         </NavLink>
-        <NavLink
-          to={"/"}
-          className={style.navBarItemContainer}
-          onClick={() => {
-            setUser(null);
-            setToken(null);
-          }}
-        >
+        <div className={style.navBarItemContainer} onClick={logout}>
           <Icon.BoxArrowRight className={style.navBarIcon} />
           <div>Выйти</div>
-        </NavLink>
+        </div>
       </div>
     </div>
   );

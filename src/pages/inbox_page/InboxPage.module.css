@@ -1,0 +1,50 @@
+.container {
+  width: 931px;
+  height: 100%;
+  margin-left: 258px;
+}
+.chatBlock {
+  width: 57.35%;
+  height: 100vh;
+  margin-left: 598px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.chatIconBorder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 25px;
+  border: 1.5px solid;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+.chatIcon {
+  width: 50px;
+  height: 50px;
+  background-image: url("../../pictures/chat.png");
+  background-size: 100% 100%;
+  background-position: center;
+}
+.messagingInformation {
+  font-size: 14px;
+  color: grey;
+  margin: 10px 0 18px 0;
+}
+.sendMessageButton {
+  margin-right: 10px;
+  padding: 10px 18px 7px 18px;
+  border: none;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  color: white;
+  background-color: #2196f3;
+}
+.sendMessageButton:hover {
+  background-color: #276def;
+  cursor: pointer;
+}

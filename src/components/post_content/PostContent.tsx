@@ -214,7 +214,7 @@ const PostContent: React.FC<{ post: IPost }> = post => {
           className={style.postDate}
           style={post.post.likes.length === 0 ? { marginTop: "10px" } : {}}
         >
-          {postDateCalculation(post.post.time)}
+          {postDateCalculation(post.post.time, "post")}
         </div>
       </div>
 
