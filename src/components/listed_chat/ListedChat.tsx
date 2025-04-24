@@ -2,7 +2,7 @@ import React from "react";
 import { userStore } from "../../store/userStore";
 import { IChat } from "../../store/types/chatsStoreTypes";
 import { IListedAccount } from "../../store/types/accountStoreTypes";
-import { postDateCalculation } from "../../lib/postDateCalculation";
+import { timePeriodCalculation } from "../../lib/timePeriodCalculation";
 import style from "./ListedChat.module.css";
 import * as Icon from "react-bootstrap-icons";
 
@@ -81,7 +81,7 @@ const ListedChat: React.FC<{ chat: IChat }> = listedChat => {
               </div>
               <Icon.Dot className={style.dotIcon} />
               <div className={style.messageDate}>
-                {postDateCalculation(listedChat.chat.last_message.time, "message")}
+                {timePeriodCalculation(listedChat.chat.last_message.time, "message")}
               </div>
             </div>
           )}

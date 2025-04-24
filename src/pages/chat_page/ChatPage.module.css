@@ -1,0 +1,49 @@
+.inboxContainer {
+  width: 931px;
+  height: 100%;
+  margin-left: 258px;
+}
+.chatBlock {
+  width: 57.35%;
+  height: 100vh;
+  margin-left: 598px;
+  display: flex;
+  flex-direction: column;
+}
+.chatHeader {
+  width: 100%;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid lightgrey;
+}
+.headerElementsContainer {
+  width: 93%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.contact {
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  /* не сработает */
+  /* font-size: 20px; */
+}
+.iconsContainer {
+  width: 16%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.messagesContainer {
+  position: static;
+  height: 68%;
+  padding: 20px 0 0 25px;
+}
+.messageSendingContainer {
+  height: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

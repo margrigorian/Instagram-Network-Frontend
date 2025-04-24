@@ -16,6 +16,7 @@ const MessageModalWindow: React.FC<{ socket: Socket }> = ({ socket }) => {
   const token = userStore(state => state.token);
   const setIsOpenedMessageModalWindow = chatsStore(state => state.setIsOpenedMessageModalWindow);
   const inbox = chatsStore(state => state.inbox);
+  const setParamForGettingInbox = chatsStore(state => state.setParamForGettingInbox);
   const searchAccounts = searchStore(state => state.searchAccounts);
   const setSearchAccounts = searchStore(state => state.setSearchAccounts);
   const search = searchStore(state => state.search);
@@ -65,7 +66,10 @@ const MessageModalWindow: React.FC<{ socket: Socket }> = ({ socket }) => {
       );
 
       if (chat) {
+        // чтобы не было на странице чата повторного запроса inbox
+        setParamForGettingInbox(false);
         navigate(`/direct/${chat.id}`);
+        handleModalClose();
         return;
       }
     }
@@ -73,13 +77,14 @@ const MessageModalWindow: React.FC<{ socket: Socket }> = ({ socket }) => {
     if (token) {
       // создание диалогов и групп
       const newChat = await createChat(selectedContacts, token);
-
       if (newChat?.data && user) {
         socket.emit("addChat", {
           chat: newChat.data
         });
+        // чтобы не было на странице чата повторного запроса inbox
+        setParamForGettingInbox(false);
+        navigate(`/direct/${newChat.data.id}`);
       }
-      // navigate(`/direct/${newChat.id}`);
       handleModalClose();
     }
   }

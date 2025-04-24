@@ -7,6 +7,7 @@ import { postStore, storeOfEditedPost } from "../../store/postStore";
 import { searchStore } from "../../store/searchStore";
 import style from "./NavBar.module.css";
 import * as Icon from "react-bootstrap-icons";
+import { chatsStore } from "../../store/chatsStore";
 
 const NavBar: React.FC<{ socket: Socket }> = ({ socket }) => {
   const setIsOpenedNewPostModalWindow = storeOfEditedPost(
@@ -24,13 +25,19 @@ const NavBar: React.FC<{ socket: Socket }> = ({ socket }) => {
   const setSearchAccounts = searchStore(state => state.setSearchAccounts);
   const posts = postStore(state => state.posts);
   const setPosts = postStore(state => state.setPosts);
+  // если переключение происходит со страницы чата
+  const idOfActiveChat = chatsStore(state => state.idOfActiveChat);
+  const setIdOfActiveChat = chatsStore(state => state.setIdOfActiveChat);
   const setReloudAccountPage = accountStore(state => state.setReloudAccountPage);
+  const clearInputMessages = chatsStore(state => state.clearInputMessages);
   const navigate = useNavigate();
 
   async function logout() {
     socket.disconnect();
     setUser(null);
     setToken(null);
+    // чтобы не сохранялись записанные сообщения
+    clearInputMessages();
     navigate("/");
   }
 
@@ -53,6 +60,9 @@ const NavBar: React.FC<{ socket: Socket }> = ({ socket }) => {
             }
             if (posts.length > 0) {
               setPosts([]);
+            }
+            if (idOfActiveChat) {
+              setIdOfActiveChat(0);
             }
           }}
         >
@@ -94,6 +104,9 @@ const NavBar: React.FC<{ socket: Socket }> = ({ socket }) => {
             if (posts.length > 0) {
               setPosts([]);
             }
+            if (idOfActiveChat) {
+              setIdOfActiveChat(0);
+            }
           }}
         >
           <Icon.Compass className={style.navBarIcon} />
@@ -118,6 +131,9 @@ const NavBar: React.FC<{ socket: Socket }> = ({ socket }) => {
             }
             if (posts.length > 0) {
               setPosts([]);
+            }
+            if (idOfActiveChat) {
+              setIdOfActiveChat(0);
             }
           }}
         >
@@ -157,6 +173,9 @@ const NavBar: React.FC<{ socket: Socket }> = ({ socket }) => {
               if (searchAccounts.length > 0) {
                 setSearchAccounts([]);
               }
+            }
+            if (idOfActiveChat) {
+              setIdOfActiveChat(0);
             }
             if (user?.login !== account?.login) setReloudAccountPage();
           }}

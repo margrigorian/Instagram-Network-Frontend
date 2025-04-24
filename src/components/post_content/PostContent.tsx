@@ -5,7 +5,7 @@ import Comment from "../comment/Comment";
 import { userStore } from "../../store/userStore";
 import { accountStore } from "../../store/accountStore";
 import { postStore } from "../../store/postStore";
-import { postDateCalculation } from "../../lib/postDateCalculation";
+import { timePeriodCalculation } from "../../lib/timePeriodCalculation";
 import { addComment } from "../../lib/requests/commentsRequests";
 import { addLikeToPost, deleteLikeFromPost } from "../../lib/requests/postsRequests";
 import { postSubscriptionOnAccount } from "../../lib/requests/accountRequests";
@@ -214,7 +214,7 @@ const PostContent: React.FC<{ post: IPost }> = post => {
           className={style.postDate}
           style={post.post.likes.length === 0 ? { marginTop: "10px" } : {}}
         >
-          {postDateCalculation(post.post.time, "post")}
+          {timePeriodCalculation(post.post.time, "post")}
         </div>
       </div>
 

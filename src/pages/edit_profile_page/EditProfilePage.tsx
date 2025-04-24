@@ -6,6 +6,7 @@ import ChangeAvatarModalWindow from "../../components/change_avatar_modal_window
 import GenderSelectionBlock from "../../components/gender_selection_block/GenderSelectionBlock";
 import { userStore } from "../../store/userStore";
 import { searchStore } from "../../store/searchStore";
+import { chatsStore } from "../../store/chatsStore";
 import { putUserInfo, deleteAvatarOrAccount } from "../../lib/requests/userRequests";
 import { getSearchAccounts } from "../../lib/requests/accountRequests";
 import style from "./EditProfilePage.module.css";
@@ -33,6 +34,7 @@ const EditProfilePage: React.FC<{ socket: Socket }> = ({ socket }) => {
   const [recommendation, setRecommendation] = useState(user ? user.recommendation : true);
   const [isOpenedAccountDeletionModalWindow, setIsOpenedAccountDeletionModalWindow] =
     useState(false);
+  const clearInputMessages = chatsStore(state => state.clearInputMessages);
 
   async function updateUserInfo(): Promise<void> {
     const data = {
@@ -58,6 +60,8 @@ const EditProfilePage: React.FC<{ socket: Socket }> = ({ socket }) => {
       setUser(null);
       setToken(null);
       setIsOpenedAccountDeletionModalWindow(false);
+      // чтобы не сохранялись записанные сообщения
+      clearInputMessages();
     }
   }
 

@@ -7,7 +7,7 @@ import MessageModalWindow from "../../components/message_modal_window/MessageMod
 import { userStore } from "../../store/userStore";
 import { searchStore } from "../../store/searchStore";
 import { chatsStore } from "../../store/chatsStore";
-import { getChatsWithSearchAccounts } from "../../lib/requests/chatsRequests";
+import { getInboxAlongWithSearchAccounts } from "../../lib/requests/chatsRequests";
 import style from "./InboxPage.module.css";
 
 const InboxPage: React.FC<{ socket: Socket }> = ({ socket }) => {
@@ -19,13 +19,15 @@ const InboxPage: React.FC<{ socket: Socket }> = ({ socket }) => {
   const setInbox = chatsStore(state => state.setInbox);
   const isOpenedMessageModalWindow = chatsStore(state => state.isOpenedMessageModalWindow);
   const setIsOpenedMessageModalWindow = chatsStore(state => state.setIsOpenedMessageModalWindow);
+  const setInboxLoading = chatsStore(state => state.setInboxLoading);
 
   useEffect(() => {
     async function makeRequest() {
       if (token) {
-        const chatsWithSearchAccounts = await getChatsWithSearchAccounts(search, token);
+        const chatsWithSearchAccounts = await getInboxAlongWithSearchAccounts(search, token);
         if (chatsWithSearchAccounts?.data) {
-          setInbox(chatsWithSearchAccounts?.data.chats);
+          setInbox(chatsWithSearchAccounts.data.chats);
+          setInboxLoading(false);
         }
       }
     }
@@ -37,7 +39,7 @@ const InboxPage: React.FC<{ socket: Socket }> = ({ socket }) => {
   useEffect(() => {
     async function makeRequest() {
       if (token && search) {
-        const chatsWithSearchAccounts = await getChatsWithSearchAccounts(search, token);
+        const chatsWithSearchAccounts = await getInboxAlongWithSearchAccounts(search, token);
         // проверка, требуемая типизацией
         if (chatsWithSearchAccounts?.data) {
           setSearchAccounts(chatsWithSearchAccounts.data.searchAccounts);
@@ -60,7 +62,7 @@ const InboxPage: React.FC<{ socket: Socket }> = ({ socket }) => {
         <div>
           <NavBar socket={socket} />
           {isOpenedMessageModalWindow && <MessageModalWindow socket={socket} />}
-          <div className={style.container}>
+          <div className={style.inboxContainer}>
             <InboxBlock socket={socket} />
           </div>
           <div className={style.chatBlock}>

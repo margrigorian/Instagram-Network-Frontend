@@ -1,4 +1,4 @@
-export function postDateCalculation(time: number, key: string): string {
+export function timePeriodCalculation(time: number, key: string): string {
   const second = 1000;
   const minute = second * 60;
   const hour = minute * 60;
@@ -22,9 +22,9 @@ export function postDateCalculation(time: number, key: string): string {
   const now = new Date();
   const timePeriod = now.getTime() - time;
 
-  if (timePeriod >= second && timePeriod < minute) {
+  if (timePeriod < minute) {
     const date = Math.floor(timePeriod / second); // миллисекунды переводим в секунды
-    return key === "post" ? `${date} секунд назад` : `${date} cек.`;
+    return key === "post" ? `${date} секунд назад` : `${date} сек.`;
   } else if (timePeriod >= minute && timePeriod < hour) {
     const date = Math.floor(timePeriod / minute); // минуты
     return key === "post" ? `${date} минут назад` : `${date} мин.`;

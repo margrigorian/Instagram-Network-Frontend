@@ -1,5 +1,9 @@
 import axios from "axios";
-import { IChat, IChatsWithSearchAccounts } from "../../store/types/chatsStoreTypes";
+import {
+  IChat,
+  IInboxAlongWithSearchAccounts,
+  IInboxAlongWithCurrentChatMessagesAndSearchAccounts
+} from "../../store/types/chatsStoreTypes";
 
 interface IResponse<T> {
   data: T | null;
@@ -10,10 +14,10 @@ type Message = {
   message: string;
 };
 
-async function getChatsWithSearchAccounts(
+async function getInboxAlongWithSearchAccounts(
   search: string,
   token: string
-): Promise<IResponse<IChatsWithSearchAccounts> | undefined> {
+): Promise<IResponse<IInboxAlongWithSearchAccounts> | undefined> {
   try {
     let searchParam = "";
     if (search) {
@@ -23,6 +27,33 @@ async function getChatsWithSearchAccounts(
     const data = await axios({
       method: "get",
       url: `http://localhost:3001/direct${searchParam}`,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        authorization: `Bearer ${token}`
+      }
+    });
+
+    return data.data.data;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+async function getInboxAlongWithCurrentChatMessagesAndSearchAccounts(
+  chatId: string,
+  paramForGettingInbox: boolean,
+  search: string,
+  token: string
+): Promise<IResponse<IInboxAlongWithCurrentChatMessagesAndSearchAccounts> | undefined> {
+  try {
+    let searchParam = "";
+    if (search) {
+      searchParam = `&search=${search}`;
+    }
+
+    const data = await axios({
+      method: "get",
+      url: `http://localhost:3001/direct/${chatId}?inbox=${paramForGettingInbox}${searchParam}`,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         authorization: `Bearer ${token}`
@@ -53,4 +84,83 @@ async function createChat(body: string[], token: string): Promise<IResponse<ICha
   }
 }
 
-export { getChatsWithSearchAccounts, createChat };
+async function postMessage(
+  id: number,
+  message: string,
+  time: number,
+  chatId: number,
+  token: string
+): Promise<void> {
+  try {
+    const postedMessage = await axios({
+      method: "post",
+      url: `http://localhost:3001/direct/${chatId}`,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        authorization: `Bearer ${token}`
+      },
+      data: JSON.stringify({ id, message, time })
+    });
+
+    console.log(postedMessage.data.data);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function readMessage(chatId: number, messageId: number, token: string): Promise<void> {
+  try {
+    const readMessage = await axios({
+      method: "delete",
+      url: `http://localhost:3001/direct/${chatId}?readMessageId=${messageId}`,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        authorization: `Bearer ${token}`
+      }
+    });
+
+    console.log(readMessage.data.data);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function deleteMessageOrGroupParticipantOrChat(
+  chatId: number,
+  messageId: number | null,
+  groupParticipant: string | null,
+  token: string
+): Promise<void> {
+  try {
+    let messageIdQueryParam = "";
+    if (messageId) {
+      messageIdQueryParam = `?messageId=${messageId}`;
+    }
+    let groupParticipantQueryParam = "";
+    if (groupParticipant) {
+      groupParticipantQueryParam = `?participant=${groupParticipant}`;
+    }
+
+    const deletedElement = await axios({
+      method: "delete",
+      url: `http://localhost:3001/direct/${chatId}${messageIdQueryParam}${groupParticipantQueryParam}`,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        authorization: `Bearer ${token}`
+      }
+    });
+
+    console.log(deletedElement.data.data);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export {
+  getInboxAlongWithSearchAccounts,
+  getInboxAlongWithCurrentChatMessagesAndSearchAccounts,
+  createChat,
+  postMessage,
+  readMessage,
+  deleteMessageOrGroupParticipantOrChat
+};

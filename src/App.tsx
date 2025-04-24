@@ -1,16 +1,16 @@
 import React, { useEffect } from "react";
 import socketIO from "socket.io-client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-// import NavBar from "./components/navbar/NavBar";
-import SearchDrawer from "./components/search_drawer/SearchDrawer";
 import LoginPage from "./pages/login_page/LoginPage";
 import RegisterPage from "./pages/register_page/RegisterPage";
 import HomePage from "./pages/home_page/HomePage";
 import AccountPage from "./pages/account_page/AccountPage";
 import EditProfilePage from "./pages/edit_profile_page/EditProfilePage";
-import InboxPage from "./pages/inbox_page/InboxPage";
-import NewPostModalWindow from "./components/new_post_modal_window/NewPostModalWindow";
 import ExplorePage from "./pages/expore_page/ExplorePage";
+import InboxPage from "./pages/inbox_page/InboxPage";
+import ChatPage from "./pages/chat_page/ChatPage";
+import SearchDrawer from "./components/search_drawer/SearchDrawer";
+import NewPostModalWindow from "./components/new_post_modal_window/NewPostModalWindow";
 import { userStore } from "./store/userStore";
 import { postStore, storeOfEditedPost } from "./store/postStore";
 import ScrollToTop from "./hoc/ScrollToTheTop";
@@ -30,7 +30,7 @@ const App: React.FC = () => {
     if (user) {
       socket.emit("login", { login: user.login });
     }
-    // функция очистки не требуется, так как размонтирование может произойти лишь с случае
+    // функция очистки не требуется, так как размонтирование может произойти лишь в случае
     // полного закрытия страницы
   }, [user]);
 
@@ -51,6 +51,7 @@ const App: React.FC = () => {
           <Route path="/profile/edit" element={<EditProfilePage socket={socket} />}></Route>
           <Route path="/explore" element={<ExplorePage socket={socket} />}></Route>
           <Route path="/direct" element={<InboxPage socket={socket} />}></Route>
+          <Route path="/direct/:chatId" element={<ChatPage socket={socket} />}></Route>
         </Routes>
       </BrowserRouter>
     </div>

@@ -9,6 +9,14 @@
   font-weight: 700;
   margin: 40px 20px 0 20px;
 }
+.loading {
+  width: 200px;
+  height: 200px;
+  background-image: url("../../pictures/loading.gif");
+  background-size: cover;
+  background-position: center center;
+  margin: 0 auto;
+}
 .inbox {
   margin-top: 44px;
   height: 76vh;
@@ -18,7 +26,7 @@
   padding: 8px 20px 4px 20px;
 }
 .chat:hover {
-  background-color: rgb(245, 245, 245);
+  background-color: rgb(242, 240, 240, 0.5);
   cursor: pointer;
 }
 .notFoundText {
