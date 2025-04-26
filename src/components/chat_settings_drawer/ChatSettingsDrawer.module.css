@@ -1,0 +1,43 @@
+.container {
+  width: 340px;
+  height: 100vh;
+}
+.header {
+  padding: 0px 20px;
+  height: 76.5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 500;
+  border-bottom: 1px solid lightgrey;
+}
+.titleParticipants {
+  font-weight: 500;
+  color: #2196f3;
+  padding: 20px;
+}
+.participantsContainer {
+  height: 55%;
+  padding: 0 20px 20px 20px;
+  overflow: auto;
+  border-bottom: 1px solid lightgrey;
+}
+.participant {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.deleteParticipantButton {
+  font-size: 13px;
+  color: rgb(250, 81, 81);
+  cursor: pointer;
+}
+.menuContainer {
+  padding: 20px;
+}
+.menuItem {
+  color: rgb(250, 81, 81);
+  cursor: pointer;
+}

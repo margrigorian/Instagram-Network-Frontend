@@ -15,6 +15,8 @@ const InboxBlock: React.FC<{ socket: Socket }> = ({ socket }) => {
   const inboxLoading = chatsStore(state => state.inboxLoading);
   const changeLastMessageOfChatInInbox = chatsStore(state => state.changeLastMessageOfChatInInbox);
   const deleteLastMessageOfChatInInbox = chatsStore(state => state.deleteLastMessageOfChatInInbox);
+  const deleteGroupParticipant = chatsStore(state => state.deleteGroupParticipant);
+  const deleteChat = chatsStore(state => state.deleteChat);
   const idOfActiveChat = chatsStore(state => state.idOfActiveChat);
   const setIdOfActiveChat = chatsStore(state => state.setIdOfActiveChat);
   const addChat = chatsStore(state => state.addChat);
@@ -40,17 +42,22 @@ const InboxBlock: React.FC<{ socket: Socket }> = ({ socket }) => {
       }
     });
 
-    socket.on("message", (message: IMessage) => {
-      // изменение inbox
-      if (message.sender.login === user?.login) {
-        message.is_read = true;
+    socket.on("message", (data: { message: IMessage; chat: IChat }) => {
+      const isExistingChat = inbox.find(chat => chat.id === data.chat.id);
+      // если пользователь ранее удалял диалог, в inbox он отсутствует, восстанавливаем
+      if (!isExistingChat) {
+        addChat(data.chat);
       }
-      changeLastMessageOfChatInInbox(message);
+      // если сообщение отправлено текущим пользователем, отмечаем его как изначально прочитанное
+      if (data.message.sender.login === user?.login) {
+        data.message.is_read = true;
+      }
+      changeLastMessageOfChatInInbox(data.message);
 
       // проверка, чтобы не добавлялось сообщение к другому чату
-      if (message.chat_id === idOfActiveChat) {
+      if (data.message.chat_id === idOfActiveChat) {
         // отсортироваваем сообщение по временному блоку
-        const dateSortedMessages = sortMessagesByDate(currentChatMessages, [message]);
+        const dateSortedMessages = sortMessagesByDate(currentChatMessages, [data.message]);
         setCurrentChatMessages(dateSortedMessages);
       }
     });
@@ -88,10 +95,35 @@ const InboxBlock: React.FC<{ socket: Socket }> = ({ socket }) => {
       }
     });
 
+    socket.on("deletedGroupParticipant", (data: { chatId: number; deletedParticipant: string }) => {
+      if (data.deletedParticipant !== user?.login) {
+        deleteGroupParticipant(data.chatId, data.deletedParticipant);
+      } else {
+        // исключили из группы текущего пользователя
+        deleteChat(data.chatId);
+        setCurrentChatMessages([]);
+        if (idOfActiveChat === data.chatId) {
+          // если ранее был открыт данный групповой чат, делаем перенаправление
+          navigate("/direct/");
+        }
+      }
+    });
+
+    socket.on("deletedGroup", (data: { chatId: number }) => {
+      deleteChat(data.chatId);
+      setCurrentChatMessages([]);
+      if (idOfActiveChat === data.chatId) {
+        // если ранее был открыт данный групповой чат, делаем перенаправление
+        navigate("/direct/");
+      }
+    });
+
     return () => {
       socket.off("chat");
       socket.off("message");
       socket.off("deletedMessage");
+      socket.off("deletedParticipant");
+      socket.off("deletedGroup");
     };
   }, [socket, inbox, currentChatMessages]);
 

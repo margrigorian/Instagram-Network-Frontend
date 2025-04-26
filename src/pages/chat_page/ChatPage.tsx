@@ -4,6 +4,7 @@ import { Socket } from "socket.io-client";
 import NavBar from "../../components/navbar/NavBar";
 import InboxBlock from "../../components/inbox_block/InboxBlock";
 import ListedChat from "../../components/listed_chat/ListedChat";
+import ChatSettingsDrawer from "../../components/chat_settings_drawer/ChatSettingsDrawer";
 import MessagesBlock from "../../components/messages_block/MessagesBlock";
 import MessageInput from "../../components/message_input/MessageInput";
 import { userStore } from "../../store/userStore";
@@ -25,6 +26,7 @@ const ChatPage: React.FC<{ socket: Socket }> = ({ socket }) => {
   const currentChat = inbox.find(el => el.id === Number(chatId));
   const setIdOfActiveChat = chatsStore(state => state.setIdOfActiveChat);
   const setCurrentChatMessages = chatsStore(state => state.setCurrentChatMessages);
+  const setIsOpenedChatSettingsDrawer = chatsStore(state => state.setIsOpenedChatSettingsDrawer);
   // поиск
   const search = searchStore(state => state.search);
   const searchAccounts = searchStore(state => state.searchAccounts);
@@ -98,7 +100,6 @@ const ChatPage: React.FC<{ socket: Socket }> = ({ socket }) => {
 
   return (
     <div>
-      {" "}
       {/* Без регистрации будет перенаправление на страницу login */}
       {user ? (
         <div>
@@ -106,6 +107,7 @@ const ChatPage: React.FC<{ socket: Socket }> = ({ socket }) => {
           <div className={style.inboxContainer}>
             <InboxBlock socket={socket} />
           </div>
+          {currentChat && <ChatSettingsDrawer socket={socket} currentChat={currentChat} />}
           <div className={style.chatBlock}>
             <div className={style.chatHeader}>
               {currentChat ? (
@@ -124,7 +126,11 @@ const ChatPage: React.FC<{ socket: Socket }> = ({ socket }) => {
                   <div className={style.iconsContainer}>
                     <Icon.Telephone size={"24px"} style={{ cursor: "pointer" }} />
                     <Icon.CameraVideo size={"28px"} style={{ cursor: "pointer" }} />
-                    <Icon.InfoCircle size={"24px"} style={{ cursor: "pointer" }} />
+                    <Icon.InfoCircle
+                      size={"24px"}
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setIsOpenedChatSettingsDrawer(true)}
+                    />
                   </div>
                 </div>
               ) : (
@@ -137,7 +143,7 @@ const ChatPage: React.FC<{ socket: Socket }> = ({ socket }) => {
                 <MessagesBlock
                   socket={socket}
                   messagesLoading={messagesLoading}
-                  participants={currentChat.participants}
+                  currentChat={currentChat}
                 />
               )}
             </div>

@@ -1,8 +1,10 @@
 import axios from "axios";
 import {
+  IMessage,
   IChat,
   IInboxAlongWithSearchAccounts,
-  IInboxAlongWithCurrentChatMessagesAndSearchAccounts
+  IInboxAlongWithCurrentChatMessagesAndSearchAccounts,
+  IDeletedGroupParticipant
 } from "../../store/types/chatsStoreTypes";
 
 interface IResponse<T> {
@@ -85,12 +87,11 @@ async function createChat(body: string[], token: string): Promise<IResponse<ICha
 }
 
 async function postMessage(
-  id: number,
   message: string,
   time: number,
   chatId: number,
   token: string
-): Promise<void> {
+): Promise<IResponse<IMessage> | undefined> {
   try {
     const postedMessage = await axios({
       method: "post",
@@ -99,10 +100,10 @@ async function postMessage(
         "Content-Type": "application/json; charset=utf-8",
         authorization: `Bearer ${token}`
       },
-      data: JSON.stringify({ id, message, time })
+      data: JSON.stringify({ message, time })
     });
 
-    console.log(postedMessage.data.data);
+    return postedMessage.data.data;
   } catch (e) {
     console.log(e);
   }
@@ -125,12 +126,12 @@ async function readMessage(chatId: number, messageId: number, token: string): Pr
   }
 }
 
-async function deleteMessageOrGroupParticipantOrChat(
+async function deleteMesseageOrGroupParticipantOrChat(
   chatId: number,
   messageId: number | null,
   groupParticipant: string | null,
   token: string
-): Promise<void> {
+): Promise<IResponse<IMessage | IDeletedGroupParticipant | IChat> | undefined> {
   try {
     let messageIdQueryParam = "";
     if (messageId) {
@@ -150,7 +151,7 @@ async function deleteMessageOrGroupParticipantOrChat(
       }
     });
 
-    console.log(deletedElement.data.data);
+    return deletedElement.data.data;
   } catch (e) {
     console.log(e);
   }
@@ -162,5 +163,5 @@ export {
   createChat,
   postMessage,
   readMessage,
-  deleteMessageOrGroupParticipantOrChat
+  deleteMesseageOrGroupParticipantOrChat
 };

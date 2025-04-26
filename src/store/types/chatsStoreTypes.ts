@@ -8,14 +8,17 @@ export interface IChatsStore {
   currentChatMessages: IDateSortedMessages[];
   inputMessages: { chatId: number; message: string }[];
   isOpenedMessageModalWindow: boolean;
+  isOpenedChatSettingsDrawer: boolean;
   setInbox: (chats: IChat[]) => void;
   setParamForGettingInbox: (value: boolean) => void;
   setInboxLoading: (value: boolean) => void;
+  addChat: (chat: IChat) => void;
   changeLastMessageOfChatInInbox: (message: IMessage) => void;
   deleteLastMessageOfChatInInbox: (chatId: number) => void;
   readLastMessageInInboxChat: (chatId: number) => void;
+  deleteGroupParticipant: (chatId: number, login: string) => void;
+  deleteChat: (chatId: number) => void;
   setIdOfActiveChat: (id: number) => void;
-  addChat: (chat: IChat) => void;
   setCurrentChatMessages: (messages: IDateSortedMessages[]) => void;
   addInputMessage: (chatId: number, message: string) => void;
   changeInputMessage: (chatId: number, message: string) => void;
@@ -23,6 +26,7 @@ export interface IChatsStore {
   readMessageInCurrentChat: (messageId: number) => void;
   deleteMessageInCurrentChat: (messageId: number) => void;
   setIsOpenedMessageModalWindow: (value: boolean) => void;
+  setIsOpenedChatSettingsDrawer: (value: boolean) => void;
 }
 
 export interface IChat {
@@ -56,4 +60,9 @@ export interface IInboxAlongWithSearchAccounts {
 export interface IInboxAlongWithCurrentChatMessagesAndSearchAccounts
   extends IInboxAlongWithSearchAccounts {
   currentChatMessages: IMessage[];
+}
+
+export interface IDeletedGroupParticipant {
+  chat_id: number;
+  participant: string;
 }

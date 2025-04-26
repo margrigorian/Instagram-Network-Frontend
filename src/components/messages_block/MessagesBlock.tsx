@@ -5,11 +5,10 @@ import { userStore } from "../../store/userStore";
 import { chatsStore } from "../../store/chatsStore";
 import { messageDateAndTimeCalculation } from "../../lib/messageDateAndTimeCalculation";
 import {
-  deleteMessageOrGroupParticipantOrChat,
-  readMessage
+  readMessage,
+  deleteMesseageOrGroupParticipantOrChat
 } from "../../lib/requests/chatsRequests";
-import { IMessage } from "../../store/types/chatsStoreTypes";
-import { IListedAccount } from "../../store/types/accountStoreTypes";
+import { IChat, IMessage } from "../../store/types/chatsStoreTypes";
 import style from "./MessagesBlock.module.css";
 import * as Icon from "react-bootstrap-icons";
 
@@ -23,8 +22,9 @@ interface MessageRefs {
 const MessagesBlock: React.FC<{
   socket: Socket;
   messagesLoading: boolean;
-  participants: IListedAccount[];
-}> = ({ socket, messagesLoading, participants }) => {
+  // participants: IListedAccount[];
+  currentChat: IChat;
+}> = ({ socket, messagesLoading, currentChat }) => {
   const user = userStore(state => state.user);
   const token = userStore(state => state.token);
   const currentChatMessages = chatsStore(state => state.currentChatMessages);
@@ -75,14 +75,22 @@ const MessagesBlock: React.FC<{
     };
   }, [messagesLoading, currentChatMessages]);
 
-  function deleteMessage(chatId: number, messageId: number) {
+  async function deleteMessageFromChat(chatId: number, messageId: number) {
     if (token) {
-      socket.emit("deleteMessage", {
+      const deletedMessage = await deleteMesseageOrGroupParticipantOrChat(
         chatId,
         messageId,
-        participants
-      });
-      deleteMessageOrGroupParticipantOrChat(chatId, messageId, null, token);
+        null,
+        token
+      );
+      // необходимо убедиться, что удаление прошло успешно
+      if (deletedMessage?.data) {
+        socket.emit("deleteMessage", {
+          chatId,
+          messageId,
+          participants: currentChat.participants
+        });
+      }
     }
   }
 
@@ -151,6 +159,12 @@ const MessagesBlock: React.FC<{
                       {message.message}
                     </div>
                     {!message.is_read && <div className={style.unreadMessageCircleIcon}></div>}
+                    {currentChat.type === "group" && currentChat.creators === user?.login && (
+                      <Icon.Trash3
+                        className={style.basket}
+                        onClick={() => deleteMessageFromChat(message.chat_id, message.id)}
+                      />
+                    )}
                   </div>
                 </div>
               ) : (
@@ -167,7 +181,7 @@ const MessagesBlock: React.FC<{
                 >
                   <Icon.Trash3
                     className={style.basket}
-                    onClick={() => deleteMessage(message.chat_id, message.id)}
+                    onClick={() => deleteMessageFromChat(message.chat_id, message.id)}
                   />
                   <div
                     style={{ backgroundColor: "#2196f3", color: "white" }}

@@ -20,39 +20,26 @@ const MessageInput: React.FC<{ socket: Socket }> = ({ socket }) => {
 
   async function sendMassage() {
     // проверка, требуемая типизацией
-    if (user && token && currentChat && currentInputMessage) {
-      const newMessageId = currentChat.last_message?.id ? currentChat.last_message.id + 1 : 1;
+    if (user && token && currentChat && currentInputMessage?.message) {
       const newMessageTime = new Date().getTime();
-      // формируем объект для сокета, чтобы не ожидать ответа сервера
-      const message = {
-        id: newMessageId,
-        message: currentInputMessage.message,
-        sender: {
-          avatar: user.avatar,
-          login: user.login,
-          username: user.username,
-          verification: user.verification
-        },
-        time: newMessageTime,
-        chat_id: currentChat.id,
-        is_read: false
-      };
-
-      // socket
-      socket.emit("sendMessage", {
-        message,
-        participants: currentChat.participants
-      });
-
-      // возможно не стоит использовать await, чтобы не было задержки очистки input сообщения
-      await postMessage(
-        newMessageId,
+      const message = await postMessage(
         currentInputMessage.message,
         newMessageTime,
         currentChat.id,
         token
       );
-      changeInputMessage(currentChat.id, "");
+
+      if (message?.data) {
+        // очистка input сообщения
+        changeInputMessage(currentChat.id, "");
+
+        socket.emit("sendMessage", {
+          message: message.data,
+          // необходимо для восстановления чата у себеседника, если он ранее его удалял
+          chat: currentChat,
+          participants: currentChat.participants
+        });
+      }
     }
   }
 

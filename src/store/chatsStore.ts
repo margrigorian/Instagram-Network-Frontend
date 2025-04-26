@@ -11,10 +11,12 @@ export const chatsStore = create<IChatsStore>(set => ({
   currentChatMessages: [],
   inputMessages: [],
   isOpenedMessageModalWindow: false,
+  isOpenedChatSettingsDrawer: false,
 
   setInbox: chats => set({ inbox: chats }),
   setParamForGettingInbox: value => set({ paramForGettingInbox: value }),
   setInboxLoading: value => set({ inboxLoading: value }),
+  addChat: chat => set(state => ({ inbox: [chat, ...state.inbox] })),
   changeLastMessageOfChatInInbox: message =>
     set(state => ({
       inbox: state.inbox.map(chat => {
@@ -48,8 +50,19 @@ export const chatsStore = create<IChatsStore>(set => ({
         }
       })
     })),
+  deleteGroupParticipant: (chatId, login) =>
+    set(state => ({
+      inbox: state.inbox.map(chat => {
+        if (chat.id === chatId) {
+          chat.participants = chat.participants.filter(participant => participant.login !== login);
+          return chat;
+        } else {
+          return chat;
+        }
+      })
+    })),
+  deleteChat: chatId => set(state => ({ inbox: state.inbox.filter(chat => chat.id !== chatId) })),
   setIdOfActiveChat: id => set({ idOfActiveChat: id }),
-  addChat: chat => set(state => ({ inbox: [chat, ...state.inbox] })),
   setCurrentChatMessages: messages => set({ currentChatMessages: messages }),
   addInputMessage: (chatId, message) =>
     set(state => ({ inputMessages: [...state.inputMessages, { chatId, message }] })),
@@ -93,5 +106,6 @@ export const chatsStore = create<IChatsStore>(set => ({
         // исключаем временные блоки, если количество сообщений в них равно 0
         .filter(messagesBlock => messagesBlock.messages.length > 0)
     })),
-  setIsOpenedMessageModalWindow: value => set({ isOpenedMessageModalWindow: value })
+  setIsOpenedMessageModalWindow: value => set({ isOpenedMessageModalWindow: value }),
+  setIsOpenedChatSettingsDrawer: value => set({ isOpenedChatSettingsDrawer: value })
 }));
